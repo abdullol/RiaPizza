@@ -1,0 +1,224 @@
+﻿@model Order
+@{
+    ViewData["Title"] = "Invoice";
+    //Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    Layout = null;
+    var tax = Model.TotalBill * 0.14;
+    var totalWithTax = Model.TotalBill + tax;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from www.radixtouch.in/templates/admin/lorax/source/light/pages/ecommerce/invoice.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 09 Jan 2020 16:29:46 GMT -->
+<head>
+    @*<meta charset="UTF-8">
+        <meta content="width=device-width, initial-scale=1" name="viewport" />*@
+    <!--  <title></title> -->
+    <!-- Favicon-->
+    <link rel="icon" href="~/assets/images/favicon.ico" type="image/x-icon">
+    <!-- Plugins Core Css -->
+    <link href="~/assets/css/app.min.css" rel="stylesheet">
+    <!-- Custom Css -->
+    <link href="~/assets/css/style.css" rel="stylesheet" />
+    <!-- You can choose a theme from css/styles instead of get all themes -->
+    <link href="~/assets/css/styles/all-themes.css" rel="stylesheet" />
+    <title>Invoice</title>
+    <style type="text/css">
+        tr.roww {
+            height: 100px;
+            border: 2px solid;
+            border-left: 0 !important;
+            border-right: 0 !important;
+        }
+
+        .one {
+            border: 2px solid;
+            border-left: 0 !important;
+            width: 150px;
+        }
+
+        .two {
+            border: 2px solid;
+            width: 300px;
+        }
+
+        .invoiceBody {
+            width: 80%;
+            margin: auto;
+        }
+
+        @@media print {
+            .invoiceBody {
+                width: 100%;
+            }
+
+            .printBtn {
+                display: none;
+            }
+        }
+    </style>
+
+</head>
+<body class="light">
+
+    <div class="container-fluid">
+
+        <div class="row clearfix" style="margin-left: ;">
+            <div class="invoiceBody">
+                <div class="card" id="invoiceBody">
+                    <div class="body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="white-box">
+                                    <h3>
+                                        <b>INVOICE</b>
+                                        <span class="pull-right"></span>
+                                    </h3>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="pull-left">
+                                                <address>
+                                                    <p class="font-bold">BILL FROM :</p>
+                                                    <p class="text-muted">
+                                                        Ria Pizza HerranBerg
+                                                        <br> www.riapizza.de<br><br><br>
+                                                        <br>
+                                                    <p class="m-t-30">
+                                                        <b>Invoice Date :</b>
+                                                        <br>  <i class="fa fa-calendar"></i> @DateTime.Now.Date
+                                                    </p>
+
+                                                    </p>
+                                                </address>
+                                            </div><br><br>
+                                            <div class="pull-right text-right">
+                                                <img src="../../assets/images/logo/logo.png"
+                                                     alt="" height="60px" width="230">
+                                                <!--  <address>
+                                                     <p class="addr-font-h3 font-bold">BILL TO :</p>
+                                                     <p class="font-bold addr-font-h4">Jayesh Patel</p>
+                                                     <p class="text-muted m-l-30">
+                                                         207, Prem Sagar Appt.,
+                                                         <br> Near Income Tax Office,
+                                                         <br> Ashram Road,
+                                                         <br> Ahmedabad - 380057
+                                                     </p>
+                                                     <p class="m-t-30">
+                                                         <b>Invoice Date :</b>
+                                                         <i class="fa fa-calendar"></i> 14th July 2017
+                                                     </p>
+                                                     <p>
+                                                         <b>Status :</b>
+                                                         <span class="label label-success">Success</span>
+                                                     </p>
+                                                 </address> -->
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="">
+                                                <table>
+
+                                                    <tr>
+                                                        <th class="">BESTELLNR</th>
+                                                        <th class="">KUNDENDATEN</th>
+                                                        <th class="">BESTELLUBERSICHT</th>
+                                                        <!-- <th class="text-center">Quantity</th>
+                                                        <th class="text-center">Unit Cost</th>
+                                                        <th class="text-right">Total</th> -->
+                                                    </tr>
+
+
+                                                    <tbody>
+                                                        <tr class="roww" style="">
+                                                            <td class="one">QSESRQ</td>
+                                                            <td class="two">
+                                                                <div><h6>2455787515558</h6></div>
+                                                                <div style="margin-top: 20px;">
+                                                                    @Model.OrderBy.Name <br>
+                                                                    @Model.OrderDeliveryAddress.Address<br>
+                                                                    713525 HEMANOBERG
+                                                                </div>
+                                                            </td>
+                                                            <td>
+
+                                                                <div style="float: left;">Gesamtbefrag:</div>
+                                                                <div style="margin-left: 95%; width: 12%;">$3350</div>
+                                                                <div style="">Betrag bereits</div>
+                                                                <div>Kunde zahit passend</div>
+                                                                <div style="padding-top: 20px"><h6>schenellstmoglich lifern</h6></div>
+                                                            </td>
+                                                            <td></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <table>
+                                                    <thead>
+                                                        <tr class="" style="border-bottom: none;">
+                                                            <th width="14%">ANZAHIL</th>
+                                                            <th width="850px">PRODUKT</th>
+                                                            <th>PRIES</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        @{ var count = 1;}
+                                                        @foreach (var item in Model.OrderItems)
+                                                        {
+                                                            <tr style="border-bottom: none;">
+                                                                <td>@count</td>
+                                                                <td width="850px">
+                                                                    {DISH: @item.Dish.DishName}-{EXTRA: @item.Extras}-{QUANTITY: @item.Quantity}-{EXTRAPRICE:$@item.DishPriceWithAddOnes}
+                                                                </td>
+                                                                <td>$@item.DishBasePrice</td>
+                                                            </tr>
+                                                            count++;
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="pull-right m-t-30 text-right">
+                                                <p>Sub - Total amount: $@Model.TotalBill</p>
+                                                <hr>
+                                                <p>Discount : $0 </p>
+                                                <p>Tax (10%) : $@tax </p>
+                                                <hr>
+                                                <h3>
+                                                    <b>Total with tax :</b> $@totalWithTax
+                                                </h3>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            <hr>
+                                            <div class="text-right printBtn">
+                                                <button class="btn-hover btn-border-radius color-1" onclick="window.print();">
+                                                    <i class="fas fa-print"></i>
+                                                    Print
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<!-- Mirrored from www.radixtouch.in/templates/admin/lorax/source/light/pages/ecommerce/invoice.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 09 Jan 2020 16:29:46 GMT -->
+</html>
+    <script src="~/assets/js/app.min.js"></script>
+    <script src="~/assets/js/admin.js"></script>
+<script>
+
+    $(document).ready(function () {
+        window.print();
+    });
+</script>
+

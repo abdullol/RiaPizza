@@ -1,0 +1,372 @@
+﻿@model Dish
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section css{
+
+    <style>
+        .null-marbottom {
+            margin-bottom: 0 !important;
+        }
+    </style>
+}
+<script src="~/Angular/Controllers/DishCtrl.js"></script>
+<div class="container-fluid" ng-controller="DishesCtrl">
+    <div class="block-header">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="breadcrumb breadcrumb-style ">
+                    <li class="breadcrumb-item">
+                        <h4 class="page-title">Dishes</h4>
+                    </li>
+                    <li class="breadcrumb-item bcrumb-1">
+                        <a href="~/Home/Index">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item bcrumb-2">
+                        <a href="#" onClick="return false;">Dishes</a>
+                    </li>
+                    <li class="breadcrumb-item active">Edit</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header">
+                    <h2>
+                        <strong>Edit</strong> Dish
+                    </h2>
+                </div>
+                <div class="modal fade" id="editExtraType" role="dialog"
+                     aria-labelledby="formModal" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="formModal">Edit Extra Type</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="post" action="~/Dishes/EditDishExtraType" id="editDishExtraTypeForm">
+                                    <input type="hidden" name="returnId" value="@Model.DishId" />
+                                    <input type="hidden" name="DishExtraTypeId" id="DishExtraTypeId" value="" />
+                                    <label>Type Name <span class="text-danger">*</span></label>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <input type="text" class="form-control" id="TypeName"
+                                                   placeholder="Enter Type Name" name="TypeName" required>
+                                        </div>
+                                    </div>
+                                    <label>Allow Multiple <span class="text-danger">*</span></label>
+                                    <div class="form-group">
+                                        <select class="form-control" id="ChooseMultiple" name="ChooseMultiple">
+                                            <option value="true">True</option>
+                                            <option value="false">False</option>
+                                        </select>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-info waves-effect" onclick="$('#editDishExtraTypeForm').submit()">Save</button>
+                                <button type="button" class="btn btn-danger waves-effect"
+                                        data-dismiss="modal">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="editExtra" role="dialog"
+                     aria-labelledby="formModal" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="formModal">Edit Extra</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="post" action="~/Dishes/EditDishExtra" id="editDishExtraForm">
+                                    <input type="hidden" name="returnId" value="@Model.DishId" />
+                                    <input type="hidden" name="DishExtraId" id="DishExtraId" value="" />
+                                    <label>Name <span class="text-danger">*</span></label>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <input type="text" class="form-control" id="ExtraName"
+                                                   placeholder="Enter Extra Name" name="ExtraName">
+                                        </div>
+                                    </div>
+                                    <label>Price <span class="text-danger">*</span></label>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <input type="text" class="form-control" id="ExtraPrice"
+                                                   placeholder="Enter Price" name="ExtraPrice">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-info waves-effect" onclick="$('#editDishExtraForm').submit()">Save</button>
+                                <button type="button" class="btn btn-danger waves-effect"
+                                        data-dismiss="modal">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="addDishExtra" role="dialog"
+                     aria-labelledby="formModal" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="formModal">Add Topping</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body" ng-init="pushDishExtraType()">
+                                <h2 class="card-inside-title" style="margin-bottom:15px">
+                                    Dish Toppings
+                                    <button style="float:right" type="button" class="btn btn-primary" ng-click="pushDishExtraType()">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </h2>
+                                <div class="row clearfix" ng-repeat="extraType in addDishExtraTypes" ng-init="extraTypeIndex=$index">
+                                    <div class="col-lg-10 null-marbottom">
+                                        <div class="form-group null-marbottom">
+                                            <div class="form-line">
+                                                <label>Topping Category Head <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" placeholder="Enter Topping Name" ng-model="extraType.typeName">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-1">
+                                        <div class="form-group null-marbottom right">
+                                            <div class="form-line">
+                                                <label>Allow Multiple <span class="text-danger">*</span></label>
+                                                <div class="switch">
+                                                    <label>
+                                                        <input type="checkbox" ng-model="extraType.chooseMultiple">
+                                                        <span class="lever switch-col-light-blue"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-1">
+                                        <div class="form-group null-marbottom right">
+                                            <div class="form-line">
+                                                <label>Actions</label><br />
+                                                <button class="btn btn-danger" ng-click="removeExtraType($index)"><i class="fas fa-trash-alt"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-1"></div>
+                                    <div class="col-lg-10">
+                                        <span style="font-weight:bold">Dish Toppings</span>
+                                        <button ng-click="pushDishExtra($index)" type="button" class="btn bg-orange btn-circle waves-effect waves-circle waves-float right">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                        <div class="row clearfix" ng-if="extraType.dishExtras.length > 0" style="margin-top:30px">
+                                            <div class="col-lg-5"><label>Topping Name <span class="text-danger">*</span></label></div>
+                                            <div class="col-lg-5"><label>Topping Price <span class="text-danger">*</span></label></div>
+                                            <div class="col-lg-2"><label class="right">Actions</label></div>
+                                        </div>
+                                        <div class="row clearfix" ng-repeat="extra in extraType.dishExtras" ng-init="extraIndex=$index">
+                                            <div class="col-lg-5">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" placeholder="Topping" ng-model="extra.extraName"
+                                                           required>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <input type="number" class="form-control" placeholder="$$" ng-model="extra.extraPrice"
+                                                       required>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <button class="btn btn-danger right" ng-click="removeExtra(extraTypeIndex, extraIndex)"><i class="fas fa-trash-alt"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-1"></div>
+
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-info waves-effect" ng-click="saveDishExtraType()">Save</button>
+                                <button type="button" class="btn btn-danger waves-effect"
+                                        data-dismiss="modal">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="addExtra" role="dialog"
+                     aria-labelledby="formModal" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="formModal">Edit Extra</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="post" action="~/Dishes/AddDishExtra" id="addDishExtraForm">
+                                    <input type="hidden" name="returnId" value="@Model.DishId" />
+                                    <input type="hidden" name="DishExtraTypeId" id="AddDishExtraTypeId" value="" />
+                                    <label>Name <span class="text-danger">*</span></label>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <input type="text" class="form-control"
+                                                   placeholder="Enter Extra Name" name="ExtraName">
+                                        </div>
+                                    </div>
+                                    <label>Price <span class="text-danger">*</span></label>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <input type="text" class="form-control"
+                                                   placeholder="Enter Price" name="ExtraPrice">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-info waves-effect" onclick="$('#addDishExtraForm').submit()">Save</button>
+                                <button type="button" class="btn btn-danger waves-effect"
+                                        data-dismiss="modal">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="body" ng-init="">
+                    <form action="~/Dishes/Edit" method="post" style="margin-bottom:15px">
+                        <h2 class="card-inside-title">Dish Details</h2>
+                        <div class="row clearfix">
+                            <input type="hidden" asp-for="DishId" value="@Model.DishId" id="dishId" />
+                            <div class="col-lg-12 col-md-12 null-marbottom">
+                                <label>Dish Category</label>
+                                <div class="form-group">
+                                    <select class="form-control" asp-for="DishCategoryId" asp-items="@( new SelectList(@ViewBag.Categories,"DishCategoryId","CategoryName" ))" required>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-12 null-marbottom">
+                                <div class="form-group">
+                                    <label>Dish Name</label>
+                                    <input type="text" asp-for="DishName" class="form-control" placeholder="Enter Dish Name" required>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-12 null-marbottom">
+                                <div class="form-group">
+                                    <label>Sub Name</label>
+                                    <input type="text" asp-for="SubName" class="form-control" placeholder="Enter Dish Sub Name">
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-md-12 null-marbottom">
+                                <div class="form-group">
+                                    <label>Base Price</label>
+                                    <input type="number" asp-for="BasePrice" class="form-control" placeholder="$$" required>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-md-12 null-marbottom">
+                                <div class="form-group">
+                                    <label>Allergies</label>
+                                    <input type="text" asp-for="Allergies" class="form-control" placeholder="Allergies">
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-md-12">
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <textarea placeholder="Enter Description of Dish" asp-for="Description" class="form-control"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-md-12">
+                                <div class="form-group">
+                                    <input class="btn btn-success" type="submit" name="submit" value="Submit" style="float:right; margin-right:5px" />
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <h2 class="card-inside-title">
+                        Dish Topping Details
+                        <button data-toggle="modal" data-target="#addDishExtra" class="btn btn-primary" style="float:right">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    </h2>
+
+                    <br />
+                    <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                        @foreach (var extraType in Model.DishExtraTypes)
+                        {
+                            <thead>
+                                <tr>
+                                    <th>@extraType.TypeName</th>
+                                    <th>Price</th>
+                                    <th>
+                                        <button onclick="setExtraTypeEditModalValues(@extraType.DishExtraTypeId,'@extraType.TypeName','@extraType.ChooseMultiple')" data-toggle="modal" data-target="#editExtraType" class="btn btn-warning" style="float:right">
+                                            <i class="fa fa-pencil-alt"></i>
+                                        </button>
+                                        <button onclick="$('#AddDishExtraTypeId').val(@extraType.DishExtraTypeId);" data-toggle="modal" data-target="#addExtra" class="btn btn-success" style="float:right">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var extra in extraType.DishExtras)
+                                {
+                                    <tr>
+                                        <td>@extra.ExtraName</td>
+                                        <td>@extra.ExtraPrice $</td>
+                                        <td>
+                                            <button onclick="setExtraEditModalValues(@extra.DishExtraId,'@extra.ExtraName',@extra.ExtraPrice)" data-toggle="modal" data-target="#editExtra" class="btn btn-info" style="float:right"><i class="fa fa-pencil-alt"></i></button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        }
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section scripts{
+
+    <script src="~/assets/js/form.min.js"></script>
+    <script src="~/assets/js/pages/forms/form-wizard.js"></script>
+    <script>
+        function setExtraTypeEditModalValues(id, name, allowMultiple) {
+            $("#DishExtraTypeId").val(id);
+            $("#TypeName").val(name);
+            if (allowMultiple == 'True')
+                $("#ChooseMultiple").val("true");
+            else
+                $("#ChooseMultiple").val("false");
+        }
+        function setExtraEditModalValues(id, name, price) {
+            $("#DishExtraId").val(id);
+            $("#ExtraName").val(name);
+            $("#ExtraPrice").val(price);
+        }
+    </script>
+}

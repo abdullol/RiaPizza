@@ -1,0 +1,35 @@
+// ? Global Styles
+@import "./base";
+
+// ! Global Variables
+@import "./variables";
+
+// * Navigation Styles
+@import "./navigation";
+
+// ? HomePage Styles
+@import "./home";
+
+// ! PizzaPage Styles
+@import "./pizza";
+
+// ? PizzaPage Slider Styles
+@import "./swiper";
+
+// ! StartPage Styles
+@import "./start";
+
+// ? Personal Data Styles
+@import "./personal";
+
+// ? Change Password page styles
+@import "./password";
+
+// ! Services page styles
+@import "./services";
+
+// * Ready to eat page styles
+@import "./eat";
+
+// ? Order page styles
+@import "./thankyou";

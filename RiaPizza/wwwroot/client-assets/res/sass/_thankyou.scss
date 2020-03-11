@@ -1,0 +1,151 @@
+// ! Map
+.map {
+    margin-top: -15px;
+    width: 100%;
+    height: 400px;
+}
+// ! Map ends
+
+
+// ? Food
+.order {
+    .order-container {
+      max-width: 680px !important;
+      margin-bottom: -20px !important;
+    }
+    .order-logo {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      .logo-order-container {
+        height: 100px;
+        width: 100px;
+        top: -90px;
+        position: absolute;
+        z-index: 2;
+        left: 47%;
+        .logo-inner-order {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border-radius: 50%;
+          border: 5px solid #f37f36;
+          background: #fff;
+          overflow: hidden;
+          width: 100%;
+          height: 100%;
+          left: -17px;
+          position: relative;
+          p {
+              position: relative;
+              top: 16%;
+              font-size: 20px;
+              color: #000;
+              font-weight: bold;
+          }
+        }
+      }
+    }
+    .res-logo {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      .logo-container-res{
+        height: 100px;
+        width: 100px;
+        top: -50px;
+        position: absolute;
+        z-index: 2;
+        left: 47%;
+        .logo-inner-res {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border-radius: 50%;
+          border: 1px solid #d7d7d7;
+          background: #fff;
+          overflow: hidden;
+          width: 100%;
+          height: 100%;
+          left: -17px;
+          position: relative;
+          p {
+              position: relative;
+              top: 16%;
+              font-size: 20px;
+              color: #000;
+              font-weight: bold;
+          }
+        }
+      }
+    }
+    .heart-color {
+      color: #f37f36;
+    }
+    .heading {
+      font-size: 22px;
+      font-weight: 600;
+    }
+    ul {
+      position: relative;
+      right: -60px !important;
+      top: 10px !important;
+      #info {
+        box-shadow: none !important;
+        outline: none !important;
+        margin-right: -4px;
+        width: 48px;
+        height: 46px;
+        font-size: 100% !important;
+        justify-content: center;
+        &:focus {
+          box-shadow: none !important;
+          outline: none !important;
+        }
+      }
+      #heart {
+        box-shadow: none !important;
+        outline: none !important;
+        width: 48px !important;
+        height: 46px !important;
+        font-size: 100% !important;
+        justify-content: center;
+        &:focus {
+          box-shadow: none !important;
+          outline: none !important;
+        }
+      }
+    }
+    .reviews {
+      font-size: 13px;
+      font-weight: 400;
+      margin-bottom: 0px !important;
+    }
+    .ria-para {
+      font-size: 13px !important;
+      line-height: 1.4rem !important;
+      font-weight: 400;
+      margin-left: -18px;
+      color: rgb(102, 102, 102);
+    }
+    .heading {
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 28px;
+      color: #0a3847;
+      text-overflow: ellipsis;
+      margin-bottom: 0px !important;
+    }
+    .order-row {
+        background: #f8f5f2;
+        padding-top: 4rem;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+  }
+
+// ? Order ends

@@ -1,0 +1,74 @@
+﻿@model IEnumerable<RiaPizza.Models.OrderItem>
+
+@{
+    ViewData["Title"] = "Thank You to order";
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+}
+@section css{
+    <style>
+        .dish-name {
+            font-size: 20px;
+        }
+    </style>
+}
+<!-- Order Description -->
+<section class="order mb-3">
+    <div class="container order-container">
+        <div class="row mt-4">
+            <div class="col-12 text-center">
+                <h1 style="font-size: 20px;" class="mb-4">Thank you for your order!</h1>
+                <p style="font-size: 15px; font-weight: 500;">Your order with us is baking and will be delivered soon</p>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Order Description ends -->
+<!-- Restaurant Description -->
+<section class="order my-0">
+    <div class="container order-container">
+        <div class="res-logo">
+            <div class="row logo-container-res mx-auto">
+                <div class="col-12 text-center bd-dark logo-inner-res">
+                    <img src="~/client-assets/res/img/pizza.png" alt="" class="img-fluid" width="100" />
+                </div>
+            </div>
+        </div>
+        <div class="order-row">
+            <div class="align-items-center mb-3">
+                <h3 class="heading">Ria Pizza</h3>
+            </div>
+            @foreach (var item in Model)
+            {
+                <div class="row mt-4">
+                    <div class="col-1">
+                        @item.Quantity
+                    </div>
+                    <div class="col-md-11 font-weight-bold">
+                        <h3 class="dish-name">@item.Dish.DishName</h3>
+                        <p class="ria-para pt-3">@item.Extras</p>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="row">
+            <div class="col-12 mb-1">
+                <h1 style="font-size: 16px;" class="mt-4 mb-3 text-center">Forgot something?</h1>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <a href="~/Dishes/Explore?postalCode=@ViewBag.PostalCode" style="color: #f36f37; font-size: 15px;" class="text-center">Create new order</a>
+                        <a href="~/Home/Index" style="color: #f36f37; font-size: 15px; float:right">Go to Home</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 mb-4">
+                <div style="width: 100%; height: 1px; background: #d7d7d7;"></div>
+            </div>
+            <div class="col-12">
+                <p style="font-size: 14px; color: #144;">Your order reference: <span style="font-weight: 600; text-transform: uppercase;">@ViewBag.OrderCode</span></p>
+                <p style="color: #f36f37; font-size: 15px; margin-top: -40px;">Customer service</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+<!-- Restaurant Description ends -->

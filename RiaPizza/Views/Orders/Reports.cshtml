@@ -1,0 +1,267 @@
+﻿@model IEnumerable<RiaPizza.Models.Order>
+@{
+    ViewBag.Title = "";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@section css{
+    <link href="../../assets/css/form.min.css" rel="stylesheet">
+}
+<div class="container-fluid">
+    <div class="block-header">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="breadcrumb breadcrumb-style ">
+                    <li class="breadcrumb-item">
+                        <h4 class="page-title">Orders</h4>
+                    </li>
+                    <li class="breadcrumb-item bcrumb-1">
+                        <a href="~/Home/Index">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item bcrumb-2">
+                        <a href="#" onClick="return false;">Search</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Basic Examples -->
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+
+                <div class="modal fade bd-example-modal-lg orderDetails-modal" tabindex="-1" role="dialog"
+                     aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="myLargeModalLabel">Order Detail</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <h4 class="modal-title">Order By</h4>
+                                <br />
+                                <div class="row clearfix" id="OrderByDetails"></div>
+                                <hr />
+
+                                <h4 class="modal-title">Order Delivery Address</h4>
+                                <br />
+                                <div class="row clearfix" id="OrderAddressDetails"></div>
+                                <hr />
+
+                                <h4 class="modal-title">Orders Items</h4>
+                                <br />
+                                <div class="row clearfix">
+                                    <div class="col-12">
+                                        <div class="row">
+                                            <div class="col-md-3"><h6>Item Name</h6></div>
+                                            <div class="col-md-3"><h6>Extras</h6></div>
+                                            <div class="col-md-3"><h6>Quantity</h6></div>
+                                            <div class="col-md-3"><h6>Total Price</h6></div>
+                                        </div>
+                                        <div class="row" id="OrderItemsDetails"></div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="header">
+                    <h2>
+                        <strong>Search Orders</strong>
+                        <button style="float:right; margin-left:10px" class="btn btn-primary btn-border-radius waves-effect m-b-15" type="button"
+                                onclick="$('#statusSearch').hide(200); $('#dateRange').show(200);">
+                            Search By Date Range
+                        </button>
+                        <button style="float:right" class="btn btn-success btn-border-radius waves-effect m-b-15" type="button"
+                                onclick="$('#dateRange').hide(200); $('#statusSearch').show(200);">
+                            Search By Status
+                        </button>
+                    </h2>
+                </div>
+                <div class="body">
+                    <div class="collapse" id="dateRange" style="display:none">
+                        <form method="post" action="~/Orders/ReportByDate">
+                            <div class="row clearfix">
+                                <div class="col-lg-6 col-md-12 col-sm-12">
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <input type="text" name="DF" class="datepicker form-control" placeholder="Please choose date from">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-12 col-sm-12">
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <input type="text" name="DT" class="datepicker form-control" placeholder="Please choose date to">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <div class="select-wrapper">
+                                                <select class="form-control statusList" name="status">
+                                                    <option value="">All</option>
+                                                    <option value="Pending">Pending</option>
+                                                    <option value="Baked">Baked</option>
+                                                    <option value="Enroute">Enroute</option>
+                                                    <option value="Delivered">Delivered</option>
+                                                    <option value="Cancelled">Cancelled</option>
+                                                    <option value="Returned">Returned</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12" style="text-align:right">
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <button style="text-align:center" class="btn btn-primary">Search</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="collapse" id="statusSearch" style="display:none">
+                        <form method="post" action="~/Orders/ReportByStatus">
+                            <div class="row clearfix">
+                                <div class="col-lg-10 col-md-12 col-sm-12">
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <div class="select-wrapper">
+                                                <select id="statusList" class="form-control statusList" name="status">
+                                                    <option value="Pending">Pending</option>
+                                                    <option value="Baked">Baked</option>
+                                                    <option value="Enroute">Enroute</option>
+                                                    <option value="Delivered">Delivered</option>
+                                                    <option value="Cancelled">Cancelled</option>
+                                                    <option value="Returned">Returned</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-12 col-sm-12" style="text-align:center">
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <button style="text-align:center" class="btn btn-primary">Search</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table id="tableExport" class="display table table-hover table-checkable order-column m-t-20 width-per-100">
+                            <thead>
+                                <tr>
+                                    <th>Order Code</th>
+                                    <th>Order By</th>
+                                    <th>Order Status</th>
+                                    <th>Payment Method</th>
+                                    <th id="heading-date">Date</th>
+                                    <th>Bill</th>
+                                </tr>
+                            </thead>
+                            <tbody class="tableBody">
+                                @foreach (var order in Model)
+                                {
+                                    <tr style="cursor:pointer" onclick="showOrderDetails(@order.OrderId)">
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.OrderCode)
+                                        </td>
+                                        <td>@order.OrderBy.Name</td>
+                                        <td class="status">
+                                            @if (order.OrderStatus == "Pending")
+                                            {<span class="label bg-yellow shadow-style">Pending</span>}
+                                            else if (order.OrderStatus == "Confirmed")
+                                            {<span class="label bg-orange shadow-style">Confirmed</span>}
+                                            else if (order.OrderStatus == "Processing")
+                                            {<span class="label bg-teal shadow-style">Processing</span>}
+                                            else if (order.OrderStatus == "Shipped")
+                                            {<span class="label bg-cyan shadow-style">Shipped</span>}
+                                            else if (order.OrderStatus == "Delivered")
+                                            {<span class="label bg-blue shadow-style">Delivered</span>}
+                                            else if (order.OrderStatus == "Cancelled")
+                                            {<span class="label bg-red shadow-style">Cancelled</span>}
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.PaymentMethod) -
+                                            @if (order.IsPaymentConfirmed == true)
+                                            {<span class="label bg-green shadow-style">Confirmed</span>}
+                                            @if (order.IsPaymentConfirmed == false)
+                                            {<span class="label bg-red shadow-style">Pending</span>}
+                                        </td>
+                                        <td>
+                                            @order.OrderDateTime.ToShortDateString() @order.OrderDateTime.ToShortTimeString()
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.TotalBill) €
+                                        </td>
+                                    </tr>
+                                }
+                                <tr role='row'><th></th><th></th><th></th><th></th><th class='text-bold'>Total Payment</th><th class='text-bold'>@Model.Select(s => s.TotalBill).Sum() €</th></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/assets/js/table.min.js"></script>
+
+    <!-- Custom Js -->
+    <script src="~/assets/js/admin.js"></script>
+    <script src="~/assets/js/bundles/export-tables/dataTables.buttons.min.js"></script>
+    <script src="~/assets/js/bundles/export-tables/buttons.flash.min.js"></script>
+    <script src="~/assets/js/bundles/export-tables/jszip.min.js"></script>
+    <script src="~/assets/js/bundles/export-tables/pdfmake.min.js"></script>
+    <script src="~/assets/js/bundles/export-tables/vfs_fonts.js"></script>
+    <script src="~/assets/js/bundles/export-tables/buttons.html5.min.js"></script>
+    <script src="~/assets/js/bundles/export-tables/buttons.print.min.js"></script>
+    <script src="~/assets/js/pages/tables/jquery-datatable.js"></script>
+
+    <script src="~/assets/js/form.min.js"></script>
+    <script src="~/assets/js/pages/forms/basic-form-elements.js"></script>
+    <script>
+        $(window).on('load', function () {
+            $('#heading-date').click();
+        });
+
+        function showOrderDetails(Id) {
+            $('#OrderByDetails').empty();
+            $('#OrderAddressDetails').empty();
+            $('#OrderItemsDetails').empty();
+            $.ajax({
+                type: "POST",
+                url: '/Orders/GetOrderDetails',
+                data: { id: Id },
+                success: function (order) {
+                    let orderby = order.orderBy;
+                    let address = order.address;
+                    let orderitems = order.orderItems;
+                    $('#OrderByDetails').append("<div class='col-md-6'><b>Order By :</b>" + orderby.name + "</div> <div class='col-md-6'><b>Email :</b>" + orderby.email + "</div> <div class='col-md-6'><b>Contact :</b>" + orderby.contact + "</div> <div class='col-md-6'><b>Company :</b>" + orderby.company + "</div>");
+                    $('#OrderAddressDetails').append("<div class='col-md-6'><b>City :</b> " + address.city + "</div> <div class='col-md-6'><b>Address :</b> " + address.address + "</div> <div class='col-md-6'><b>Floor :</b> " + address.floor + "</div> <div class='col-md-6'><b>Postal Code :</b> " + address.postalCode + "</div>");
+                    for (var i = 0; i < orderitems.length; i++) {
+                        $('#OrderItemsDetails').append("<div class='col-md-3'>" + orderitems[i].dish.dishName + "</div> <div class='col-md-3'>" + orderitems[i].extras + "</div> <div class='col-md-3'>" + orderitems[i].quantity + "</div> <div class='col-md-3'>" + orderitems[i].totalPrice + "</div>");
+                    }
+                }
+            });
+
+            $('.orderDetails-modal').modal();
+        }
+    </script>
+}

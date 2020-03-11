@@ -1,0 +1,578 @@
+﻿@using Microsoft.AspNetCore.Identity
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- BootStrap CSS -->
+    <link rel="stylesheet" href="~/client-assets/res/bootstrap.css">
+
+    <!-- BootStrap Icons -->
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+          integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:200,400,500,600,700,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="~/client-assets/res/sass/style.css" type="text/css">
+
+
+    <!--Angular Scripts-->
+    <script src="~/lib/angular.js/angular.min.js"></script>
+    <!--Angular Scripts-->
+
+    <style>
+        .pointer {
+            cursor: pointer;
+        }
+        .goog-te-banner-frame skiptranslate { display: none; }
+     	body{ top: 0 !important;}
+		.goog-te-banner-frame{display: none !important;}
+    </style>
+    <script>
+
+        var App = angular.module('RiaPizza', ['paypal-button']);
+        
+        paypal.Button.driver('angular', window.angular);
+        App.controller("Auth", function ($scope, $http) {
+            function JsonCallParam(Controller, Action, Parameters) {
+                $.ajax({
+                    type: "POST",
+                    traditional: true,
+                    async: false,
+                    cache: false,
+                    url: '/' + Controller + '/' + Action,
+                    context: document.body,
+                    data: Parameters,
+                    success: function (json) {
+                        list = null;
+                        list = json;
+                    }
+                    ,
+                    error: function (xhr) {
+                        list = null;
+                    }
+                });
+            }
+            function JsonCall(Controller, Action) {
+                $.ajax({
+                    type: "POST",
+                    traditional: true,
+                    async: false,
+                    cache: false,
+                    url: '/' + Controller + '/' + Action,
+                    context: document.body,
+                    success: function (json) {
+                        list = null; list = json;
+                    },
+                    error: function (xhr) {
+                        list = null;
+                        //debugger;
+                    }
+                });
+            }
+
+            $scope.registerUser = { fullName: "", firstName: "", lastName: "", address: "", city: "", email: "", userName: "", password: "", phoneNumber: "" };
+            $scope.loginUser = { username: "", password: "" };
+
+            $scope.usernameExists = false;
+            $scope.isLoggedIn = false;
+            $scope.user = {};
+            $scope.userOrders = [];
+
+            $scope.register = function () {
+                JsonCallParam("Auth", "RegisterUser", { "registerDto": JSON.stringify($scope.registerUser) });
+                if (list == "Success") {
+                    $('#signModal').modal('hide');
+                    $('#loginModal').modal();
+                }
+                else if (list == "UsernameExists") {
+                    $scope.usernameExists = true;
+                }
+            }
+            $scope.login = function () {
+                JsonCallParam("Auth", "LoginUser", { "loginDto": JSON.stringify($scope.loginUser) });
+                if (list == "Success") {
+                    $('#loginModal').modal('hide');
+                    $scope.loadUser();
+                }
+                else
+                    $scope.loginUnsuccessful = true;
+            }
+            $scope.logout = function () {
+                JsonCall("Auth", "LogoutUser");
+                $scope.isLoggedIn = false;
+                $scope.user = {};
+            }
+            $scope.loadUser = function () {
+                JsonCall("Auth", "GetLoggedInUser");
+                if (list != false) {
+                    $scope.isLoggedIn = true;
+                    $scope.user = list;
+                    var viewDishesScope = angular.element(document.getElementById("ViewDishes")).scope();
+                    if (viewDishesScope !== undefined && viewDishesScope.$id) {
+                        viewDishesScope.loadUserDataInCheckOut();
+                    }
+                }
+                else {
+                    $scope.isLoggedIn = false;
+                    $scope.user = {};
+                }
+            }
+            $scope.routeToPersonalData = function () {
+                if ($scope.isLoggedIn) {
+                    window.load
+                    JsonCall("MyAccount", "PersonalData");
+                }
+            }
+
+            $scope.loadOrders = function () {
+                if ($scope.isLoggedIn) {
+                    JsonCallParam("Orders", "GetUserOrders", { id: $scope.user.id });
+                    $scope.userOrders = list;
+                }
+                else {
+                    var orders = localStorage.getItem('orders');
+                    if (orders) {
+                        $scope.userOrders = JSON.parse(localStorage.orders);
+                    } else $scope.userOrders = [];
+
+                }
+            }
+        });
+    </script>
+    @RenderSection("css", required: false)
+    <title>Ria Pizza</title>
+</head>
+
+<body ng-app="RiaPizza">
+    <!-- Navbar -->
+    <nav class="navbar bg-transparent px-5 py-3 align-items-center" ng-controller="Auth" ng-init="loadUser()">
+        <a href="/">
+            <img src="~/assets/images/logo.png" alt="logo" class="img-fluid" style="max-height: 2.5rem;" />
+        </a>
+        <!-- Language dropdown -->
+        <div class="nav-wrapper d-md-block d-none ml-auto mr-4 mt-2">
+            <div class="sl-nav bg-white p-1 rounded-circle">
+                <ul>
+                    <li>
+                        <i class="sl-flag flag-usa" aria-hidden="true"></i>
+                        <div class="triangle"></div>
+                        <ul>
+                            <li>
+                                <i class="sl-flag flag-usa">
+                                    <div id="germany"></div>
+                                </i>
+                                <a href="#googtrans(de|en)" data-lang="en" class="lang-es lang-select">
+                                    <span class="active">English</span>
+                                </a>
+                            </li>
+                            <li>
+                                <i class="sl-flag flag-de">
+                                    <div id="germany"></div>
+                                </i>
+                                <a href="#googtrans(en|de)" data-lang="de" class="lang-es lang-select">
+                                    <span>Deutsch</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- Language dropdown ends -->
+        <!-- Navbar Modal Toggler -->
+        <button type="button" href="#myModal" role="button" class="nav-btn" data-toggle="modal">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </button>
+        <!-- Navbar Modal Toggler ends -->
+        <!-- Navbar Modal -->
+        <div id="myModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered mx-auto my-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="container">
+                            <div class="row mt-4">
+                                <div class="col-3">
+                                    <img src="~/client-assets/res/img/profile.png" alt="profile" class="w-75">
+                                </div>
+                                <div class="ml-n5 col-9">
+                                    <h3 class="modal-title text-white font-weight-bold" id="myModalLabel">
+                                        <span ng-if="isLoggedIn">{{user.firstName}} {{user.lastName}}</span>
+                                        <span ng-if="!isLoggedIn">My Account</span>
+                                    </h3>
+                                    <a href="~/MyAccount/PersonalData" class="text-white pointer">View personal data</a>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row mb-5" ng-if="!isLoggedIn">
+                            <!-- Login Modal Toggler -->
+                            <div class="col-6">
+                                <button type="button" href="#loginModal" class="btn btn-block btn-outline login-btn"
+                                        role="button" data-toggle="modal">
+                                    Login
+                                </button>
+                            </div>
+                            <!-- Login Modal Toggler ends -->
+                            <!-- Registration Modal Toggler -->
+                            <div class="col-6">
+                                <button type="button" href="#signModal" class="btn btn-block btn-primary create-btn"
+                                        role="button" data-toggle="modal">
+                                    Create
+                                    account
+                                </button>
+                            </div>
+                            <!-- Registration Modal Toggler -->
+                        </div>
+                        <div class="row pt-4 pl-4 pr-4">
+                            <div class="col-12 border-bottom bg-white py-3 px-4">
+                                <a type="button" href="#orderModal" ng-click="loadOrders()" class="link" data-toggle="modal" role="button">
+                                    <i class="fas fa-shopping-bag mr-3"></i> Orders
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row p-4">
+                            <div class="col-12 bg-white py-3 px-4 border-bottom">
+                                <a href="#" class="link">
+                                    <i class="far fa-star mr-3"></i> Loyalty shop
+                                </a>
+                            </div>
+                            <div class="col-12 bg-white py-3 px-4 border-bottom">
+                                <a href="#" class="link">
+                                    <i class="fas fa-percentage mr-3"></i> StampCard
+                                </a>
+                            </div>
+                            <div class="col-12 bg-white py-3 px-4 border-bottom">
+                                <a href="#" class="link">
+                                    <i class="fas fa-info-circle mr-3"></i> Need help?
+                                </a>
+                            </div>
+                            <div class="col-12 bg-white py-3 px-4 border-bottom">
+                                <a href="#" class="link">
+                                    <i class="far fa-building mr-3"></i> Takeway Pay
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row pt-4 pl-4 pr-4" ng-if="isLoggedIn">
+                            <div class="col-12 border-bottom bg-white py-3 px-4">
+                                <a ng-click="logout()" role="button" class="pointer">
+                                    <i class="fas fa-home mr-3"></i> Logout
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- Navbar Modal ends -->
+        <!-- Login Modal -->
+        <div id="loginModal" class="modal modal-child" data-backdrop-limit="1" tabindex="-1" role="dialog"
+             aria-labelledby="myModalLabel" aria-hidden="true" data-modal-parent="#myModal">
+            <div class="modal-dialog modal-dialog-centered mx-auto my-modal">
+                <div class="modal-content">
+                    <div class="modal-header border-0">
+                        <div class="row">
+                            <div class="col-12">
+                                <h4 class="modal-title">Sign in</h4>
+                            </div>
+                        </div>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <form name="loginForm" ng-submit="login()">
+                                    <!--<a href="#" class="btn btn-block login-btn p-3 mb-5">Login with FaceBook</a>-->
+                                    <!--<p class="or mb-4">or</p>-->
+                                    <div class="form-group mb-5">
+                                        <label for="email">Email Address</label>
+                                        <input ng-model="loginUser.username" type="text" class="form-control" required>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="password">Password</label>
+                                        <input ng-model="loginUser.password" type="password" class="form-control mb-3" required>
+                                        <a href="#" class="pass-link text-right mt-3">Forgot password?</a>
+                                    </div>
+                                    <p ng-if="loginUnsuccessful" class="text-danger">Email and Password didn't match</p>
+                                    <button type="submit" class="btn btn-block login-btn2 p-3 mb-3">Login</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <a role="button" onclick="toggleRegister()" class="pass-link text-center mb-2 pointer">Create Account</a>
+
+                </div>
+            </div>
+        </div>
+        <!-- Login Modal ends -->
+        <!-- Signup Modal -->
+        <div id="signModal" class="modal modal-child" data-backdrop-limit="1" tabindex="-1" role="dialog"
+             aria-labelledby="myModalLabel" aria-hidden="true" data-modal-parent="#myModal">
+            <div class="modal-dialog modal-dialog-centered mx-auto my-modal">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header border-0">
+                        <div class="row">
+                            <div class="col-12">
+                                <h4 class="modal-title">Register</h4>
+                            </div>
+                        </div>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <form name="registerForm" ng-submit="register()" novalidate>
+                                    <!--<a href="#" class="btn btn-block login-btn p-3 mb-5">Login with FaceBook</a>
+                                    <p class="or mb-4">or</p>-->
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group mb-5">
+                                                <label for="name">First Name</label>
+                                                <input ng-model="registerUser.firstName" name="firstName" type="text" class="form-control mb-3" required>
+                                                <p class="text-danger mb-0 pb-0" ng-show="registerForm.firstName.$touched && registerForm.firstName.$error.required">* Firstname is required.</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group mb-5">
+                                                <label for="name">Last Name</label>
+                                                <input ng-model="registerUser.lastName" name="lastName" type="text" class="form-control mb-3" required>
+                                                <p class="text-danger mb-0 pb-0" ng-show="registerForm.lastName.$touched && registerForm.lastName.$error.required">* Lastname is required.</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-group mb-5">
+                                                <label for="email">Email Address</label>
+                                                <input ng-model="registerUser.email" name="email" type="email" class="form-control mb-3" required>
+                                                <p class="text-danger mb-0 pb-1" ng-show="registerForm.email.$touched && registerForm.email.$error.required">* Email is required.</p>
+                                                <p class="text-danger mb-0 pb-0" ng-show="registerForm.email.$touched && registerForm.email.$invalid">* Email is invalid</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group mb-5">
+                                                <label for="password">Password</label>
+                                                <input ng-model="registerUser.password" name="password" type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" class="form-control mb-3" required>
+                                                <p class="text-danger mb-0 pb-1" ng-show="registerForm.password.$touched && registerForm.password.$error.required">* Password is required.</p>
+                                                <p class="text-danger mb-0 pb-0" ng-show="registerForm.password.$touched && registerForm.password.$invalid">* Password must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters.</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group mb-3">
+                                                <label for="password">Re-enter Password</label>
+                                                <input ng-model="registerUser.confirmPassword" dirname="confirmPassword" type="password" class="form-control mb-3" name="confirmPassword" required>
+                                                <p class="text-danger mb-0 pb-1" ng-show="registerForm.confirmPassword.$touched && registerForm.confirmPassword.$error.required">* Confirmation is required.</p>
+                                                <p class="text-danger mb-0 pb-0" ng-if="registerForm.confirmPassword.$touched && registerUser.password !== registerUser.confirmPassword">* Password and Confirm Password didn't match</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-group" ng-if="usernameExists">
+                                                <p class="text-danger">Email already registered, please login with registerd email or try other email!</p>
+                                            </div>
+                                            <button ng-disabled="registerForm.$invalid || registerUser.password !== registerUser.confirmPassword" type="submit" href="#" class="btn btn-block login-btn2 p-3">Register</button>
+                                        </div>
+                                    </div>
+                                    <p class="caption mb-2">
+                                        By clicking on send you accept the <a href="#">terms of use</a>
+                                        and the <a href="#">terms of use of the Loyalty Shop</a>
+                                    </p>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <a role="button" onclick="toggleLogin()" class="pass-link text-center mb-3 pointer">I have an account</a>
+                </div>
+            </div>
+        </div>
+        <!-- Signup Modal ends -->
+        <!-- order Modal -->
+        <div id="orderModal" class="modal modal-child" data-backdrop-limit="1" tabindex="-1" role="dialog"
+             aria-labelledby="myModalLabel" aria-hidden="true" data-modal-parent="#myModal">
+            <div class="modal-dialog modal-dialog-centered mx-auto my-modal">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header border-0">
+                        <div class="row">
+                            <div class="col-12">
+                                <h4 class="modal-title text-center">Orders</h4>
+                            </div>
+                        </div>
+                        <button type="button" class="close" data-dismiss="modal">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body align-items-center" style="overflow:scroll">
+                        <div class="row mt-5" ng-if="userOrders.length < 1">
+                            <div class="col-12 text-center">
+                                <div class="userpanel-favorites js-userpanel-favorites">
+                                </div>
+                                <i class="fas fa-shopping-bag fa-3x my-4"></i>
+                                <h4 class="my-4">No orders yet</h4>
+                                <p class="my-4" style="color: #7d7d7d;">You have no order history available</p>
+                                <button type="submit" href="#" class="btn d-block login-btn2 mx-auto">Send</button>
+                            </div>
+                        </div>
+                        <div ng-if="userOrders.length > 0">
+                            <div class="row text-center font-weight-bold mb-4 mt-1">
+                                <div class="col-2">
+                                    Code
+                                </div>
+                                <div class="col-2">
+                                    Pay Info
+                                </div>
+                                <div class="col-2">
+                                    Status
+                                </div>
+                                <div class="col-6" style="text-align:left !important">
+                                    <div class="row">
+                                        <div class="col-2">
+                                            Qty
+                                        </div>
+                                        <div class="col-10">
+                                            Dishes
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row text-center border-bottom pt-3" style="font-size:15px" ng-repeat="order in userOrders">
+                                <div class="col-2">
+                                    {{order.orderCode}}
+                                </div>
+                                <div class="col-2">
+                                    {{order.totalBill}}
+                                    <span ng-if="order.isPaymentConfirmed" class="badge badge-success">Paid</span>
+                                    <span ng-if="!order.isPaymentConfirmed" class="badge badge-danger">Pending</span>
+                                </div>
+                                <div class="col-2">
+                                    {{order.orderStatus}}
+                                </div>
+                                <div class="col-6 text-md-left">
+                                    <div class="row" ng-repeat="item in order.orderItems">
+                                        <div class="col-2">
+                                            {{item.quantity}}x
+                                        </div>
+                                        <div class="col-10">
+                                            <h4 style="font-size:18px">{{item.dish.dishName}}</h4>
+                                            <p class="pl-0">{{item.extras}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- order Modal ends -->
+    </nav>
+    <!-- Navbar ends -->
+    <button onclick="topFunction()" id="myBtn" title="Go to top" style="z-index: 99999;">
+        <i class="fas fa-angle-up fa-2x"></i>
+    </button>
+
+    @RenderBody()
+
+    <!-- Footer -->
+    <footer class="footer pt-2 pl-4 pr-4" style="z-index: 667; position: absolute; left: 0; right: 0;">
+        <div class="container-fluid pt-4">
+            <div class="row justify-content-center align-items-center">
+                <ul style="list-style: none; text-align: center;">
+                    <li class="d-md-inline-block d-block mb-4" style="margin-right: 20px; font-size: 13px; font-weight: 400; color: #fff;">
+                        <a href="#" style="color: #fff;">Recommend a restaurant</a>
+                    </li>
+                    <li class="d-md-inline-block d-block mb-4" style="margin-right: 20px; font-size: 13px; font-weight: 400; color: #fff;">
+                        <a href="#" style="color: #fff;">Signup a restaurant</a>
+                    </li>
+                    <li class="d-md-inline-block d-block mb-4" style="margin-right: 20px; font-size: 13px; font-weight: 400; color: #fff;">
+                        <a href="#" style="color: #fff;">Jobs</a>
+                    </li>
+                    <li class="d-md-inline-block d-block mb-4" style="margin-right: 20px; font-size: 13px; font-weight: 400; color: #fff;">
+                        <a href="#" style="color: #fff;">Terms of use</a>
+                    </li>
+                    <li class="d-md-inline-block d-block mb-4" style="margin-right: 20px; font-size: 13px; font-weight: 400; color: #fff;">
+                        <a href="#" style="color: #fff;">Privacy statement</a>
+                    </li>
+                    <li class="d-md-inline-block d-block mb-4" style="margin-right: 20px; font-size: 13px; font-weight: 400; color: #fff;">
+                        <a href="#" style="color: #fff;">Colophon</a>
+                    </li>
+                    <li class="d-md-inline-block d-block mb-4" style="margin-right: 20px; font-size: 13px; font-weight: 400; color: #fff;">
+                        <a href="#" style="color: #fff;">Cookie statement</a>
+                    </li>
+                    <li class="d-md-inline-block d-block" style="margin-right: 20px; font-size: 13px; font-weight: 400; color: #fff;">
+                        <a href="#" style="color: #fff;">Bug Bounty</a>
+                    </li>
+                </ul>
+            </div>
+            <p style="font-size: 13px; font-weight: 400; color: #fff;" class="text-center mt-1">&copy; 2020 RiaPizza</p>
+        </div>
+    </footer>
+    <!-- Footer Ends -->
+    <!-- jQuery -->
+    <script src="~/client-assets/res/jquery-3.4.1.js" type="text/javascript"></script>
+    <!-- Bootstrap JS -->
+    <script src="~/client-assets/res/bootstrap.bundle.js" type="text/javascript"></script>
+    <!-- FontAwesome Icons -->
+    <script src="https://kit.fontawesome.com/2def6b71ee.js" crossorigin="anonymous" type="text/javascript"></script>
+    <!-- Custom JS -->
+    <script src="~/client-assets/res/js/index.js" type="text/javascript"></script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+
+    <script>
+        function toggleRegister() {
+            $('#loginModal').modal('hide');
+            $('#signModal').modal();
+        }
+        function toggleLogin() {
+            $('#signModal').modal('hide');
+            $('#loginModal').modal();
+        }
+        //google translator Code (paste in script tag section)
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({ pageLanguage: 'en', layout: google.translate.TranslateElement.FloatPosition.TOP_LEFT }, 'google_translate_element');
+        }
+
+        function triggerHtmlEvent(element, eventName) {
+            var event;
+            if (document.createEvent) {
+                event = document.createEvent('HTMLEvents');
+                event.initEvent(eventName, true, true);
+                element.dispatchEvent(event);
+            } else {
+                event = document.createEventObject();
+                event.eventType = eventName;
+                element.fireEvent('on' + event.eventType, event);
+            }
+        }
+
+        jQuery('.lang-select').click(function () {
+            var theLang = jQuery(this).attr('data-lang');
+            jQuery('.goog-te-combo').val(theLang);
+
+            //alert(jQuery(this).attr('href'));
+            window.location = jQuery(this).attr('href');
+            location.reload();
+
+        });
+
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+
+</html>

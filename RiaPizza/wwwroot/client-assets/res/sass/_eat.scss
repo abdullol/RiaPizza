@@ -1,0 +1,197 @@
+// * sidebar
+.sidenav-eat {
+  height: 100%;
+  width: 360px;
+  position: fixed;
+  z-index: 666;
+  background: #fff;
+  right: 0;
+  box-shadow: 0px 10px 5px 1px rgba($color: #666, $alpha: 0.4);
+  padding-top: 20px;
+}
+// * sidebar ends
+
+// ! Ready to eat section
+.ready {
+    margin-right: 360px !important;
+    .eat-h {
+        font-size: 38px;
+        font-weight: 600;
+        line-height: 58px;
+        color: rgb(10, 56, 71);
+        margin: 5px 0 0 5px;
+    }
+    .eat-sub-h {
+        font-size: 23px;
+        font-weight: 600;
+        line-height: 28px;
+        color: rgb(102, 102, 102);
+        padding-left: 6px;
+        margin-top: -15px;
+    }
+    .eat-para {
+        font-size: 23px;
+        line-height: 35px;
+        color: rgb(102, 102, 102);
+        padding-left: 6px;
+        margin-top: -30px;
+        margin-bottom: 0;
+    }
+    .eat-para2 {
+        font-size: 23px;
+        line-height: 35px;
+        color: rgb(102, 102, 102);
+        padding-left: 6px;
+        margin-top: 40px;
+        margin-bottom: 0;
+    }
+    .divider {
+        height: 1px;
+        width: 98%;
+        margin: auto;
+        background: #d7d7d7;
+    }
+    .address-option {
+        font-size: 13px !important;
+        color: #000;
+    }
+    .label {
+        font-size: 14px;
+        color: rgb(102, 102, 102);
+        font-weight: 500;
+    }
+    .label2 {
+        font-size: 13px;
+        color: rgb(102, 102, 102);
+        font-weight: 500;
+    }
+    .remarks {
+        width: 99%;
+        margin-left: 1%;
+        height: 45%;
+        &:hover {
+            box-shadow: 0 0 5px #1574f5;
+            cursor: pointer;
+        }
+        .remarks-check {
+            font-size: 12px;
+            color: rgb(102, 102, 102);
+            margin-left: 15px;
+        }
+    }
+    .acc {
+        overflow: hidden;
+        padding: 0;
+      }
+      
+      .acc li {
+        list-style-type: none;
+        padding: 0;
+      }
+      
+      .acc_ctrl {
+        border: none;
+        cursor: pointer;
+        color: rgb(10, 56, 71);
+        display: block;
+        outline: none;
+        padding: 1em .5em;
+        position: relative;
+        text-align: left;
+        width: 100%;
+        border-radius: 2px;
+        h2 {
+          font-size: 10px !important;
+          font-weight: 500;
+        }
+      }
+      
+      .acc_ctrl:before {
+        background: #44596B;
+        content: '';
+        height: 2px;
+        margin-right: 37px;
+        position: absolute;
+        right: 0;
+        top: 50%;
+        -webkit-transform: rotate(90deg);
+        -moz-transform: rotate(90deg);
+        -ms-transform: rotate(90deg);
+        -o-transform: rotate(90deg);
+        transform: rotate(90deg);
+        -webkit-transition: all 0.2s ease-in-out;
+        -moz-transition: all 0.2s ease-in-out;
+        -ms-transition: all 0.2s ease-in-out;
+        -o-transition: all 0.2s ease-in-out;
+        transition: all 0.2s ease-in-out;
+        width: 14px;
+      }
+      
+      .acc_ctrl:after {
+        background: #44596B;
+        content: '';
+        height: 2px;
+        margin-right: 37px;
+        position: absolute;
+        right: 0;
+        top: 50%;
+        width: 14px;
+      }
+      
+      .acc_ctrl.active:before {
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+      }
+      
+      .acc_ctrl.active h2, .acc_ctrl:focus h2 {
+        position: relative;
+      }
+      
+      .small-panel {
+        padding: 5px;
+        display: none;
+        overflow: hidden;
+      }
+  
+      .acc_panel {
+        background: #ffffff;
+        padding: 5px 10px;
+      }
+}
+
+@media only screen and (max-width: 991px) and (min-width: 0) {
+    .ready {
+        margin-right: 0 !important;
+        .eat-h {
+          font-size: 26px !important;
+        }
+        .eat-sub-h {
+          font-size: 18px !important;
+        }
+    }
+}
+@media only screen and (max-width: 767px) and (min-width: 0) {
+  .remarks {
+    width: 99%;
+    margin-left: 1%;
+    height: auto !important;
+    &:hover {
+        box-shadow: 0 0 5px #1574f5;
+        cursor: pointer;
+    }
+    .remarks-check {
+        font-size: 12px;
+        color: rgb(102, 102, 102);
+        margin-left: 15px;
+    }
+}
+}
+@media only screen and (max-width: 324px) and (min-width: 320px) {
+  .remarks-check {
+    font-size: 11px !important;
+  }
+}
+// ! Ready to eat section ends

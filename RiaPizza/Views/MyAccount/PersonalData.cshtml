@@ -1,0 +1,149 @@
+﻿@model RiaPizza.DTOs.User.UpdateProfileDto
+
+@{
+    ViewData["Title"] = "PersonalData";
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+}
+
+<!-- Header -->
+<header id="header-s">
+    <div class="container">
+        <div class="row container-hs pt-5">
+            <div class="col-12 text-center text-white">
+                <h1 class="banner-hs font-weight-bold mb-3">Order takeaway in</h1>
+                <div class="input-group input-group-lg mx-auto">
+                    <i class="fas fa-map-marker-alt fa-1x pin p-3 align-self-center"></i>
+                    <input type="text"
+                           class="form-control"
+                           placeholder="Address, i.e. KirchstraBe 1" />
+                    <div class="input-group-prepend">
+                        <span class="btn btn-primary btn-show font-weight-bold">Show</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Header ends -->
+<!-- Small devices Nav -->
+<section class="small-nav d-lg-none d-block">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 my-2">
+                <h1 class="side-h">MY ACCOUNT</h1>
+            </div>
+            <div class="col-12">
+                <ul class="acc">
+                    <li>
+                        <button class="acc_ctrl"><h2 style="letter-spacing: 0 !important;">navigation / personal data</h2></button>
+                        <div class="small-panel">
+                            <div class="acc_panel">
+                                <a href="./start.html" class="mb-1 mt-2 mr-4">Start</a>
+                                <a href="./order.html" class="mb-1 mt-2 mr-4">Orders</a>
+                                <a href="./address.html" class="mb-1 mr-4">Addresses</a>
+                                <a href="./personal.html" class="mb-1 mr-4 active-link1">Personal data</a>
+                                <a href="./password.html" class="mr-2 mb-1">Change password</a>
+                                <a href="#" class="mr-1">Logout</a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <h2 class="personal-h">Personal data</h2>
+        <form asp-action="PersonalData" method="post">
+            <div class="row" style="width: 90%; margin-left: 1px;">
+                <div class="col-12">
+                    <div class="form-group">
+                        <label style="font-size: 14px; color: #676767;">First Name</label>
+                        <input asp-for="FirstName" type="text" class="form-control">
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label style="font-size: 14px; color: #676767;">Last Name</label>
+                        <input asp-for="LastName" type="text" class="form-control">
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label style="font-size: 14px; color: #676767;">Email address</label>
+                        <input asp-for="Email" type="text" class="form-control">
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label style="font-size: 14px; color: #676767;">Phone Number</label>
+                        <input asp-for="PhoneNumber" type="text" class="form-control">
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 mt-2 mb-4">
+                    <button class="btn btn-primary px-3" style="font-size: 14px;">Save data</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+<!-- Small devices nav ends -->
+
+<div class="personal-container d-lg-block d-none">
+    <!-- Sidenav -->
+    <div class="sidebar d-md-block d-none">
+        <h1 class="side-h">MY ACCOUNT</h1>
+        <a href="~/MyAccount/Orders" class="mb-1 mt-2 mr-4">Orders</a>
+        <a href="~/MyAccount/Addresses" class="mb-2 mr-4">Addresses</a>
+        <a href="~/MyAccount/PersonalData" class="mb-2 mr-4 active-link">Personal data</a>
+        <a href="~/MyAccount/ChangePassword" class="mr-4 mb-2">Change password</a>
+        <a href="~/Auth/LogoutUser" class="mr-4">Logout</a>
+    </div>
+    <!-- Sidenav ends -->
+    <!-- Side section -->
+    <div class="main d-md-block d-none personal">
+        <h2>Personal data</h2>
+        <form asp-action="PersonalData" method="post">
+            <div class="row" style="width: 90%; margin-left: 1px;">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label style="font-size: 14px; color: rgb(102, 102, 102);">First Name</label>
+                        <input asp-for="FirstName" type="text" class="form-control">
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label style="font-size: 14px; color: rgb(102, 102, 102);">Last Name</label>
+                        <input asp-for="LastName" type="text" class="form-control">
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label style="font-size: 14px; color: rgb(102, 102, 102);">Email address</label>
+                        <input asp-for="Email" type="text" class="form-control">
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label style="font-size: 14px; color: rgb(102, 102, 102);">Phone Number</label>
+                        <input asp-for="PhoneNumber" type="text" class="form-control">
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 ml-3 mt-2 mb-4">
+                    <button class="btn btn-primary px-3" style="font-size: 14px;">Save data</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- side section ends -->
+</div>

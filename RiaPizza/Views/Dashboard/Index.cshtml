@@ -1,0 +1,317 @@
+﻿@model IEnumerable<Order>
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+@section css{
+    <style>
+        .support-box {
+            min-height: 90px !important;
+        }
+    </style>
+}
+<div class="container-fluid">
+    <div class="block-header">
+        <div class="row">
+            <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                <ul class="breadcrumb breadcrumb-style ">
+                    <li class="breadcrumb-item">
+                        <h4 class="page-title" style="border-right:0">
+                            Dashboard
+
+                        </h4>
+
+                    </li>
+                </ul>
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="text-align:right">
+                <form action="~/ShopSchedule/ToggleShop" method="post" id="scheduleForm" style="cursor:pointer">
+                    <div class="form-line" style="padding-top:30px">
+                        <div class="switch">
+                            <label>
+                                @(ViewBag.isOpen ? "Shop Opened" : "Shop Closed")
+                                <input type="checkbox" name="status" @(ViewBag.isOpen ? "checked=checked" : "") @(ViewBag.isOpen ? "on" : "off") id="shopId" onchange="$('#scheduleForm').submit()">
+                                <span class="lever switch-col-black"></span>
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-3 col-sm-6">
+            <form action="~/Orders/SearchTodayOrders" onclick="$(this).submit()" target="_blank" style="cursor:pointer">
+                <input type="hidden" name="filter" value="TodayOrders" />
+                <div class="support-box text-center bg-green">
+                    <div class="text font-17 m-b-5">Today Orders</div>
+                    <h3 class="m-b-10">
+                        @ViewBag.TodayOrdersCount
+                    </h3>
+                </div>
+            </form>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <form action="~/Orders/SearchTodayOrders" onclick="$(this).submit()" target="_blank" style="cursor:pointer">
+                <input type="hidden" name="filter" value="Pending" />
+                <div class="support-box text-center bg-orange">
+                    <div class="text font-17 m-b-5">Pending Orders</div>
+                    <h3 class="m-b-10">
+                        @ViewBag.PendingOrdersCount
+                    </h3>
+                </div>
+            </form>
+
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <form action="~/Orders/SearchTodayOrders" onclick="$(this).submit()" target="_blank" style="cursor:pointer">
+                <input type="hidden" name="filter" value="Delivered" />
+                <div class="support-box text-center bg-cyan">
+                    <div class="text font-17 m-b-5">Delivered Orders</div>
+                    <h3 class="m-b-10">
+                        @ViewBag.TodayDeliveredCount
+                    </h3>
+                </div>
+            </form>
+
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <form action="~/Orders/SearchTodayOrders" onclick="$(this).submit()" target="_blank" style="cursor:pointer">
+                <input type="hidden" name="filter" value="TodaySale" />
+                <div class="support-box text-center bg-teal">
+                    <div class="text font-17 m-b-5">Today Sales</div>
+                    <h3 class="m-b-10">
+                        @ViewBag.TodaySales €
+                    </h3>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row clearfix">
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-12">
+            <div class="card">
+                <audio id="NotSound">
+                    <source src="~/Sounds/not.mp3" type="audio/mpeg">
+                </audio>
+                <div class="modal fade" id="ChangeStatusModal" tabindex="-1" role="dialog"
+                     aria-labelledby="formModal" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="formModal">Change Order Status</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form>
+                                    <input type="hidden" class="mdlOrderId" name="OrderId" />
+                                    <div class="row clearfix">
+                                        <div class="col-md-12">
+                                            <h5> Status</h5>
+                                            <div class="select-wrapper focused ">
+                                                <input type="hidden" name="orderId" value="" id="orderId" />
+                                                <select id="statusList" class="form-control statusList" tabindex="-1" name="orderStatus">
+                                                    <option value="Pending">Pending</option>
+                                                    <option value="Confirmed">Confirmed</option>
+                                                    <option value="Processing">Processing</option>
+                                                    <option value="Shipped">Shipped</option>
+                                                    <option value="Delivered">Delivered</option>
+                                                    <option value="Cancelled">Cancelled</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-info waves-effect" onclick="changeStatus()">Submit</button>
+                                        <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                </form>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade bd-example-modal-lg orderDetails-modal" tabindex="-1" role="dialog"
+                     aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="myLargeModalLabel">Order Detail</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <h4 class="modal-title">Order By</h4>
+                                <br />
+                                <div class="row clearfix" id="OrderByDetails"></div>
+                                <hr />
+
+                                <h4 class="modal-title">Order Delivery Address</h4>
+                                <br />
+                                <div class="row clearfix" id="OrderAddressDetails"></div>
+                                <hr />
+
+                                <h4 class="modal-title">Orders Items</h4>
+                                <br />
+                                <div class="row clearfix">
+                                    <div class="col-12">
+                                        <div class="row">
+                                            <div class="col-md-3"><h6>Item Name</h6></div>
+                                            <div class="col-md-3"><h6>Extras</h6></div>
+                                            <div class="col-md-3"><h6>Quantity</h6></div>
+                                            <div class="col-md-3"><h6>Total Price</h6></div>
+                                        </div>
+                                        <div class="row" id="OrderItemsDetails"></div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="header">
+                    <h2>
+                        <strong>Orders</strong> Recieved
+                    </h2>
+                </div>
+                <div class="tableBody">
+                    <div class="table-responsive" style="overflow:hidden">
+                        <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                            <thead>
+                                <tr>
+                                    <th>OrderCode</th>
+                                    <th>OrderBy</th>
+                                    <th>OrderStatus</th>
+                                    <th>RecievingTime</th>
+                                    <th>TotalBill</th>
+                                    <th>PaymentMethod</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="ordersList">
+                                @foreach (var order in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.OrderCode)
+                                        </td>
+                                        <td>@order.OrderBy.Name</td>
+                                        <td class="status">
+                                            @if (order.OrderStatus == "Pending")
+                                            {<span class="label bg-yellow shadow-style">Pending</span>}
+                                            else if (order.OrderStatus == "Confirmed")
+                                            {<span class="label bg-orange shadow-style">Confirmed</span>}
+                                            else if (order.OrderStatus == "Processing")
+                                            {<span class="label bg-teal shadow-style">Processing</span>}
+                                            else if (order.OrderStatus == "Shipped")
+                                            {<span class="label bg-cyan shadow-style">Shipped</span>}
+                                            else if (order.OrderStatus == "Delivered")
+                                            {<span class="label bg-blue shadow-style">Delivered</span>}
+                                            else if (order.OrderStatus == "Cancelled")
+                                            {<span class="label bg-red shadow-style">Cancelled</span>}
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.RecievingTime)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.TotalBill)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.PaymentMethod)
+                                            @if (order.IsPaymentConfirmed == true)
+                                            {<span class="label bg-green shadow-style">Confirmed</span>}
+                                            @if (order.IsPaymentConfirmed == false)
+                                            {<span class="label bg-red shadow-style">Pending</span>}
+                                        </td>
+                                        <td>
+                                            <a target="_blank" class="btn btn-warning" href="~/Orders/Invoice/@order.OrderId"><i class="fas fa-print"></i></a>
+                                            <button data-toggle="modal" data-target="#ChangeStatusModal" class="btn btn-success" onclick="setValue(@order.OrderId,'@order.OrderStatus')"><i class="fas fa-toggle-on"></i></button>
+                                            <button type="button" class="btn btn-primary" onclick="showOrderDetails(@order.OrderId)"><i class="fas fa-info-circle"></i></button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>OrderCode</th>
+                                    <th>OrderBy</th>
+                                    <th>OrderStatus</th>
+                                    <th>RecievingTime</th>
+                                    <th>TotalBill</th>
+                                    <th>PaymentMethod</th>
+                                    <th>Action</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script src="~/Notifications/notifyorder.js"></script>
+    <script>
+        function setValue(id, status) {
+            $("#orderId").val(id);
+            $("#statusList option[value=" + status + "]").attr('selected', 'selected');
+        }
+        function changeStatus() {
+            var id = $("#orderId").val();
+            var status = $("#statusList").val();
+
+            $.ajax({
+                type: "POST",
+                url: '/Orders/ChangeOrderStatus',
+                data: { orderId: id, orderStatus: status },
+                success: function (orderId) {
+                    var id = orderId
+                    if (status == 'Confirmed') {
+                        window.open('/Orders/Invoice/' + id, '_blank');
+                        document.location.reload(true);
+                    } else {
+                        window.location.href = "/Dashboard/Index";
+                    }
+                }
+            });
+        }
+        function showOrderDetails(Id) {
+            $('#OrderByDetails').empty();
+            $('#OrderAddressDetails').empty();
+            $('#OrderItemsDetails').empty();
+            $.ajax({
+                type: "POST",
+                url: '/Orders/GetOrderDetails',
+                data: { id: Id },
+                success: function (order) {
+                    let orderby = order.orderBy;
+                    let address = order.address;
+                    let orderitems = order.orderItems;
+                    $('#OrderByDetails').append("<div class='col-md-6'><b>Order By :</b>" + orderby.name + "</div> <div class='col-md-6'><b>Email :</b>" + orderby.email + "</div> <div class='col-md-6'><b>Contact :</b>" + orderby.contact + "</div> <div class='col-md-6'><b>Company :</b>" + orderby.company + "</div>");
+                    $('#OrderAddressDetails').append("<div class='col-md-6'><b>City :</b> " + address.city + "</div> <div class='col-md-6'><b>Address :</b> " + address.address + "</div> <div class='col-md-6'><b>Floor :</b> " + address.floor + "</div> <div class='col-md-6'><b>Postal Code :</b> " + address.postalCode + "</div>");
+                    for (var i = 0; i < orderitems.length; i++) {
+                        $('#OrderItemsDetails').append("<div class='col-md-3'>" + orderitems[i].dish.dishName + "</div> <div class='col-md-3'>" + orderitems[i].extras + "</div> <div class='col-md-3'>" + orderitems[i].quantity + "</div> <div class='col-md-3'>" + orderitems[i].totalPrice + "</div>");
+                    }
+                }
+            });
+
+            $('.orderDetails-modal').modal();
+        }
+    </script>
+    <script src="~/assets/js/table.min.js"></script>
+    <script src="~/assets/js/pages/tables/jquery-datatable.js"></script>
+    <script src="~/assets/js/pages/index.js"></script>
+    <script src="~/assets/js/pages/charts/jquery-knob.js"></script>
+    <script src="~/assets/js/pages/sparkline/sparkline-data.js"></script>
+    <script src="~/assets/js/pages/medias/carousel.js"></script>
+    <script src="~/assets/js/chart.min.js"></script>
+}

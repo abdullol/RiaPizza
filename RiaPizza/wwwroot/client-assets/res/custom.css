@@ -1,0 +1,215 @@
+﻿.qtvalue {
+    color: #27f;
+    font-size: 20px;
+    width: 50px;
+    height: 45px;
+    text-align: center;
+    position: relative;
+    border-radius: 0 !important;
+    background: #fff !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.qtvalue:disabled {
+    opacity: 100;
+}
+
+.qtminus {
+    color: #666;
+    font-size: 22px;
+    font-weight: 600;
+    width: 50px;
+    background: #fff !important;
+    height: 45px;
+    margin-right: -3.5px;
+    border-right: 0;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.qtplus {
+    color: #666;
+    font-size: 22px;
+    font-weight: 600;
+    background: #fff !important;
+    width: 50px;
+    height: 45px;
+    margin-left: -3.5px;
+    border-left: 0;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.order-btn {
+    width: 70% !important;
+    height: 100%;
+    border-radius: 2px !important;
+    margin-left: 10px !important;
+}
+
+@media only screen and (max-width: 767px) and (min-width: 451px) {
+    .qtvalue {
+        width: 40px !important;
+        height: 35px !important;
+        text-align: center !important;
+    }
+
+    .qtplus {
+        width: 40px !important;
+        height: 35px !important;
+        margin-left: -4px !important;
+        border-left: 0 !important;
+        align-self: center;
+    }
+
+    .qtminus {
+        width: 40px;
+        height: 35px;
+        margin-right: -4px;
+        border-right: 0;
+    }
+}
+
+@media only screen and (max-width: 511px) {
+    .qtvalue {
+        width: 30px;
+        height: 45px;
+        text-align: center;
+        position: relative;
+    }
+
+    .qtplus {
+        width: 30px;
+        height: 45px;
+        margin-left: -4px;
+        border-left: 0;
+    }
+
+    .qtminus {
+        width: 30px;
+        height: 45px;
+        margin-right: -4px;
+        border-right: 0;
+    }
+}
+
+@media only screen and (max-width: 421px) and (min-width: 320px) {
+    #myform {
+        width: 100px !important;
+    }
+
+    .qtvalue {
+        color: #27f;
+        font-size: 14px !important;
+        width: 35px !important;
+        height: 35px !important;
+        text-align: center;
+    }
+
+    .qtminus {
+        color: #666;
+        font-size: 14px !important;
+        width: 30px !important;
+        height: 35px !important;
+        margin-right: -4px;
+        border-right: 0;
+    }
+
+    .qtplus {
+        color: #666;
+        font-size: 14px !important;
+        width: 30px !important;
+        height: 35px !important;
+        margin-left: -4px;
+        border-left: 0;
+    }
+
+    .order-btn {
+        width: 60% !important;
+        border-radius: 2px !important;
+        margin-left: 0 !important;
+        position: relative;
+        right: -40px !important;
+        text-align: center;
+        font-size: 10px !important;
+    }
+}
+
+.dishExtras {
+    margin-top: 20px;
+}
+
+.d-block {
+    font-size: 12px;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.more-btn, .less-btn {
+    background: transparent;
+    border: 0;
+    margin-top: 10px;
+    color: #1474f5;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.hide {
+    display: none;
+}
+
+.custom-select {
+    font-size: 12px;
+}
+
+.right {
+    float: right;
+}
+
+.commentBox {
+    margin-top: 10px;
+}
+
+    .commentBox label {
+        font-size: 12px;
+    }
+
+    .commentBox a {
+        font-size: 15px;
+        margin-top: 5px;
+        float: right;
+    }
+
+.cartToppings {
+    font-size: 11px !important;
+    margin-top: -5px !important;
+    margin-left: 11px;
+    margin-bottom: 0;
+    padding-bottom: 0 !important;
+}
+.sidenav {
+    width: 360px !important;
+}
+#mainNav {
+    margin-right: 360px !important;
+}
+.cartIncreasBtn {
+    width: 40%;
+    box-sizing: border-box;
+    background: white;
+    color: black;
+    border: 1px solid #cecece;
+    border-radius: 20%;
+    height: 26px;
+    cursor:pointer;
+}
+.ready .remarks{
+    height:40px !important;
+}

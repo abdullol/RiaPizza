@@ -1,0 +1,125 @@
+﻿@model IEnumerable<RiaPizza.Models.DeliveryArea>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+}
+<!-- Header -->
+<header id="header" class="mt-n5">
+    <div class="bg-img-overlay">
+        <div class="container">
+            <div class="row py-4">
+                <div class="col-12 text-center text-white">
+                    <h1 class="display-3 banner-h font-weight-bold">
+                        Time to
+                        order food
+                    </h1>
+                    <h3 class="mb-3">Find restaurants in your area</h3>
+                    <form action="~/Dishes/Explore" method="get">
+                        <div class="input-group input-group-lg mx-auto">
+                            <i class="fas fa-map-marker-alt fa-1x pin p-3 align-self-center"></i>
+                            <input name="postalCode" type="text" class="form-control" autoComplete="on" list="suggestions">
+                            <datalist id="suggestions">
+                                @foreach (var area in Model)
+                                {
+                                    <option value="@area.PostalCode">@area.AreaName - @area.PostalCode</option>
+                                }
+                            </datalist>
+                            <div class="input-group-prepend">
+                                <button class="btn btn-primary btn-show font-weight-bold">Show</button>
+                            </div>
+                        </div>
+                        <h6 class="text-white mt-4">@ViewBag.Error</h6>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Header ends -->
+<!-- Back to top button -->
+<button onclick="topFunction()" id="myBtn" title="Go to top">
+    <i class="fas fa-angle-up fa-2x"></i>
+</button>
+<!-- Back to top button ends -->
+<!-- How it works -->
+<section class="bg-white work">
+    <div class="container my-4">
+        <div class="row text-center">
+            <div class="col-12">
+                <h2 class="mb-3">How it works</h2>
+                <h1 class="easy mb-3">Easy as that!</h1>
+            </div>
+        </div>
+        <div class="row text-center my-5 align-items-center d-lg-flex d-none">
+            <div class="col-md-4 text-center">
+                <img src="~/client-assets/res/img/location.png" alt="map-marker" class="img-fluid img" width="100">
+                <h5 class="my-4 font-weight-bold">Enter your location</h5>
+                <p>Enter your street address or let us find your location</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <img src="~/client-assets/res/img/junk.png" alt="junkfood" class="img-fluid img" width="100">
+                <h5 class="my-4 font-weight-bold">Choose your food</h5>
+                <p>What do you fancy? Browse through countless menus and reviews</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <img src="~/client-assets/res/img/delivery.png" alt="map-marker" class="img-fluid img" width="100">
+                <h5 class="my-4 font-weight-bold">Pay and get your food delivered</h5>
+                <p>Pay cash or online with Creditcard, Klarna, PayPal, Bitcoin. Bon appetit!</p>
+            </div>
+        </div>
+        <div class="row d-lg-none d-block">
+            <div class="col-md-6 mx-auto">
+                <div class="carousel slide" data-ride="carousel" id="steps-carousel">
+                    <ol class="carousel-indicators">
+                        <li data-target="#steps-carousel" data-slide-to="0"></li>
+                        <li data-target="#steps-carousel" data-slide-to="1"></li>
+                        <li data-target="#steps-carousel" data-slide-to="2"></li>
+                    </ol>
+                    <div class="carousel-inner">
+                        <div class="carousel-item active text-center">
+                            <img src="~/client-assets/res/img/location.png" alt="map-marker" class="img-fluid" width="100">
+                            <h5 class="my-4 font-weight-bold">Enter your location</h5>
+                            <p>Enter your street address or let us find your location</p>
+                        </div>
+                        <div class="carousel-item text-center">
+                            <img src="~/client-assets/res/img/junk.png" alt="junkfood" class="img-fluid" width="100">
+                            <h5 class="my-4 font-weight-bold">Choose your restaurant and food</h5>
+                            <p>What do you fancy? Browse through countless menus and reviews</p>
+                        </div>
+                        <div class="carousel-item text-center">
+                            <img src="~/client-assets/res/img/delivery.png" alt="map-marker" class="img-fluid" width="100">
+                            <h5 class="my-4 font-weight-bold">Pay and get your food delivered</h5>
+                            <p>Pay cash or online with Creditcard, Klarna, PayPal, Bitcoin. Bon appetit!</p>
+                        </div>
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#steps-carousel" role="button" data-slide="prev">
+                    <span class="fas fa-angle-left fa-2x" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#steps-carousel" role="button" data-slide="next">
+                    <span class="fas fa-angle-right fa-2x" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- How it works ends -->
+
+<!-- More -->
+<section class="more">
+    <div class="container p-4">
+        <div class="row p-4 align-items-center">
+            <div class="col-md-6 mb-5 text-md-left text-center">
+                <h3>Want more?</h3>
+                <h4 class="mb-4">Check out exciting news about food and lifestyle on our blog</h4>
+                <a href="#">> Visit the blog</a>
+            </div>
+            <div class="col-md-6 mt-5  text-md-right text-center">
+                <img src="~/client-assets/res/img/blog.png" alt="" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</section>
+<!-- More ends -->

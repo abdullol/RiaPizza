@@ -1,0 +1,334 @@
+﻿@model Order
+
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from www.radixtouch.in/templates/admin/lorax/source/light/pages/ecommerce/invoice.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 09 Jan 2020 16:29:46 GMT -->
+<head>
+    @*<meta charset="UTF-8">
+        <meta content="width=device-width, initial-scale=1" name="viewport" />*@
+    <!--  <title></title> -->
+    <!-- Favicon-->
+    <link rel="icon" href="~/assets/images/favicon.ico" type="image/x-icon">
+    <!-- Plugins Core Css -->
+    <link href="~/assets/css/app.min.css" rel="stylesheet">
+    <!-- Custom Css -->
+    <link href="~/assets/css/style.css" rel="stylesheet" />
+    <!-- You can choose a theme from css/styles instead of get all themes -->
+    <link href="~/assets/css/styles/all-themes.css" rel="stylesheet" />
+    <title>Invoice</title>
+    <style type="text/css">
+        tr.roww {
+            height: 100px;
+            border: 2px solid;
+            border-left: 0 !important;
+            border-right: 0 !important;
+        }
+
+        .one {
+            border: 2px solid;
+            border-left: 0 !important;
+            width: 150px;
+        }
+
+        .two {
+            border: 2px solid;
+            width: 300px;
+        }
+
+        .invoiceBody {
+            width: 80%;
+            margin: auto;
+        }
+
+        @@media print {
+            .invoiceBody {
+                width: 100%;
+            }
+
+            .printBtn {
+                display: none;
+            }
+        }
+
+        .center {
+            display: block;
+            width: 50%;
+            margin-left: 25%;
+            margin-right: 30%;
+        }
+    </style>
+
+</head>
+<body class="light">
+
+    <div class="container-fluid">
+        <div class="row clearfix" style="margin-left: ;">
+            <div class="invoiceBody">
+                <div class="card" id="invoiceBody">
+                    <div class="body">
+                        <div class="col-md-12">
+                            <div class="row">
+
+                                <div class="white-box col-md-6">
+                                    <div class="center" style="padding-top:20px; padding-bottom: 20px">
+                                        <h6 style="text-decoration: underline">Pizza Venedig Help Service</h6>
+                                        <p style="font-weight: bold; font-size: 8px">Herber 122-2131-4232-3232 Herbernereg</p>
+                                        <p style="font-weight: bold; font-size: 8px">Herber 122-2131-4232-3232 Herbernereg</p>
+                                    </div>
+                                    <div class="demo-google-material-icon center" style="margin-left:105px; padding-top:20px; padding-bottom: 20px">
+                                        <i class="material-icons" style="width: 30px; font-size: 17px">star_rate</i>
+                                        <i class="material-icons" style="width: 30px; font-size: 17px">star_rate</i>
+                                        <i class="material-icons" style="width: 30px; font-size: 17px">star_rate</i>
+                                        <i class="material-icons" style="width: 30px; font-size: 17px">star_rate</i>
+                                        <i class="material-icons" style="width: 30px; font-size: 17px">star_rate</i>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-md-12 row">
+                                            <div class="pull-left col-md-6">
+                                                <address>
+                                                    <p class="font-bold">BILL FROM :</p>
+                                                    <p>checking one</p>
+                                                    <p>checking two</p>
+                                                    <p>checking three</p>
+                                                </address>
+                                            </div><br><br>
+                                            <div class="pull-right col-md-6 text-right">
+                                                <address>
+                                                    <p class="addr-font-h3 font-bold">BILL TO :</p>
+                                                    <p>checking one</p>
+                                                    <p>12: 12: 2020</p>
+                                                    <p style="font-weight:bold">Lieferando  SOFORT</p>
+                                                </address>
+                                            </div>
+                                        </div>
+
+                                        <h2 class="col-md-12" style="text-align:center">LIEFERANDO</h2>
+                                        <div class="col-md-12">
+                                            <div class="">
+                                                <table>
+                                                    <tr>
+                                                        <th style="font-size:10px">Menge</th>
+                                                        <th style="font-size:10px">Art-Nr</th>
+                                                        <th style="font-size:10px">Bezwnchge</th>
+                                                        <th style="font-size:10px">Zuneange</th>
+                                                        <th style="font-size:10px">Preicis</th>
+                                                        <th style="font-size:10px">Summe</th>
+                                                    </tr>
+                                                    <tbody>
+                                                        <tr class="roww" style="">
+                                                            <td>
+                                                                <p>one</p>
+                                                                <p>one</p>
+                                                                <p>one</p>
+                                                            </td>
+                                                            <td>
+                                                                <p>one</p>
+                                                                <p>one</p>
+                                                                <p>one</p>
+                                                            </td>
+                                                            <td>
+                                                                <p>one</p>
+                                                                <p>one</p>
+                                                                <p>one</p>
+                                                            </td>
+                                                            <td>
+                                                                <p>one</p>
+                                                                <p>one</p>
+                                                                <p>one</p>
+                                                            </td>
+                                                            <td>
+                                                                <p>one</p>
+                                                                <p>one</p>
+                                                                <p>one</p>
+                                                            </td>
+                                                            <td>
+                                                                <p>one</p>
+                                                                <p>one</p>
+                                                                <p>one</p>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <table>
+                                                    <thead>
+                                                        <tr class="" style="border-bottom: none;">
+                                                            <th width="14%">ANZAHIL</th>
+                                                            <td width="14%">ANZAHIL</td>
+                                                            <th width="14%">ANZAHIL</th>
+                                                            <td width="14%">ANZAHIL</td>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>QSESRQ</th>
+                                                            <td>QSESRQ</td>
+                                                            <th>QSESRQ</th>
+                                                            <td>QSESRQ</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <p style="font-weight:bold; font-size: 10px; text-align: center">hello we are chec king the printing pting of the hello yellow</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="white-box col-md-6">
+                                    <div class="col-md-12 row">
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <div class="col-md-5">
+                                                    <p style="font-weight:bold; font-size: 10px; padding-right: 5px">Hello World:</p>
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <p style="font-size: 10px">hello checking the order</p>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-5">
+                                                    <p style="font-weight:bold; font-size: 10px; padding-right: 5px">Hello World:</p>
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <p style="font-size: 10px">hello checking the order</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <p style="font-weight:bold; font-size: 10px; padding-right: 5px">Best No:</p>
+                                                <p style="font-size: 10px">5</p>
+                                            </div>
+                                            <div class="row">
+                                                <p style="font-weight:bold; font-size: 10px; padding-right: 5px">datum:</p>
+                                                <p style="font-size: 10px">12:4:2020</p>
+                                            </div>
+                                            <div class="row">
+                                                <p style="font-weight:bold; font-size: 10px; padding-right: 5px">Unocfot:</p>
+                                                <p style="font-size: 10px">71:9:2020</p>
+                                            </div>
+                                            <div class="row">
+                                                <p style="font-weight:bold; font-size: 10px; padding-right: 5px">LOFERANDO:</p>
+                                                <p style="font-size: 10px">FORFOTZE</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="demo-google-material-icon center" style="margin-left:105px">
+
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-md-12 row">
+                                            <div class="pull-left col-md-4">
+                                                <address>
+                                                    <p class="font-bold">BILL FROM :</p>
+                                                    <p>checking one</p>
+                                                    <p>checking two</p>
+                                                    <p>checking </p>
+                                                </address>
+                                            </div><br><br>
+                                            <div class="col-md-4">
+                                                <address>
+                                                    <p style="font-weight:bold">Lieferando Saferiz </p>
+                                                </address>
+                                            </div>
+                                            <div class="pull-right col-md-4 text-right">
+                                                <address>
+                                                    <p class="addr-font-h3 font-bold">BILL TO :</p>
+                                                    <p>checking one</p>
+                                                    <p>12: 12: 2020</p>
+                                                    <p style="font-weight:bold">Lieferando </p>
+                                                </address>
+                                            </div>
+                                        </div>
+
+                                        <h2 class="col-md-12" style="text-align:center">LIEFERANDO</h2>
+                                        <div class="col-md-12">
+                                            <div class="">
+                                                <table>
+                                                    <tr>
+                                                        <th style="font-size:10px">Menge</th>
+                                                        <th style="font-size:10px">Art-Nr</th>
+                                                        <th style="font-size:10px">Bezwnchge</th>
+                                                        <th style="font-size:10px">Zuneange</th>
+                                                        <th style="font-size:10px">Preicis</th>
+                                                        <th style="font-size:10px">Summe</th>
+                                                    </tr>
+                                                    <tbody>
+                                                        <tr class="roww" style="">
+                                                            <td>
+                                                                <p>one</p>
+                                                                <p>one</p>
+                                                                <p>one</p>
+                                                            </td>
+                                                            <td>
+                                                                <p>one</p>
+                                                                <p>one</p>
+                                                                <p>one</p>
+                                                            </td>
+                                                            <td>
+                                                                <p>one</p>
+                                                                <p>one</p>
+                                                                <p>one</p>
+                                                            </td>
+                                                            <td>
+                                                                <p>one</p>
+                                                                <p>one</p>
+                                                                <p>one</p>
+                                                            </td>
+                                                            <td>
+                                                                <p>one</p>
+                                                                <p>one</p>
+                                                                <p>one</p>
+                                                            </td>
+                                                            <td>
+                                                                <p>one</p>
+                                                                <p>one</p>
+                                                                <p>one</p>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <table>
+                                                    <thead>
+                                                        <tr class="" style="border-bottom: none;">
+                                                            <th width="14%">ANZAHIL</th>
+                                                            <td width="14%">ANZAHIL</td>
+                                                            <th width="14%">ANZAHIL</th>
+                                                            <td width="14%">ANZAHIL</td>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>QSESRQ</th>
+                                                            <td>QSESRQ</td>
+                                                            <th>QSESRQ</th>
+                                                            <td>QSESRQ</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <p style="font-weight:bold; font-size: 10px; text-align: center">hello we are chec king the printing pting of the hello yellow</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<!-- Mirrored from www.radixtouch.in/templates/admin/lorax/source/light/pages/ecommerce/invoice.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 09 Jan 2020 16:29:46 GMT -->
+</html>
+<script src="~/assets/js/app.min.js"></script>
+<script src="~/assets/js/admin.js"></script>
+
+

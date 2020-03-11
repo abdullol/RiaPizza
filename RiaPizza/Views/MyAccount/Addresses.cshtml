@@ -1,0 +1,96 @@
+﻿
+@{
+    ViewData["Title"] = "Addresses";
+    Layout = "~/Views/Shared/_LayoutSite.cshtml";
+}
+<!-- Header -->
+<header id="header-s">
+    <div class="container">
+        <div class="row container-hs pt-5">
+            <div class="col-12 text-center text-white">
+                <h1 class="banner-hs font-weight-bold mb-3">Order takeaway in</h1>
+                <div class="input-group input-group-lg mx-auto">
+                    <i class="fas fa-map-marker-alt fa-1x pin p-3 align-self-center"></i>
+                    <input type="text"
+                           class="form-control"
+                           placeholder="Address, i.e. KirchstraBe 1" />
+                    <div class="input-group-prepend">
+                        <span class="btn btn-primary btn-show font-weight-bold">Show</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Header ends -->
+<!-- Small devices Nav -->
+<section class="small-nav d-lg-none d-block">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 my-2">
+                <h1 class="side-h">MY ACCOUNT</h1>
+            </div>
+            <div class="col-12">
+                <ul class="acc">
+                    <li>
+                        <button class="acc_ctrl"><h2 style="letter-spacing: 0 !important;">navigation / addresses</h2></button>
+                        <div class="small-panel">
+                            <div class="acc_panel">
+                                <a href="~/MyAccount/Orders" class="mb-1 mt-2 mr-4">Orders</a>
+                                <a href="~/MyAccount/Addresses" class="mb-1 mr-4">Addresses</a>
+                                <a href="~/MyAccount/PersonalData" class="mb-1 mr-4">Personal data</a>
+                                <a href="~/MyAccount/ChangePassword" class="mr-2 mb-1 active-link1">Change password</a>
+                                <a href="~/Auth/LogoutUser" class="mr-1">Logout</a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <div class="row" style="height: 30vh;">
+            <div class="col-12">
+                <h2 class="small-h">Addresses</h2>
+                <p class="small-p">Your address book is empty</p>
+                <button class="btn btn-primary ml-md-3"
+                        style="font-size: 15px;"
+                        type="button"
+                        href="#address2Modal"
+                        role="button"
+                        data-toggle="modal">
+                    Add address
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Small devices nav ends -->
+
+<div class="start-container d-lg-block d-none">
+    <!-- Sidenav -->
+    <div class="sidebar d-md-block d-none">
+        <h1 class="side-h">MY ACCOUNT</h1>
+        <a href="~/MyAccount/Orders" class="mb-1 mt-2 mr-4">Orders</a>
+        <a href="~/MyAccount/Addresses" class="mb-2 mr-4 active-link">Addresses</a>
+        <a href="~/MyAccount/PersonalData" class="mb-2 mr-4">Personal data</a>
+        <a href="~/MyAccount/ChangePassword" class="mr-4 mb-2">Change password</a>
+        <a href="~/Auth/LogoutUser" class="mr-4">Logout</a>
+    </div>
+    <!-- Sidenav ends -->
+    <!-- Side section -->
+    <div class="main d-md-block d-none">
+        <h2>Addresses</h2>
+        <p>Your address book is empty</p>
+        <!-- Address Modal Trigger -->
+        <button class="btn btn-primary ml-3"
+                style="font-size: 15px;"
+                type="button"
+                href="#address2Modal"
+                role="button"
+                data-toggle="modal">
+            Add address
+        </button>
+        <!-- Address Modal Trigger ends -->
+    </div>
+    <!-- side section ends -->
+</div>

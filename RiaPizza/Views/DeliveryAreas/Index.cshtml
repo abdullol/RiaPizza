@@ -1,0 +1,185 @@
+﻿@{
+    ViewData["Title"] = "Delivery Areas";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<script src="~/Angular/Controllers/DeliveryAreasCtrl.js"></script>
+<div class="container-fluid" ng-controller="DeliveryAreasCtrl">
+    <div class="block-header">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="breadcrumb breadcrumb-style ">
+                    <li class="breadcrumb-item">
+                        <h4 class="page-title">Delivery Areas</h4>
+                    </li>
+                    <li class="breadcrumb-item bcrumb-1">
+                        <a href="~/Home/Index">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item bcrumb-2">
+                        <a href="#" onClick="return false;">Delivery Areas</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Basic Examples -->
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header">
+                    <h2>
+                        <strong>Delivery Areas</strong>
+                        <button data-toggle="modal" data-target="#addModal" class="btn btn-info" style="float:right"> Add <i class="fa fa-plus"></i></button>
+                        <div class="modal fade" id="addModal" role="dialog"
+                             aria-labelledby="formModal" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="formModal">Add Delivery Area</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form>
+                                            <label>Area <span class="text-danger">*</span></label>
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <input type="text" class="form-control"
+                                                           placeholder="Enter Area Name" ng-model="addAreaObj.areaName">
+                                                </div>
+                                            </div>
+                                            <label>Postal Code <span class="text-danger">*</span></label>
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <input type="text" class="form-control"
+                                                           placeholder="Enter Postal Code" ng-model="addAreaObj.postalCode">
+                                                </div>
+                                            </div>
+                                            <label>Delivery Charges <span class="text-danger">*</span></label>
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <input type="number" class="form-control"
+                                                           placeholder="Enter order charges for this area" ng-model="addAreaObj.deliveryCharges">
+                                                </div>
+                                            </div>
+                                            <label>Minimum Order Charges <span class="text-danger">*</span></label>
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <input type="number" class="form-control"
+                                                           placeholder="Enter minimum charges for this area" ng-model="addAreaObj.minOrderCharges">
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-info waves-effect" ng-click="addArea()">Save</button>
+                                        <button type="button" class="btn btn-danger waves-effect"
+                                                data-dismiss="modal">
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="editModal" role="dialog"
+                             aria-labelledby="formModal" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="formModal">Edit Delivery Area</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form>
+                                            <label for="password">Area</label>
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <input type="text" class="form-control"
+                                                           placeholder="Enter Area Name" ng-model="editAreaObj.areaName">
+                                                </div>
+                                            </div>
+                                            <label for="password">Postal Code</label>
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <input type="text" class="form-control"
+                                                           placeholder="Enter Postal Code" ng-model="editAreaObj.postalCode">
+                                                </div>
+                                            </div>
+
+                                            <label for="password">Delivery Charges</label>
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <input type="number" class="form-control"
+                                                           placeholder="Enter delivery harges for this area" ng-model="editAreaObj.deliveryCharges">
+                                                </div>
+                                            </div>
+                                            <label for="password">Minimum Order Charges</label>
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <input type="number" class="form-control"
+                                                           placeholder="Enter minimum charges for this area" ng-model="editAreaObj.minOrderCharges">
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-info waves-effect" ng-click="editArea()">Save</button>
+                                        <button type="button" class="btn btn-danger waves-effect"
+                                                data-dismiss="modal">
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </h2>
+                </div>
+                <div class="body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                            <thead>
+                                <tr>
+                                    <th>Area Name</th>
+                                    <th>Postal Code</th>
+                                    <th>Delivery Charges</th>
+                                    <th>Min Order Price</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody ng-init="getAllAreas()">
+                                <tr ng-repeat="area in allAreas">
+                                    <td>{{area.areaName}}</td>
+                                    <td>{{area.postalCode}}</td>
+                                    <td>{{area.deliveryCharges}}</td>
+                                    <td>{{area.minOrderCharges}}</td>
+                                    <td>
+                                        <button class="btn btn-primary" ng-click="openEditModal(area)"><i class="fas fa-pencil-alt"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>Area Name</th>
+                                    <th>Postal Code</th>
+                                    <th>Order Charges</th>
+                                    <th>Areawise Charges</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/assets/js/table.min.js"></script>
+    <script src="~/assets/js/pages/tables/jquery-datatable.js"></script>
+}

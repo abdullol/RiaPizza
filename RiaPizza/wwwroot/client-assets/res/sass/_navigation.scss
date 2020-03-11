@@ -1,0 +1,814 @@
+// ? Navbar
+.navbar {
+  background: black !important;
+  // * Language Dropdown
+  .nav-wrapper {
+    text-align: center;
+  }
+  .sl-nav {
+    display: inline;
+    z-index: 999999999;
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      position: relative;
+      display: inline-block;
+      li {
+        cursor: pointer;
+        padding-bottom: 10px;
+        ul {
+          display: none;
+          li {
+            position: relative;
+            text-align: left;
+            background: transparent;
+            padding: 15px 15px;
+            padding-bottom: 0;
+            z-index: 88888888;
+            font-size: 15px;
+            color: #3c3c3c;
+            &:last-of-type {
+              padding-bottom: 15px;
+            }
+            span {
+              padding-left: 5px;
+              .active {
+                color: #146c78;
+              }
+              &:hover {
+                color: #146c78;
+              }
+            }
+          }
+        }
+        &:hover {
+          ul {
+            position: absolute;
+            top: 29px;
+            right: -15px;
+            display: block;
+            background: #fff;
+            width: 120px;
+            padding-top: 0px;
+            z-index: 888888;
+            border-radius: 5px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+          }
+          .triangle {
+            position: absolute;
+            top: 15px;
+            right: -10px;
+            z-index: 10;
+            height: 14px;
+            overflow: hidden;
+            width: 30px;
+            background: transparent;
+            &::after {
+              content: "";
+              display: block;
+              z-index: 20;
+              width: 15px;
+              transform: rotate(45deg) translateY(0px) translatex(10px);
+              height: 15px;
+              background: #fff;
+              border-radius: 2px 0px 0px 0px;
+              box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+            }
+          }
+        }
+      }
+    }
+  }
+  .sl-flag {
+    display: inline-block;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.4);
+    width: 15px;
+    height: 15px;
+    background: #aaa;
+    border-radius: 50%;
+    position: relative;
+    top: 2px;
+    overflow: hidden;
+  }
+  .flag-de {
+    background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAIAAAAC64paAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAZdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjAuMTM0A1t6AAAAPUlEQVQ4T+3HMQ0AIBTE0NOHM8x9B7hgh71bIWGieUvze1m7kHGBr/AVvsJX+EpmP5dV5/gKX+ErfIUvVDYcX2NMxQC8PAAAAABJRU5ErkJggg==");
+    background-size: cover;
+    background-position: center center;
+  }
+  .flag-usa {
+    background-size: cover;
+    background-position: center center;
+    background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAIAAAAC64paAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAZdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjAuMTM0A1t6AAABhUlEQVQ4T2Ows82PjGixsc4LD2tysC/09Kjw8622tyuICG8u0w/cpGSCBzF4e1VmZkzw9anOzOj38a4KCW4IC22ECHYk1l9tn4gHMeTlTnZxLikvm+XiUpKW2hvgX+vnV5OVOQEoOGfOtv94AYOzU3Fd7XxHh6Lq6rlurqUx0W0J8Z1AnbW18yotonaYuOJBDBXls4A+bGpaBCTz86YEBtQCvVBSPAPIbY0oP1/aiAcxABU1Ny+2tclvbFjo5FgUF9uenNwNDLnmpkWEnV1TPRcY1O1tS4H6i4umA/0MDK2K8tlAwRqHpP1uoXgQKKraWpcClTY3LQZaCLQ5NaUX5OaWJY3++SeTC/AgBmA4AXUClUJs9ver8fKsAAYEUJCws4G21dXNB1oFdD/Qz8DQTk4C+bm2dn6DZ9bRiDQ8iAEYt8CoBpK5YBIYw0AEEZwSXX4oMB4PYoC6gCzAcDqrjGzEsMfen2xEmbMv1rSTjRi26dqRjShz9o2+6WQjBrSShQSkZAIADvW/HLrLY6cAAAAASUVORK5CYII=");
+  }
+  // * Language Dropdown ends
+
+  // ? Navbar Toggler button
+  .nav-btn {
+    background: transparent;
+    box-shadow: none;
+    border: 0;
+    outline: none;
+    &:focus {
+      box-shadow: none;
+      border: 0;
+      outline: none;
+    }
+    &:hover {
+      cursor: pointer;
+    }
+    .line1,
+    .line2,
+    .line3 {
+      width: 23px;
+      height: 3px;
+      margin: 5px;
+      background: #fff;
+    }
+  }
+  // ? Navbar Toggler button ends
+
+  // ! Navbar Modal
+
+  // ? Main Modal
+  #myModal {
+    // .my-modal {
+    .my-modal {
+      width: $modal-width;
+      .modal-content {
+        background: #f8f5f2;
+        border: 0;
+        border-radius: 0;
+        .modal-header {
+          background: black;
+          border-radius: 0;
+          height: 175px;
+          border: 0;
+          clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);
+        }
+        .modal-body {
+          .login-btn {
+            background: transparent;
+            box-shadow: none;
+            outline: none;
+            border-radius: 0;
+            border: 0.1px solid #e7e7e7;
+            color: #17f;
+            transition: all ease-in-out 0.4s;
+            &:hover {
+              background: #14a;
+              border: none;
+              color: #fff;
+            }
+          }
+          .create-btn {
+            border-radius: 0;
+            transition: all ease-in-out 0.4s;
+            box-shadow: none;
+            outline: none;
+            &:hover {
+              background: #14a;
+            }
+          }
+          .link {
+            color: #144;
+            text-decoration: none;
+            &:hover {
+              color: #17f;
+            }
+          }
+        }
+      }
+    }
+  }
+  // ? Main Modal ends
+
+  // * Login Modal
+  #loginModal {
+    .my-modal {
+      width: $modal-width;
+      .modal-content {
+        background: #fff;
+        border: 0;
+        border-radius: 0;
+        .modal-body {
+          .login-btn {
+            background: #358;
+            border-radius: 0;
+            color: #fff;
+            transition: all ease-in-out 0.4s;
+          }
+          .login-btn2 {
+            background: #17f;
+            border-radius: 0;
+            color: #fff;
+            transition: all ease-in-out 0.4s;
+            &:hover {
+              background: #14a;
+            }
+          }
+          .form-group {
+            .form-control {
+              border-radius: 0;
+              box-shadow: none;
+              outline: none;
+              &:focus {
+                box-shadow: none;
+                outline: none;
+              }
+            }
+          }
+          .or {
+            max-width: 600px;
+            position: relative;
+            font-size: 14px;
+            text-align: center;
+            margin: 20px auto;
+            &::before {
+              content: "";
+              display: block;
+              width: 45%;
+              height: 1px;
+              background: #e7e7e7;
+              position: absolute;
+              left: 0;
+              top: 50%;
+            }
+            &::after {
+              content: "";
+              display: block;
+              width: 45%;
+              height: 1px;
+              background: #e7e7e7;
+              position: absolute;
+              right: 0;
+              top: 50%;
+            }
+          }
+          .create-btn {
+            border-radius: 0;
+            transition: all ease-in-out 0.4s;
+            &:hover {
+              background: #14a;
+            }
+          }
+          .link {
+            color: #144;
+            text-decoration: none;
+            &:hover {
+              color: #17f;
+            }
+          }
+        }
+        .pass-link {
+          text-align: center !important;
+          text-decoration: none;
+          color: $primary-bg;
+        }
+      }
+    }
+  }
+  // * Login Modal ends
+
+  // ? Product Info Modal
+  #productInfo {
+    .my-modal {
+      width: $modal-width;
+      .modal-content {
+        padding: 3px 20px;
+        .modal-header {
+          .modal-title {
+            font-size: 23px !important;
+            font-weight: 600;
+            letter-spacing: 0 !important;
+            color: rgb(10, 56, 71);
+            margin-bottom: 2rem;
+          }
+        }
+        .modal-body {
+          .product-h {
+            font-size: 16px;
+            font-weight: 600;
+            color: rgb(10, 56, 71);
+          }
+          .info-list {
+            margin-left: -20px;
+            margin-bottom: 2.5rem;
+            .list-item {
+              font-size: 13px;
+              line-height: 21px;
+              color: rgb(10, 56, 71);
+            }
+          }
+          .product-p {
+            font-size: 12px;
+            font-weight: 400;
+            color: rgb(102, 102, 102);
+            margin-left: -10px;
+          }
+        }
+      }
+    }
+  }
+  // ? Product Info Modal ends
+
+  // ! SignUp Modal
+  #signModal {
+    .my-modal {
+      width: $modal-width;
+      .modal-content {
+        background: #fff;
+        border: 0;
+        border-radius: 0;
+        .modal-body {
+          .login-btn {
+            background: #358;
+            border-radius: 0;
+            color: #fff;
+            transition: all ease-in-out 0.4s;
+          }
+          .login-btn2 {
+            background: #17f;
+            border-radius: 0;
+            color: #fff;
+            transition: all ease-in-out 0.4s;
+            &:hover {
+              background: #14a;
+            }
+          }
+          .form-group {
+            .form-control {
+              border-radius: 0;
+              box-shadow: none;
+              outline: none;
+              &:focus {
+                box-shadow: none;
+                outline: none;
+              }
+            }
+          }
+          .or {
+            max-width: 600px;
+            position: relative;
+            font-size: 14px;
+            text-align: center;
+            margin: 20px auto;
+            &::before {
+              content: "";
+              display: block;
+              width: 45%;
+              height: 1px;
+              background: #e7e7e7;
+              position: absolute;
+              left: 0;
+              top: 50%;
+            }
+            &::after {
+              content: "";
+              display: block;
+              width: 45%;
+              height: 1px;
+              background: #e7e7e7;
+              position: absolute;
+              right: 0;
+              top: 50%;
+            }
+          }
+          .caption {
+            font-size: 14px;
+            margin-top: 10px;
+            a {
+              text-decoration: none;
+            }
+          }
+          .create-btn {
+            border-radius: 0;
+            transition: all ease-in-out 0.4s;
+            &:hover {
+              background: #14a;
+            }
+          }
+          .link {
+            color: #144;
+            text-decoration: none;
+            &:hover {
+              color: #17f;
+            }
+          }
+        }
+        .pass-link {
+          text-align: center !important;
+          text-decoration: none;
+          color: $primary-bg;
+        }
+      }
+    }
+  }
+  // ! SignUp Modal ends
+
+  // ? Info Modal
+  #infoModal {
+    .my-modal {
+      width: $modal-width;
+      .modal-content {
+        background: #fff;
+        border: 0;
+        border-radius: 0;
+        .modal-body {
+          .tab-links {
+            font-family: "Roboto Slab", Arial, serif;
+            font-size: 15px;
+            font-weight: 400;
+            line-height: 22.5px;
+            color: rgb(10, 56, 71);
+          }
+          .start1 {
+            margin-top: -2.4rem;
+          }
+        }
+      }
+    }
+  }
+  // ? Info Modal ends
+
+  // ? Order Modal
+  #orderModal {
+    .my-modal {
+      width: $modal-width;
+      .modal-content {
+        height: 600px !important;
+        background: #fff;
+        border: 0;
+        border-radius: 0;
+        .modal-header {
+          border-radius: 0;
+          background: #f37f36;
+          color: #fff;
+          text-align: center;
+        }
+        .modal-body {
+          .login-btn {
+            background: #358;
+            border-radius: 0;
+            color: #fff;
+            transition: all ease-in-out 0.4s;
+          }
+          .login-btn2 {
+            background: transparent;
+            box-shadow: none;
+            outline: none;
+            border-radius: 0;
+            border: 1px solid #e7e7e7;
+            color: #17f;
+            font-weight: 500;
+            transition: all ease-in-out 0.4s;
+            padding: 14px 120px;
+            &:hover {
+              background: #15c;
+              color: #fff;
+            }
+          }
+          .form-group {
+            .form-control {
+              border-radius: 0;
+              box-shadow: none;
+              outline: none;
+              &:focus {
+                box-shadow: none;
+                outline: none;
+              }
+            }
+          }
+          .or {
+            max-width: 600px;
+            position: relative;
+            font-size: 14px;
+            text-align: center;
+            margin: 20px auto;
+            &::before {
+              content: "";
+              display: block;
+              width: 45%;
+              height: 1px;
+              background: #e7e7e7;
+              position: absolute;
+              left: 0;
+              top: 50%;
+            }
+            &::after {
+              content: "";
+              display: block;
+              width: 45%;
+              height: 1px;
+              background: #e7e7e7;
+              position: absolute;
+              right: 0;
+              top: 50%;
+            }
+          }
+          .caption {
+            font-size: 14px;
+            margin-top: 10px;
+            a {
+              text-decoration: none;
+            }
+          }
+          .create-btn {
+            border-radius: 0;
+            transition: all ease-in-out 0.4s;
+            &:hover {
+              background: #14a;
+            }
+          }
+          .link {
+            color: #144;
+            text-decoration: none;
+            &:hover {
+              color: #17f;
+            }
+          }
+        }
+        .pass-link {
+          text-align: center !important;
+          text-decoration: none;
+          color: $primary-bg;
+        }
+      }
+    }
+  }
+  // ? Order Modal ends
+
+  // * Favorites  Modal
+  #favoritesModal {
+    .my-modal {
+      width: $modal-width;
+      .modal-content {
+        height: 600px !important;
+        background: #fff;
+        border: 0;
+        border-radius: 0;
+        .modal-header {
+          border-radius: 0;
+          background: #f37f36;
+          color: #fff;
+          text-align: center;
+        }
+        .modal-body {
+          .login-btn {
+            background: #358;
+            border-radius: 0;
+            color: #fff;
+            transition: all ease-in-out 0.4s;
+          }
+          .login-btn2 {
+            background: transparent;
+            box-shadow: none;
+            outline: none;
+            border-radius: 0;
+            border: 1px solid #e7e7e7;
+            color: #17f;
+            font-weight: 500;
+            transition: all ease-in-out 0.4s;
+            padding: 14px 95px;
+            &:hover {
+              background: #15c;
+              color: #fff;
+            }
+          }
+          .form-group {
+            .form-control {
+              border-radius: 0;
+              box-shadow: none;
+              outline: none;
+              &:focus {
+                box-shadow: none;
+                outline: none;
+              }
+            }
+          }
+          .or {
+            max-width: 600px;
+            position: relative;
+            font-size: 14px;
+            text-align: center;
+            margin: 20px auto;
+            &::before {
+              content: "";
+              display: block;
+              width: 45%;
+              height: 1px;
+              background: #e7e7e7;
+              position: absolute;
+              left: 0;
+              top: 50%;
+            }
+            &::after {
+              content: "";
+              display: block;
+              width: 45%;
+              height: 1px;
+              background: #e7e7e7;
+              position: absolute;
+              right: 0;
+              top: 50%;
+            }
+          }
+          .caption {
+            font-size: 14px;
+            margin-top: 10px;
+            a {
+              text-decoration: none;
+            }
+          }
+          .create-btn {
+            border-radius: 0;
+            transition: all ease-in-out 0.4s;
+            &:hover {
+              background: #14a;
+            }
+          }
+          .link {
+            color: #144;
+            text-decoration: none;
+            &:hover {
+              color: #17f;
+            }
+          }
+        }
+        .pass-link {
+          text-align: center !important;
+          text-decoration: none;
+          color: $primary-bg;
+        }
+      }
+    }
+  }
+  // * Favorites  Modal ends
+
+  // ? Modal close toggler
+  .close {
+    box-shadow: none !important;
+    border: 0 !important;
+    outline: none !important;
+    &:focus {
+      box-shadow: none !important;
+      border: 0 !important;
+      outline: none !important;
+    }
+  }
+  // ? Modal close toggler ends
+
+  // ? Adress Modal 2
+  #address2Modal {
+    .my-modal {
+      width: 38%;
+      .modal-content {
+        background: #fff;
+        border: 0;
+        border-radius: 0;
+        .modal-header {
+          border-radius: 0;
+          background: #f37f36;
+          color: #fff;
+          text-align: center;
+          justify-content: center;
+        }
+        .modal-body {
+          .form-group {
+            .add-label {
+              font-size: 13px !important;
+              color: rgb(102, 102, 102);
+            }
+            .form-control {
+              border-radius: 5px;
+              height: 37px !important;
+              border-color: #999999;
+              margin-bottom: -15px;
+            }
+          }
+          .or {
+            max-width: 600px;
+            position: relative;
+            font-size: 14px;
+            text-align: center;
+            margin: 20px auto;
+            &::before {
+              content: "";
+              display: block;
+              width: 45%;
+              height: 1px;
+              background: #e7e7e7;
+              position: absolute;
+              left: 0;
+              top: 50%;
+            }
+            &::after {
+              content: "";
+              display: block;
+              width: 45%;
+              height: 1px;
+              background: #e7e7e7;
+              position: absolute;
+              right: 0;
+              top: 50%;
+            }
+          }
+          .caption {
+            font-size: 14px;
+            margin-top: 10px;
+            a {
+              text-decoration: none;
+            }
+          }
+          .create-btn {
+            border-radius: 0;
+            transition: all ease-in-out 0.4s;
+            &:hover {
+              background: #14a;
+            }
+          }
+          .link {
+            color: #144;
+            text-decoration: none;
+            &:hover {
+              color: #17f;
+            }
+          }
+        }
+        .pass-link {
+          text-align: center !important;
+          text-decoration: none;
+          color: $primary-bg;
+        }
+      }
+    }
+  }
+  // ? Adress Modal 2 ends
+
+  // ! Navbar Modal
+}
+
+@media only screen and (max-width: 369px) {
+  .img-fluid {
+    top: 0 !important;
+    right: 0 !important;
+    left: 0 !important;
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  .img-fluid {
+    top: 0 !important;
+    right: 0 !important;
+    left: 0 !important;
+  }
+}
+
+@media only screen and (max-width: 360px) {
+  .navbar {
+    padding: 10px 10px !important;
+    position: relative !important;
+    .img-fluid {
+      width: 150px !important;
+      top: 0 !important;
+      right: 0 !important;
+      left: 0 !important;
+    }
+    #myModal {
+      .my-modal {
+        margin: auto !important;
+        h3 {
+          font-size: 20px !important;
+        }
+        img {
+          width: 60px !important;
+          position: relative !important;
+          left: 0 !important;
+          top: 10% !important;
+        }
+        .create-btn,
+        .login-btn {
+          font-size: 12px !important;
+        }
+      }
+    }
+    #infoModal {
+      .star1 {
+        font-size: 13px !important;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 320px) {
+  .navbar {
+    padding: 10px 10px !important;
+  }
+  #infoModal {
+    .star1 {
+      font-size: 5px !important;
+    }
+  }
+}
+
+// ? Navbar ends
