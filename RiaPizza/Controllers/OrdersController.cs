@@ -124,10 +124,10 @@ namespace RiaPizza.Controllers
         [HttpPost]
         public async Task<JsonResult> Create(IFormCollection form)
         {
-            var order = JsonConvert.DeserializeObject<Order>(form["order"]);
-            var addAddress = JsonConvert.DeserializeObject<bool>(form["addAddress"]);
             try
             {
+                var order = JsonConvert.DeserializeObject<Order>(form["order"]);
+                var addAddress = JsonConvert.DeserializeObject<bool>(form["addAddress"]);
                 if (addAddress)
                 {
                     var userAddress = new AppUserAddress

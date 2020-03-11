@@ -127,7 +127,7 @@ namespace RiaPizza.Services.OrderService
                 .Include(s => s.OrderBy).ToListAsync();
             return todayDeliveredOrders;
         }
-        public async Task<int> TodaySale() {
+        public async Task<float> TodaySale() {
            var todaySale=await _context.Orders.Where(s => s.OrderDateTime.Year == DateTime.Now.Year && s.OrderDateTime.Month == DateTime.Now.Month && s.OrderDateTime.Day == DateTime.Now.Day && s.IsCompleted == true)
                 .Select(s=>s.TotalBill).SumAsync();
             return todaySale;

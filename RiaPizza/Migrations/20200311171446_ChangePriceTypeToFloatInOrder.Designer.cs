@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RiaPizza.Data;
 
 namespace RiaPizza.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200311171446_ChangePriceTypeToFloatInOrder")]
+    partial class ChangePriceTypeToFloatInOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -583,14 +585,14 @@ namespace RiaPizza.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<float>("DishBasePrice")
-                        .HasColumnType("real");
+                    b.Property<int>("DishBasePrice")
+                        .HasColumnType("int");
 
                     b.Property<int>("DishId")
                         .HasColumnType("int");
 
-                    b.Property<float>("DishPriceWithAddOnes")
-                        .HasColumnType("real");
+                    b.Property<int>("DishPriceWithAddOnes")
+                        .HasColumnType("int");
 
                     b.Property<string>("Extras")
                         .HasColumnType("nvarchar(max)");
@@ -604,8 +606,8 @@ namespace RiaPizza.Migrations
                     b.Property<string>("Remarks")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("TotalPrice")
-                        .HasColumnType("real");
+                    b.Property<int>("TotalPrice")
+                        .HasColumnType("int");
 
                     b.HasKey("OrderItemId");
 

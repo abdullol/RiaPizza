@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RiaPizza.Data;
 
 namespace RiaPizza.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200311103859_AddedDishSizeModel")]
+    partial class AddedDishSizeModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -455,7 +457,7 @@ namespace RiaPizza.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<float?>("BasePrice")
+                    b.Property<float>("BasePrice")
                         .HasColumnType("real");
 
                     b.Property<string>("Diameter")
@@ -505,8 +507,8 @@ namespace RiaPizza.Migrations
                     b.Property<string>("Remarks")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("TotalBill")
-                        .HasColumnType("real");
+                    b.Property<int>("TotalBill")
+                        .HasColumnType("int");
 
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
@@ -583,14 +585,14 @@ namespace RiaPizza.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<float>("DishBasePrice")
-                        .HasColumnType("real");
+                    b.Property<int>("DishBasePrice")
+                        .HasColumnType("int");
 
                     b.Property<int>("DishId")
                         .HasColumnType("int");
 
-                    b.Property<float>("DishPriceWithAddOnes")
-                        .HasColumnType("real");
+                    b.Property<int>("DishPriceWithAddOnes")
+                        .HasColumnType("int");
 
                     b.Property<string>("Extras")
                         .HasColumnType("nvarchar(max)");
@@ -604,8 +606,8 @@ namespace RiaPizza.Migrations
                     b.Property<string>("Remarks")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("TotalPrice")
-                        .HasColumnType("real");
+                    b.Property<int>("TotalPrice")
+                        .HasColumnType("int");
 
                     b.HasKey("OrderItemId");
 
@@ -736,7 +738,7 @@ namespace RiaPizza.Migrations
             modelBuilder.Entity("RiaPizza.Models.DishSize", b =>
                 {
                     b.HasOne("RiaPizza.Models.Dish", "Dish")
-                        .WithMany("DishSizes")
+                        .WithMany("DishSize")
                         .HasForeignKey("DishId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

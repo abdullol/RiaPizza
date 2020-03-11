@@ -128,5 +128,29 @@ namespace RiaPizza.Services.DishService
             _context.Dishes.Remove(dish);
             await _context.SaveChangesAsync();
         }
+
+        public async Task AddDishSize(DishSize size)
+        {
+            await _context.DishSize.AddAsync(size);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task EditDishSize(DishSize size)
+        {
+            var dishSize = await _context.DishSize.FindAsync(size.DishSizeId);
+            dishSize.Size = size.Size;
+            dishSize.BasePrice = size.BasePrice;
+            dishSize.Diameter = size.Diameter;
+
+            _context.Update(dishSize);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteDishSize(int id)
+        {
+            var size = await _context.DishSize.FindAsync(id);
+            _context.DishSize.Remove(size);
+            await _context.SaveChangesAsync();
+        }
     }
 }

@@ -30,6 +30,7 @@ namespace RiaPizza.Data
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<OrderDeliveryAddress> OrderDeliveryAddresses { get; set; }
         public DbSet<ShopSchedule> ShopSchedule { get; set; }
+        public DbSet<DishSize> DishSize { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

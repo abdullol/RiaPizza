@@ -18,7 +18,7 @@ namespace RiaPizza.Services.OrderService
         Task<List<Order>> PendingOrders();
         Task<int> TodayDeliveredCount();
         Task<List<Order>> TodayDeliveredOrders();
-        Task<int> TodaySale();
+        Task<float> TodaySale();
         Task<List<Order>> InCompletedOrders();
         Task<List<Order>> AllOrders();
         Task ChangeStatus(int id, string status);

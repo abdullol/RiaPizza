@@ -15,10 +15,11 @@ namespace RiaPizza.Models
         public string Description { get; set; }
         public int DishCategoryId { get; set; }
         public virtual DishCategory DishCategory { get; set; }
-        public int BasePrice { get; set; }
+        public float BasePrice { get; set; }
         public float? Rating { get; set; }
         public bool Status { get; set; }
         public string Allergies { get; set; }
         public IEnumerable<DishExtraType> DishExtraTypes { get; set; }
+        public IEnumerable<DishSize> DishSizes { get; set; }
     }
 }

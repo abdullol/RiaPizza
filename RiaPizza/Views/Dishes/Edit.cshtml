@@ -10,6 +10,9 @@
         .null-marbottom {
             margin-bottom: 0 !important;
         }
+        .hide{
+            display:none;
+        }
     </style>
 }
 <script src="~/Angular/Controllers/DishCtrl.js"></script>
@@ -301,6 +304,53 @@
                             </div>
                         </div>
                     </form>
+
+
+                    <h4 class="card-inside-title">
+                        Dish Sizes 
+                        <button class="btn btn-primary right" onclick="$('#add-dish-size').toggle()"><i class="fa fa-plus"></i></button>
+                    </h4>
+                    @if (Model.DishSizes.Count() > 0)
+                    {
+                        <div class="row">
+                            <div class="col-12">
+                                <table>
+                                    <tr>
+                                        <th>Size</th>
+                                        <th>Price</th>
+                                        <th>Diameter</th>
+                                        <th></th>
+                                    </tr>
+                                </table>
+                                @foreach (var size in Model.DishSizes)
+                                {
+                                    <form method="post" action="~/Dishes/EditDishSize">
+                                        <input type="hidden" name="DishId" value="@Model.DishId" />
+                                        <table class="table table-striped">
+                                            <tr>
+                                                <td><input type="text" class="form-control" name="Size" value="@size.Size" /></td>
+                                                <td><input type="text" class="form-control" name="BasePrice" value="@size.BasePrice" /></td>
+                                                <td><input type="text" class="form-control" name="Diameter" value="@size.Diameter" /></td>
+                                                <td><button class="btn btn-primary"><i class="fas fa-save"></i></button></td>
+                                            </tr>
+                                        </table>
+                                    </form>
+                                }
+                                <form id="add-dish-size hide" method="post" action="~/Dishes/AddDishSize">
+                                    <input type="hidden" name="DishId" value="@Model.DishId" />
+                                    <table>
+                                        <tr>
+                                            <td><input type="text" class="form-control" name="Size" /></td>
+                                            <td><input type="text" class="form-control" name="BasePrice" /></td>
+                                            <td><input type="text" class="form-control" name="Diameter" /></td>
+                                            <td><button class="btn btn-primary"><i class="fas fa-save"></i></button></td>
+                                        </tr>
+                                    </table>
+                                </form>
+                            </div>
+                        </div>
+                    }
+
 
                     <h2 class="card-inside-title">
                         Dish Topping Details

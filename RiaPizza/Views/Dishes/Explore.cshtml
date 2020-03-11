@@ -91,7 +91,7 @@
         $scope.dishCategories = [];
         $scope.toppings = [];
         $scope.temp = "Select Value";
-        $scope.cartItem = { dishId: 0, dishName: "", quantity: 0, dishPrice: 0, priceWithExtras: 0, totalPrice: 0, remarks: "", toppings: [] };
+        $scope.cartItem = { dishId: 0, dishName: "", quantity: 0, dishPrice: 0, priceWithExtras: 0, totalPrice: 0, remarks: "", toppings: [], dishSize: {} };
         $scope.cart = [];
         $scope.ordertotalPrice = { subtotal: 0, totalPrice: 0, tax: 0, deliveryCharges: 0 };
         //End Choose Dishes Attributes
@@ -215,7 +215,10 @@
         }
         function pushCartItemInOrderItems() {
             for (var i = 0; i < $scope.cart.length; i++) {
-                var dishToppings = '';
+                if ($scope.cart[i].dishSize) 
+                    var dishToppings = "Size: "+ $scope.cart[i].dishSize.size + "Ø "+$scope.cart[i].dishSize.diameter+"cm, ";
+                else
+                    var dishToppings = "";
                 for (var j = 0; j < $scope.cart[i].toppings.length; j++) {
                     if (j < $scope.cart[i].toppings.length - 1)
                         dishToppings += $scope.cart[i].toppings[j] + ', ';
@@ -374,6 +377,24 @@
             updatePrice();
             $('#inputSelectedValue-' + id).html(extraName);
         };
+        $scope.selectDishSize = function (id, dishPrice) {
+            var obj = document.getElementById('sizeSelect-' + id).value;
+            var dishSize = JSON.parse(obj);
+            let size = dishSize.size;
+            let baseprice = dishSize.basePrice;
+            $scope.cartItem.dishSize = dishSize;
+            if (baseprice !== 0) {
+                $scope.cartItem.priceWithExtras = ($scope.cartItem.priceWithExtras - $scope.cartItem.dishPrice) + baseprice;
+                $scope.cartItem.dishPrice = baseprice;
+            }
+            else {
+                $scope.cartItem.priceWithExtras = ($scope.cartItem.priceWithExtras - $scope.cartItem.dishPrice) + dishPrice;
+                $scope.cartItem.dishPrice = dishPrice;
+            }
+
+            updatePrice();
+            $('#dishSize-' + id).html(size);
+        };
         function updatePrice() {
             $scope.cartItem.totalPrice = $scope.cartItem.priceWithExtras * $scope.cartItem.quantity;
         };
@@ -474,7 +495,7 @@
                         </div>
                     </div>
 
-                    <p class="cartToppings" ng-if="item.toppings.length>0"> <span ng-repeat="topping in item.toppings" ng-init="toppingIndex = $index">{{topping}} <i ng-if="toppingIndex < item.toppings.length - 1">,</i></span> </p>
+                    <p class="cartToppings" ng-if="item.toppings.length>0"> <span ng-if="item.dishSize">Size: {{item.dishSize.size}} Ø{{item.dishSize.diameter}}cm,</span> <span ng-repeat="topping in item.toppings" ng-init="toppingIndex = $index">{{topping}} <i ng-if="toppingIndex < item.toppings.length - 1">,</i></span> </p>
                     <p class="cartToppings" ng-if="item.remarks!=''" style="margin-bottom:5% !important">{{item.remarks}}</p>
                     <div id="commentinput-{{$index}}" class="commentBox hide" style="margin-bottom:10% !important">
                         <label>Remarks</label>
@@ -951,6 +972,22 @@
                                          aria-labelledby="heading_{{dish.dishId}}">
                                         <div class="panel-body align-items-center py-4">
                                             <div class="container align-items-center">
+                                                <div class="row" ng-if="dish.dishSizes.length > 0">
+                                                    <div class="col-8 mx-auto" ng-if="!extratype.chooseMultiple">
+                                                        <label class="d-block">
+                                                            Ihre:
+                                                        </label>
+                                                        <select class="custom-select mt-2 pointer"
+                                                                ng-model="temp" id="sizeSelect-{{dish.dishId}}"
+                                                                ng-change="selectDishSize(dish.dishId, dish.basePrice)">
+                                                            <option style="font-size:14px;" hidden value="Select Value">Select Size</option>
+                                                            <option style="font-size:14px;" ng-repeat="size in dish.dishSizes" value="{{size}}">{{size.size}} Ø {{size.diameter}}cm ({{size.basePrice}}€)</option>
+                                                        </select>
+                                                        <p class="m-0 mb-3 p-2">
+                                                            <span id="dishSize-{{dish.dishId}}"></span>
+                                                        </p>
+                                                    </div>
+                                                </div>
                                                 <div class="row" ng-repeat="extratype in dish.dishExtraTypes" ng-init="dishExtraTypeIndex = $index">
                                                     <div class="col-8 mx-auto" ng-if="extratype.chooseMultiple" style="margin-bottom:20px">
                                                         <label class="d-block">

@@ -49,6 +49,20 @@ namespace RiaPizza.Services.DeliveryAreaService
             return area;
         }
 
+        public async Task<bool> PostalCodeOtherThanThis(string postalCode, int id)
+        {
+            var exist = await _context.DeliveryAreas.AnyAsync(s => s.PostalCode == postalCode);
+            if (exist)
+            {
+                var area = await _context.DeliveryAreas.SingleOrDefaultAsync(s => s.PostalCode == postalCode);
+                if (area.DeliveryAreaId == id)
+                    return false;
+                else
+                    return true;
+            }
+            return false;
+        }
+
         public async Task ToggleDeliveryService(int id, bool isAvailable)
         {
             var deliveryArea = await _context.DeliveryAreas.FindAsync(id);

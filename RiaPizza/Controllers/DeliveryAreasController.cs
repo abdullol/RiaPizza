@@ -59,7 +59,7 @@ namespace RiaPizza.Controllers
             string message;
             try
             {
-                if (await _service.ValidatePostalCode(deliveryArea.PostalCode))
+                if (await _service.PostalCodeOtherThanThis(deliveryArea.PostalCode, deliveryArea.DeliveryAreaId))
                 {
                     return Json("PostalCodeExists");
                 }
