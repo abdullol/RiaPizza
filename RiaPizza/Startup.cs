@@ -14,6 +14,7 @@ using RiaPizza.Data;
 using RiaPizza.Data.ApplicationUser;
 using RiaPizza.Services.AccountService;
 using RiaPizza.Services.DeliveryAreaService;
+using RiaPizza.Services.DeliveryTimingService;
 using RiaPizza.Services.DishCategoryService;
 using RiaPizza.Services.DishService;
 using RiaPizza.Services.NotifyOrder;
@@ -58,6 +59,7 @@ namespace RiaPizza
             services.AddTransient<IAccountService, AccountService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IScheduleService, ScheduleService>();
+            services.AddTransient<IDeliveryTimingService, DeliveryTimingService>();
 
             //services.AddMvc(s=>s.EnableEndpointRouting = false);
             services.AddSignalR();
