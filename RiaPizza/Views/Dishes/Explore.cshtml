@@ -537,7 +537,7 @@
     </div>
     <!-- Sidebar ends -->
     <div class="car-btn-section">
-        <button id="cart-btn-mob" class="btn btn-block py-3 text-center bg-primary text-white"><i class="fas fa-shopping-cart"></i> &nbsp; Cart</button>
+        <button id="cart-btn-mob" class="rounded-0 btn btn-block py-3 text-center bg-primary text-white"><i class="fas fa-shopping-cart"></i> &nbsp; Cart</button>
     </div>
     <div id="cart-modal" data-backdrop-limit="1" tabindex="-1" role="dialog"
              aria-labelledby="myModalLabel" aria-hidden="true" class="modal">
@@ -755,23 +755,6 @@
                                 </div>
                                 <div class="row mt-4 align-items-center">
                                     <div class="col-md-1 col-2">
-                                        <i class="far fa-window-maximize fa-2x"></i>
-                                    </div>
-                                    <div class="col-md-11 col-10">
-                                        <h5>Website</h5>
-                                    </div>
-                                </div>
-                                <div class="row my-3 p-3" style="background-color: #f8f5f2;">
-                                    <div class="col-6">
-                                        <a class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; text-decoration: none;"
-                                           href="#">
-                                            riapizza-herrenberg.de
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="row mt-4 align-items-center">
-                                    <div class="col-md-1 col-2">
                                         <i class="fas fa-credit-card fa-2x"></i>
                                     </div>
                                     <div class="col-md-11 col-10">
@@ -781,28 +764,10 @@
                                 <div class="row text-center align-items-center my-3 mx-auto p-3"
                                      style="background-color: #f8f5f2;">
                                     <div class="col-2 bg-white p-2 border m-2">
-                                        <img src="./res/img/payment_0.png" alt="payment_0" class="img-fluid" />
+                                        <img src="~/client-assets/res/img/payment_0.png" alt="payment_0" class="img-fluid" />
                                     </div>
                                     <div class="col-2 bg-white p-2 border m-2">
-                                        <img src="./res/img/payment_1.png" alt="payment_1" class="img-fluid" />
-                                    </div>
-                                    <div class="col-2 bg-white p-2 border m-2">
-                                        <img src="./res/img/payment_2.png" alt="payment_2" class="img-fluid" />
-                                    </div>
-                                    <div class="col-2 bg-white p-2 border m-2">
-                                        <img src="./res/img/payment_3.png" alt="payment_3" class="img-fluid" />
-                                    </div>
-                                    <div class="col-2 bg-white p-2 border m-2">
-                                        <img src="./res/img/payment_4.png" alt="payment_4" class="img-fluid" />
-                                    </div>
-                                    <div class="col-2 bg-white p-2 border m-2">
-                                        <img src="./res/img/payment_5.png" alt="payment_5" class="img-fluid" />
-                                    </div>
-                                    <div class="col-2 bg-white p-2 border m-2">
-                                        <img src="./res/img/payment_6.png" alt="payment_6" class="img-fluid" />
-                                    </div>
-                                    <div class="col-2 bg-white p-2 border m-2">
-                                        <img src="./res/img/payment_7.png" alt="payment_7" class="img-fluid" />
+                                        <img src="~/client-assets/res/img/payment_6.png" alt="payment_1" class="img-fluid" />
                                     </div>
                                 </div>
                                 <div class="row mt-4 align-items-center">
@@ -917,7 +882,7 @@
         <!-- Swiper -->
         <div class="js-menu-category-bar-sticky sticky-top mr" id="mainNav" ng-init="getDishCategories()">
             <div class="swiper-container container" style="max-width: 1050px;">
-                @*<button type="button" onclick="showSearchBar()" class="left fas fa-search fa-1x border-0 bg-transparent" id="search-btn"></button>*@
+                <button type="button" onclick="showSearchBar()" class="left fas fa-search fa-1x border-0 bg-transparent" id="search-btn"></button>
                 <div class="swiper-wrapper container" id="dish-list">
                     <a style="color:black; font-weight: bold" ng-repeat="cat in dishCategories" href="#cat_{{$index}}" data-category="{{$index}}" class="swiper-slide nav-link js-scroll-trigger dishlink">{{cat.categoryName}}</a>
                 </div>
@@ -939,7 +904,7 @@
             <section ng-repeat="dishCategory in dishCategories" ng-init="categoryIndex=$index" id="cat_{{categoryIndex}}" class="group-item">
                 <div class="container">
                     <div class="row mx-md-4 mx-1 mt-3 dish-head">
-                        <div class="col-12 ml-5 py-3 mx-auto dish-col" style="background:url(/Uploads/{{dishCategory.image}});">
+                        <div class="col-12 ml-5 py-3 mb-4 mx-auto dish-col" style="background:url(/Uploads/{{dishCategory.image}});">
                             <h5> {{dishCategory.categoryName}} </h5>
                         </div>
                     </div>
@@ -971,9 +936,9 @@
                                         <div class="panel-body align-items-center py-4">
                                             <div class="container align-items-center">
                                                 <div class="row" ng-if="dish.dishSizes.length > 0">
-                                                    <div class="col-8 mx-auto" ng-if="!extratype.chooseMultiple">
+                                                    <div class="col-8 mt-4 mx-auto" ng-if="!extratype.chooseMultiple">
                                                         <label class="d-block">
-                                                            Ihre:
+                                                            lhre Sauce:
                                                         </label>
                                                         <select class="custom-select mt-2 pointer"
                                                                 ng-model="temp" id="sizeSelect-{{dish.dishId}}"
@@ -1024,15 +989,15 @@
                                                         </p>
                                                     </div>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="col-4 text-right">
+                                                <div style="width:100%; margin-bottom:6%">
+                                                    <div class="text-right" style="width:40%; float:left">
                                                         <form method='POST' action='#' class="d-inline-block">
                                                             <input type='button' value='-' class='qtminus btn' ng-click="addQty(dish.dishId,'less')" />
                                                             <input id="qty-{{dish.dishId}}" type='text' name='quantity' value='0' class='qtvalue btn' disabled />
                                                             <input type='button' value='+' class='qtplus btn' ng-click="addQty(dish.dishId,'add')" />
                                                         </form>
                                                     </div>
-                                                    <div class="col-8 d-inline-block">
+                                                    <div class="text-left" style="width:60%; float:right">
                                                         <button class="btn btn-primary order-btn" ng-click="addToCart(dish)" id="totalPrice-{{dishIndex}}">{{cartItem.totalPrice}} €</button>
                                                     </div>
                                                 </div>
