@@ -121,6 +121,7 @@
         $scope.cartItem = { dishId: 0, dishName: "", quantity: 0, dishPrice: 0, priceWithExtras: 0, totalPrice: 0, remarks: "", toppings: [], dishSize: {} };
         $scope.cart = [];
         $scope.ordertotalPrice = { subtotal: 0, totalPrice: 0, tax: 0, deliveryCharges: 0 };
+        $scope.deliveryTimings = [];
         //End Choose Dishes Attributes
 
         //Start Ordering Attributes
@@ -448,6 +449,11 @@
         }
         //End Choose Dishes Methods
 
+        $scope.getDeliveryTiming = function () {
+            JsonCall("DeliveryTiming", "GetDeliveryTimes");
+            $scope.deliveryTimings = list;
+        }
+
         $scope.proceedOrder = function () {
             if ($scope.shopschedule.isOpen) {
                 $('#chooseDishes').hide();
@@ -461,13 +467,11 @@
                 $('.shopClosed').modal();
             }
         }
-
         $scope.backToDishes = function () {
             $('#chooseDishes').show();
             $('#orderTab').hide();
             $('#orderBtn').show();
         }
-
         $scope.showDishDesc = function (allergies) {
             $(".dishDetails").modal();
             if (allergies !=='' && allergies !== null)
@@ -475,7 +479,6 @@
             else
                 $(".dishAllergies").html("<h6 style='font-weight:bold'>No Allergies Found</h6>");
         }
-
         $scope.showPaypalBtn = function () {
             if ($scope.shopschedule.isOpen) {
                 $scope.order.totalBill = $scope.ordertotalPrice.totalPrice;
@@ -487,7 +490,6 @@
             }
             
         }
-
         function cartButtonEffect() {
             var time = 700;
             setTimeout(function () {
@@ -705,63 +707,15 @@
                                 </div>
                                 <div class="row my-3 p-3" style="background-color: #f8f5f2;">
                                     <div class="col-6">
-                                        <p class="mb-2"
+                                        <p class="mb-2" ng-repeat="timing in deliveryTimings"
                                            style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            Monday
-                                        </p>
-                                        <p class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            Tuesday
-                                        </p>
-                                        <p class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            Wednesday
-                                        </p>
-                                        <p class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            Thursday
-                                        </p>
-                                        <p class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            Friday
-                                        </p>
-                                        <p class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            Saturday
-                                        </p>
-                                        <p class=""
-                                           style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            Sunday
+                                            {{timing.day}}
                                         </p>
                                     </div>
-                                    <div class="col-6 text-right">
+                                    <div class="col-6 text-right" ng-repeat="timing in deliveryTimings">
                                         <p class="mb-2"
                                            style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            17:00 - 22:30
-                                        </p>
-                                        <p class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            17:00 - 22:30
-                                        </p>
-                                        <p class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            17:00 - 22:30
-                                        </p>
-                                        <p class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            17:00 - 22:30
-                                        </p>
-                                        <p class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            17:00 - 00:00
-                                        </p>
-                                        <p class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            12:00 - 00:00
-                                        </p>
-                                        <p class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            12:00 - 22:30
+                                            {{timing.timings}}
                                         </p>
                                     </div>
                                 </div>
@@ -787,11 +741,11 @@
                                     <div class="col-6 text-right">
                                         <p class="mb-2"
                                            style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            10.00 €
+                                            @Model.MinOrderCharges €
                                         </p>
                                         <p class="mb-2"
                                            style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            Free
+                                            @Model.DeliveryCharges €
                                         </p>
                                     </div>
                                 </div>
@@ -902,7 +856,7 @@
                 <div class="row align-items-center mb-3">
                     <ul class="list-unstyled text-right ml-auto">
                         <li class="d-inline-block">
-                            <button type="button" href="#infoModal" role="button" class="border"
+                            <button ng-click="getDeliveryTiming()" type="button" href="#infoModal" role="button" class="border"
                                     data-toggle="modal" id="info">
                                 <i class="fas fa-info fa-md info align-self-center"></i>
                             </button>
