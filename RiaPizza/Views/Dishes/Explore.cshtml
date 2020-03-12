@@ -26,6 +26,9 @@
         .pointer{
             cursor: pointer !important;
         }
+        .order-btn{
+            height:45px;
+        }
         @@media only screen and (max-width: 992px) {
             #sidebar{
                 display:none
@@ -34,8 +37,11 @@
                 margin-right:10px !important;
                 width:100%;
             }
-            #cart-btn-mob{
-                display:block !important;
+            #cart-btn-mob {
+                display: block !important;
+            }
+            .order-btn{
+                height:35px;
             }
         }
         #cart-btn-mob{
@@ -43,6 +49,27 @@
             position: fixed;
             bottom: 0;
             z-index: 1000;
+        }
+        .carousel-indicators li{
+            width: auto !important;
+            margin-right: 0 !important;
+        }
+        #cart-btn-mob .p1[data-count]:after{
+          position:absolute;
+          right:20%;
+          top:8%;
+          content: attr(data-count);
+          font-size:40%;
+          padding:.2em;
+          border-radius:50%;
+          line-height:1em;
+          color: white;
+          background:rgba(255,0,0,.85);
+          text-align:center;
+          min-width: 1em;
+        }
+        #cart-btn-mob .p1{
+            margin-left:-20px;
         }
     </style>
 }
@@ -269,6 +296,7 @@
                 }
                 $scope.saveCart();
                 $scope.loadCart();
+                cartButtonEffect();
             }
             else {
                 $('.shopClosed').modal();
@@ -460,6 +488,14 @@
             
         }
 
+        function cartButtonEffect() {
+            var time = 700;
+            setTimeout(function () {
+                $('#cart-btn-mob').removeClass("bg-warning").addClass("bg-primary");
+            }, time);
+            $('#cart-btn-mob').removeClass("bg-primary").addClass("bg-warning");
+            
+        }
     });
 </script>
 <div ng-controller="ViewDishes" id="ViewDishes">
@@ -537,7 +573,13 @@
     </div>
     <!-- Sidebar ends -->
     <div class="car-btn-section">
-        <button id="cart-btn-mob" class="rounded-0 btn btn-block py-3 text-center bg-primary text-white"><i class="fas fa-shopping-cart"></i> &nbsp; Cart</button>
+        <button id="cart-btn-mob" class="rounded-0 btn btn-block py-3 text-center bg-primary text-white">
+            Cart
+            <span class="p1 fa-stack fa-2x has-badge" data-count="{{cart.length}}">
+                <!--<i class="p2 fa fa-circle fa-stack-2x"></i>-->
+                <i style="font-size:20px" class="p3 fa fa-shopping-cart fa-stack-1x xfa-inverse" data-count="4b"></i>
+            </span>
+        </button>
     </div>
     <div id="cart-modal" data-backdrop-limit="1" tabindex="-1" role="dialog"
              aria-labelledby="myModalLabel" aria-hidden="true" class="modal">
@@ -884,7 +926,7 @@
             <div class="swiper-container container" style="max-width: 1050px;">
                 <button type="button" onclick="showSearchBar()" class="left fas fa-search fa-1x border-0 bg-transparent" id="search-btn"></button>
                 <div class="swiper-wrapper container" id="dish-list">
-                    <a style="color:black; font-weight: bold" ng-repeat="cat in dishCategories" href="#cat_{{$index}}" data-category="{{$index}}" class="swiper-slide nav-link js-scroll-trigger dishlink">{{cat.categoryName}}</a>
+                    <a ng-repeat="cat in dishCategories" href="#cat_{{$index}}" data-category="{{$index}}" class="swiper-slide nav-link js-scroll-trigger dishlink" style="color:black;font-weight: bold;">{{cat.categoryName}}</a>
                 </div>
                 <div class="input-group mb-3" id="search-box">
                     <input type="text" class="form-control" placeholder="Search for meals, etc.." style="border-radius: 0 !important;">
@@ -1307,11 +1349,14 @@
     <script src="~/client-assets/res/js/myswiper.js"></script>
     <script>
         $(document).ready(function(){
-          $("#cart-btn-mob").click(function(){
-              //$("#sidenav").addClass("modal");
-              //$('#sidenav').attr("role", "dialoge");
-              $('#cart-modal').modal();
-          });
+            $("#cart-btn-mob").click(function(){
+                $('#cart-modal').modal();
+            });
+            //$('.dishlink').css({"margin-right":"0"});
+            $('.dishlink').css({"width":"auto"});
         });
+        //$(window).on('load',function(){
+        //    $('.swiper-slide').modal('show');
+        //});
     </script>
 }

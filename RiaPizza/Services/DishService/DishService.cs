@@ -20,7 +20,7 @@ namespace RiaPizza.Services.DishService
         //Interface Functions
         public async Task<Dish> GetDish(int id)
         {
-            var dish = await _context.Dishes.Include(s=>s.DishExtraTypes).ThenInclude(s=>s.DishExtras).SingleOrDefaultAsync(s=>s.DishId == id);
+            var dish = await _context.Dishes.Include(s=>s.DishSizes).Include(s=>s.DishExtraTypes).ThenInclude(s=>s.DishExtras).SingleOrDefaultAsync(s=>s.DishId == id);
             return dish;
         }
         public async Task<List<Dish>> GetDishes(int id)
