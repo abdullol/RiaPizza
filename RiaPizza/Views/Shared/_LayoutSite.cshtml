@@ -168,7 +168,7 @@
                                 <i class="sl-flag flag-usa">
                                     <div id="germany"></div>
                                 </i>
-                                <a href="#googtrans(de|en)" data-lang="en" class="lang-es lang-select">
+                                <a href="#googtrans(en|en)" data-lang="en" class="lang-es lang-select">
                                     <span class="active">English</span>
                                 </a>
                             </li>
@@ -546,20 +546,7 @@
         //google translator Code (paste in script tag section)
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({ pageLanguage: 'en', layout: google.translate.TranslateElement.FloatPosition.TOP_LEFT }, 'google_translate_element');
-        }
-
-        function triggerHtmlEvent(element, eventName) {
-            var event;
-            if (document.createEvent) {
-                event = document.createEvent('HTMLEvents');
-                event.initEvent(eventName, true, true);
-                element.dispatchEvent(event);
-            } else {
-                event = document.createEventObject();
-                event.eventType = eventName;
-                element.fireEvent('on' + event.eventType, event);
-            }
-        }
+        }     
 
         jQuery('.lang-select').click(function () {
             var theLang = jQuery(this).attr('data-lang');
