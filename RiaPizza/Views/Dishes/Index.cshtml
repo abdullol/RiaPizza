@@ -135,17 +135,17 @@
                                                                         {
                                                                             <div class="col-lg-12">
                                                                                 <div class="row clearfix">
-                                                                                    <div class="col-lg-2"></div>
-                                                                                    <div class="col-lg-4 heading align-center"><b>Topping Name</b></div>
-                                                                                    <div class="col-lg-4 heading align-center"><b>Topping Price</b></div>
+                                                                                    <div class="col-lg-3 heading align-center"><b>Topping Name</b></div>
+                                                                                    <div class="col-lg-3 heading align-center"><b>Topping Price</b></div>
+                                                                                    <div class="col-lg-3 heading align-center"><b>Allergy</b></div>
                                                                                     <div class="col-lg-2"></div>
                                                                                     <br />
                                                                                     @foreach (var extra in type.DishExtras)
                                                                                     {
 
-                                                                                        <div class="col-lg-2"></div>
-                                                                                        <div class="col-md-4 align-center">@extra.ExtraName</div>
-                                                                                        <div class="col-md-4 align-center">@extra.ExtraPrice</div>
+                                                                                        <div class="col-md-3 align-center">@extra.ExtraName</div>
+                                                                                        <div class="col-md-3 align-center">@extra.ExtraPrice</div>
+                                                                                        <div class="col-md-3 align-center">@extra.Allergies</div>
                                                                                         <div class="col-lg-2"></div>
                                                                                         <br />
                                                                                     }

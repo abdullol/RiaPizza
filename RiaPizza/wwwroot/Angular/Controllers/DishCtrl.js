@@ -91,19 +91,19 @@
     $scope.pushDishExtraType = function () {
         var length = $scope.addDishExtraTypes.length;
         if (length === 0) {
-            $scope.addDishExtraTypes.push({ typeName: '', chooseMultiple: true, dishExtras: [{ extraName: '', extraPrice: 0 }] });
+            $scope.addDishExtraTypes.push({ typeName: '', chooseMultiple: true, dishExtras: [{ extraName: '', extraPrice: 0, allergies: '' }] });
         }
         else if ($scope.addDishExtraTypes[length - 1].typeName !== '') {
-            $scope.addDishExtraTypes.push({ typeName: '', chooseMultiple: true, dishExtras: [{ extraName: '', extraPrice: 0 }] });
+            $scope.addDishExtraTypes.push({ typeName: '', chooseMultiple: true, dishExtras: [{ extraName: '', extraPrice: 0, allergies: '' }] });
         }
     }
     $scope.pushDishExtra = function (i) {
         var length = $scope.addDishExtraTypes[i].dishExtras.length;
         if (length === 0) {
-            $scope.addDishExtraTypes[i].dishExtras.push({ extraName: '', extraPrice: 0 });
+            $scope.addDishExtraTypes[i].dishExtras.push({ extraName: '', extraPrice: 0, allergies: '' });
         }
         else if ($scope.addDishExtraTypes[i].dishExtras[length - 1].extraName !== "") {
-            $scope.addDishExtraTypes[i].dishExtras.push({ extraName: '', extraPrice: 0 });
+            $scope.addDishExtraTypes[i].dishExtras.push({ extraName: '', extraPrice: 0, allergies: '' });
         }
     }
     $scope.removeExtraType = function (i) {
