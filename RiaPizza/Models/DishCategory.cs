@@ -14,6 +14,7 @@ namespace RiaPizza.Models
         public bool IsAvailable { get; set; }
         public bool Status { get; set; }
         public string Image { get; set; }
+        public int OrderBy { get; set; }
         public IEnumerable<Dish> Dishes { get; set; }
     }
 }

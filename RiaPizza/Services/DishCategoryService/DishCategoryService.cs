@@ -62,6 +62,7 @@ namespace RiaPizza.Services.DishCategoryService
                 dishCategory.Image = editDishCategory.Image;
             }
             dishCategory.IsAvailable = editDishCategory.IsAvailable;
+            dishCategory.OrderBy = editDishCategory.OrderBy;
 
             _context.DishCategories.Update(dishCategory);
             await _context.SaveChangesAsync();

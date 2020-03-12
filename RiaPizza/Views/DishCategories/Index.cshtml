@@ -77,6 +77,12 @@
                                                            placeholder="Enter Dish Category Name" ng-model="addCategoryObj.categoryName">
                                                 </div>
                                             </div>
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <input type="text" class="form-control"
+                                                           placeholder="OrderBy" ng-model="addCategoryObj.orderBy">
+                                                </div>
+                                            </div>
                                             <label>Image <span class="text-danger">*</span></label>
                                             <div class="form-group">
                                                 <input style="display:none" type="file" id="fileInput" oninput="showImage()">
@@ -101,7 +107,7 @@
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="formModal">Edit Delivery Area</h5>
+                                        <h5 class="modal-title" id="formModal">Edit Dish Category</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -113,6 +119,12 @@
                                                 <div class="form-line">
                                                     <input type="text" class="form-control"
                                                            placeholder="Enter Dish Category Name" ng-model="editCategoryObj.categoryName">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <input type="text" class="form-control"
+                                                           placeholder="OrderBy" ng-model="editCategoryObj.orderBy">
                                                 </div>
                                             </div>
                                             <label>Image</label>
@@ -145,6 +157,7 @@
                                     <th>Image</th>
                                     <th>Is Avalaible</th>
                                     <th>Status</th>
+                                    <th>OrderBy</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -163,6 +176,7 @@
                                         <div ng-if="cat.status" class="badge col-green">active</div>
                                         <div ng-if="!cat.status" class="badge col-red">disabled</div>
                                     </td>
+                                    <td>{{cat.orderBy}}</td>
                                     <td>
                                         <button class="btn btn-primary" ng-click="openEditModal(cat)"><i class="fas fa-pencil-alt"></i></button>
                                         <button class="btn btn-danger" ng-click="delDishCategory(cat.dishCategoryId)"><i class="fas fa-trash-alt"></i></button>
@@ -176,6 +190,7 @@
                                     <th>Image</th>
                                     <th>Is Avalaible</th>
                                     <th>Status</th>
+                                    <th>OrderBy</th>
                                     <th>Actions</th>
                                 </tr>
                             </tfoot>
