@@ -340,20 +340,26 @@
                                 <i class="fa fa-plus"></i>
                             </button>
                             <div class="row clearfix" ng-if="extraType.dishExtras.length > 0" style="margin-top:30px">
-                                <div class="col-lg-5"><label>Topping Name <span class="text-danger">*</span></label></div>
-                                <div class="col-lg-5"><label>Topping Price <span class="text-danger">*</span></label></div>
+                                <div class="col-lg-3"><label>Topping Name <span class="text-danger">*</span></label></div>
+                                <div class="col-lg-3"><label>Topping Price <span class="text-danger">*</span></label></div>
+                                <div class="col-lg-3"><label>Allergies</label></div>
                                 <div class="col-lg-2"><label class="right">Actions</label></div>
                             </div>
                             <div class="row clearfix" ng-repeat="extra in extraType.dishExtras" ng-init="extraIndex=$index">
-                                <div class="col-lg-5">
+                                <div class="col-lg-3">
                                     <div class="form-group">
                                         <input type="text" class="form-control" placeholder="Topping" ng-model="extra.extraName"
                                                required>
                                     </div>
                                 </div>
-                                <div class="col-lg-5">
+                                <div class="col-lg-3">
                                     <input type="number" class="form-control" placeholder="$$" ng-model="extra.extraPrice"
                                            required>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" placeholder="Allergies" ng-model="extra.allergies" />
+                                    </div>
                                 </div>
                                 <div class="col-lg-2">
                                     <button class="btn btn-danger right" ng-click="removeExtra(extraTypeIndex, extraIndex)"><i class="fas fa-trash-alt"></i></button>
@@ -361,7 +367,6 @@
                             </div>
                         </div>
                         <div class="col-lg-1"></div>
-
                     </div>
 
                     <button class="btn btn-info" style="float:right; margin-right:5px">Clear</button>
