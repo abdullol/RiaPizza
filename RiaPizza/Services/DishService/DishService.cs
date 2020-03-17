@@ -58,6 +58,42 @@ namespace RiaPizza.Services.DishService
 
             await _context.Dishes.AddAsync(addDish);
             await _context.SaveChangesAsync();
+
+            
+            await SaveToppingPrices(addDish);
+        }
+        private async Task SaveToppingPrices(Dish addDish)
+        {
+            try
+            {
+                var sizes = addDish.DishSizes;
+                var toppingPrices = new List<SizeToppingPrice>();
+                foreach (var extraType in addDish.DishExtraTypes)
+                {
+                    foreach (var extra in extraType.DishExtras)
+                    {
+                        foreach (var sizePrice in extra.SizeToppingPrices)
+                        {
+                            toppingPrices.Add(sizePrice);
+                        }
+                    }
+                }
+                foreach (var size in sizes)
+                {
+                    var toppingPrice = toppingPrices.Where(s => s.SizeName == size.Size).ToList();
+                    toppingPrice.ForEach(s => s.DishSizeId = size.DishSizeId);
+
+                    foreach (var price in toppingPrice)
+                    {
+                        _context.SizeToppingPrices.Update(price);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+
+            }
         }
         public async Task AddDishExtra(DishExtra extra)
         {
@@ -83,8 +119,8 @@ namespace RiaPizza.Services.DishService
         }
         public async Task<List<DishExtraType>> GetDishExtrasTypes(int id)
         {
-            var dishExtras = await _context.DishExtraTypes.Include(s => s.DishExtras).Where(s => s.DishId == id).ToListAsync();
-            dishExtras.ForEach(s => s.DishExtras.ToList().ForEach(s => s.DishExtraType = null));
+            var dishExtras = await _context.DishExtraTypes.Include(s => s.DishExtras).ThenInclude(s=>s.SizeToppingPrices).Where(s => s.DishId == id).ToListAsync();
+            dishExtras.ForEach(s => s.DishExtras.ToList().ForEach(s => { s.DishExtraType = null; s.SizeToppingPrices.ToList().ForEach(a => a.DishExtra = null); }));
             return dishExtras;
         }
         public async Task EditDishExtraType(DishExtraType editDishExtraType)

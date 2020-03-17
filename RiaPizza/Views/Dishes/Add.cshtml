@@ -59,9 +59,12 @@
         $scope.dishCategories = [];
         $scope.multipleSizes = false;
         $scope.dishSizes = [];
+        $scope.sizeToppingPrices = [];
+        $scope.haveToppings = false;
+
 
         //Add Dish Objects
-        $scope.addDish = { dishName: '', subName: '', description: '', dishCategoryId: 0, basePrice: 0, allergies: '', dishSizes:[] };
+        $scope.addDish = { dishName: '', subName: '', description: '', dishCategoryId: '0', basePrice: 0, allergies: '', dishSizes:[] };
         $scope.addDishExtraTypes = [];
         $scope.getDishCategories = function () {
             JsonCall("DishCategories", "GetAllCategories");
@@ -74,11 +77,13 @@
         //Start Dish Only Function
         $scope.saveDish = function () {
             if ($scope.addDish.dishName === "" || Number($scope.addDish.dishCategoryId) === 0 || $scope.addDish.basePrice === 0) { return; }
-            for (var i = 0; i < $scope.addDishExtraTypes.length; i++) {
-                if ($scope.addDishExtraTypes[i].typeName === "") { return; }
-                for (var j = 0; j < $scope.addDishExtraTypes[i].dishExtras.length; j++)
-                { if ($scope.addDishExtraTypes[i].dishExtras[j].extraName === "") { return; } }
+            if ($scope.haveToppings) {
+                for (var i = 0; i < $scope.addDishExtraTypes.length; i++) {
+                    if ($scope.addDishExtraTypes[i].typeName === "") { return; }
+                    for (var j = 0; j < $scope.addDishExtraTypes[i].dishExtras.length; j++) { if ($scope.addDishExtraTypes[i].dishExtras[j].extraName === "") { return; } }
+                }
             }
+            
 
             if ($scope.multipleSizes) {
                 $scope.addDish.dishSizes = $scope.dishSizes;
@@ -114,19 +119,35 @@
         $scope.pushDishExtraType = function () {
             var length = $scope.addDishExtraTypes.length;
             if (length === 0) {
-                $scope.addDishExtraTypes.push({ typeName: '', chooseMultiple: true, dishExtras: [{ extraName: '', extraPrice: 0 }] });
+                let list = [];
+                for (var i = 0; i < $scope.sizeToppingPrices.length; i++) {
+                    list.push({ dishExtraId: 0, dishSizeId: 0, price: 0,sizeName:$scope.sizeToppingPrices[i].sizeName });
+                }
+                $scope.addDishExtraTypes.push({ typeName: '', chooseMultiple: true, dishExtras: [{ extraName: '', extraPrice: 0, sizeToppingPrices: list }] });
             }
             else if ($scope.addDishExtraTypes[length - 1].typeName !== '') {
-                $scope.addDishExtraTypes.push({ typeName: '', chooseMultiple: true, dishExtras: [{ extraName: '', extraPrice: 0 }] });
+                let list = [];
+                for (var i = 0; i < $scope.sizeToppingPrices.length; i++) {
+                    list.push({ dishExtraId: 0, dishSizeId: 0, price: 0,sizeName:$scope.sizeToppingPrices[i].sizeName });
+                }
+                $scope.addDishExtraTypes.push({ typeName: '', chooseMultiple: true, dishExtras: [{ extraName: '', extraPrice: 0, sizeToppingPrices: list }] });
             }
         }
         $scope.pushDishExtra = function (i) {
             var length = $scope.addDishExtraTypes[i].dishExtras.length;
             if (length === 0) {
-                $scope.addDishExtraTypes[i].dishExtras.push({ extraName: '', extraPrice: 0 });
+                let list = [];
+                for (var j = 0; j < $scope.sizeToppingPrices.length; j++) {
+                    list.push({ dishExtraId: 0, dishSizeId: 0, price: 0,sizeName:$scope.sizeToppingPrices[j].sizeName });
+                }
+                $scope.addDishExtraTypes[i].dishExtras.push({ extraName: '', extraPrice: 0, sizeToppingPrices: list });
             }
             else if ($scope.addDishExtraTypes[i].dishExtras[length - 1].extraName !== "") {
-                $scope.addDishExtraTypes[i].dishExtras.push({ extraName: '', extraPrice: 0 });
+                let list = [];
+                for (var j = 0; j < $scope.sizeToppingPrices.length; j++) {
+                    list.push({ dishExtraId: 0, dishSizeId: 0, price: 0,sizeName:$scope.sizeToppingPrices[j].sizeName });
+                }
+                $scope.addDishExtraTypes[i].dishExtras.push({ extraName: '', extraPrice: 0, sizeToppingPrices: list });
             }
         }
         $scope.removeExtraType = function (i) {
@@ -139,14 +160,19 @@
             var count = $scope.dishSizes.length;
             if (count !== 0) {
                 if ($scope.dishSizes[count - 1].size == "") return;
-                else $scope.dishSizes.push({ size: "", basePrice: 0.0, diameter: "" });
+                else {
+                    $scope.dishSizes.push({ size: "", basePrice: 0.0, diameter: "" });
+                    $scope.sizeToppingPrices.push({ dishExtraId: 0, dishSizeId: 0, price: 0,sizeName:"" });
+                }
             }
             else {
                 $scope.dishSizes.push({ size: "", basePrice: 0.0, diameter: "" });
+                $scope.sizeToppingPrices.push({ dishExtraId: 0, dishSizeId: 0, price: 0,sizeName:"" });
             }
         }
         $scope.removeSize = function (index) {
             $scope.dishSizes.splice(index, 1);
+            $scope.sizeToppingPrices.splice(index, 1);
         }
         //End Dish Only Function
     
@@ -172,6 +198,10 @@
                 $scope.getAllCategories();
                 swal("Removed", "Dish Category Deleted!", "success");
             }
+        }
+        $scope.proceed = function () {
+            $scope.addDishExtraTypes = [];
+            $scope.pushDishExtraType();
         }
     });
 
@@ -233,15 +263,13 @@
                         <div class="col-lg-12 col-md-12 null-marbottom">
                             <div class="form-group">
                                 <label>Base Price <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" placeholder="$$" ng-model="addDish.basePrice" min="0"
-                                       required>
+                                <input type="number" class="form-control" placeholder="$$" ng-model="addDish.basePrice" min="0" required>
                             </div>
                         </div>
                         <div class="col-lg-12 col-md-12 null-marbottom">
                             <div class="form-group">
                                 <label>Allergies <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" placeholder="enter the allergies" ng-model="addDish.allergies" min="0"
-                                       required>
+                                <input type="text" class="form-control" placeholder="enter the allergies" ng-model="addDish.allergies" min="0" required>
                             </div>
                         </div>
                         <div class="col-md-12 col-md-12">
@@ -251,29 +279,29 @@
                             </div>
                         </div>
                         <div class="col-md-12 col-md-12">
-                            <div class="form-group">
-                                <label>Multiple Sizes</label>
-                                <div class="switch">
+                            <div class="form-group" style="width:100%;">
+                                <label style="width:10%; float:left">Multiple Sizes</label>
+                                <div class="switch" style="width:90%; float:right">
                                     <label>
                                         <input type="checkbox" ng-model="multipleSizes">
                                         <span class="lever switch-col-light-blue"></span>
                                     </label>
                                 </div>
                             </div>
-                            <form name="sizeForm" ng-if="multipleSizes">
+                            <form name="sizeForm" ng-if="multipleSizes" id="sizeForm">
                                 <table>
                                     <tr>
                                         <th width="30%">Size</th>
                                         <th width="30%">Price</th>
                                         <th width="30%">Diameter</th>
-                                        <th width="10%">
-                                            <button class="btn btn-primary" ng-click="addSize()"><i class="fa fa-plus"></i></button>
+                                        <th width="10%" style="text-align:right">
+                                            <button class="btn btn-primary" ng-disabled="haveToppings" ng-click="addSize()"><i class="fa fa-plus"></i></button>
                                         </th>
                                     </tr>
                                     <tr ng-repeat="size in dishSizes">
                                         <td>
                                             <div class="form-group">
-                                                <input type="text" class="form-control" name="size" ng-model="size.size" />
+                                                <input type="text" class="form-control" ng-change="sizeToppingPrices[$index].sizeName = size.size" name="size" ng-model="size.size" />
                                             </div>
                                         </td>
                                         <td>
@@ -286,87 +314,111 @@
                                                 <input type="text" class="form-control" name="diameter" ng-model="size.diameter" />
                                             </div>
                                         </td>
-                                        <td>
-                                            <button class="btn btn-danger" ng-click="removeSize($index)"><i class="fas fa-trash-alt"></i></button>
+                                        <td style="text-align:right">
+                                            <button class="btn btn-danger" ng-disabled="haveToppings" ng-click="removeSize($index)"><i class="fas fa-trash-alt"></i></button>
                                         </td>
                                     </tr>
                                 </table>
                             </form>
                         </div>
+                        <div class="col-md-12 col-md-12">
+                            <div class="form-group" style="width:100%;">
+                                <label style="width:10%; float:left">Dish Toppings</label>
+                                <div class="switch" style="width:80%;">
+                                    <label>
+                                        <input type="checkbox" ng-click="proceed()" ng-model="haveToppings">
+                                        <span class="lever switch-col-light-blue"></span>
+                                    </label>
+                                </div>
+                                <button type="button" class="btn btn-primary" style="width:5%; float:right; margin-top:-30px" ng-click="pushDishExtraType()" ng-disabled="!haveToppings">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
+                    <div ng-if="haveToppings">
+                        <div class="row clearfix" ng-repeat="extraType in addDishExtraTypes" ng-init="extraTypeIndex=$index">
+                            <div class="col-lg-10 null-marbottom">
+                                <div class="form-group null-marbottom">
+                                    <div class="form-line">
+                                        <label>Topping Category Head <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" placeholder="Enter Topping Name" ng-model="extraType.typeName">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-1">
+                                <div class="form-group null-marbottom right">
+                                    <div class="form-line">
+                                        <label>Allow Multiple <span class="text-danger">*</span></label>
+                                        <div class="switch">
+                                            <label>
+                                                <input type="checkbox" ng-model="extraType.chooseMultiple">
+                                                <span class="lever switch-col-light-blue"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-1">
+                                <div class="form-group null-marbottom right">
+                                    <div class="form-line">
+                                        <label>Actions</label><br />
+                                        <button class="btn btn-danger" ng-click="removeExtraType($index)"><i class="fas fa-trash-alt"></i></button>
+                                    </div>
+                                </div>
+                            </div>
 
-                    <h2 class="card-inside-title">
-                        Dish Toppings
-                        <button style="float:right" type="button" class="btn btn-primary" ng-click="pushDishExtraType()">
-                            <i class="fa fa-plus"></i>
-                        </button>
-                    </h2>
-                    <br />
-                    <div class="row clearfix" ng-repeat="extraType in addDishExtraTypes" ng-init="extraTypeIndex=$index">
-                        <div class="col-lg-10 null-marbottom">
-                            <div class="form-group null-marbottom">
-                                <div class="form-line">
-                                    <label>Topping Category Head <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" placeholder="Enter Topping Name" ng-model="extraType.typeName">
+                            <div class="col-lg-1"></div>
+                            <div class="col-lg-10">
+                                <span style="font-weight:bold">Dish Toppings</span>
+                                <button ng-click="pushDishExtra($index)" type="button" class="btn bg-orange btn-circle waves-effect waves-circle waves-float right">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                                <div class="row clearfix" ng-if="extraType.dishExtras.length > 0" style="margin-top:30px">
+                                    <div class="col-lg-12">
+                                        <div class="row">
+                                            <div class="col-lg-3" style="margin-bottom:0"><label>Topping Name <span class="text-danger">*</span></label></div>
+                                            <div class="col-lg-3" style="margin-bottom:0"><label>Allergies</label></div>
+                                            <div class="col-lg-3" ng-if="!multipleSizes" style="margin-bottom:0"><label>Topping Price</label></div>
+                                            <div class="col-lg-2"><label class="right" style="margin-bottom:0">Actions</label></div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-1">
-                            <div class="form-group null-marbottom right">
-                                <div class="form-line">
-                                    <label>Allow Multiple <span class="text-danger">*</span></label>
-                                    <div class="switch">
-                                        <label>
-                                            <input type="checkbox" ng-model="extraType.chooseMultiple">
-                                            <span class="lever switch-col-light-blue"></span>
-                                        </label>
+                                <div class="row clearfix" ng-repeat="extra in extraType.dishExtras" ng-init="extraIndex=$index">
+                                    <div class="col-lg-12">
+                                        <div class="row">
+                                            <div class="col-lg-3">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" placeholder="Topping" ng-model="extra.extraName" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" placeholder="Allergies" ng-model="extra.allergies" />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3" ng-if="!multipleSizes">
+                                                <input type="number" class="form-control" placeholder="$$" ng-model="extra.extraPrice" required>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <button class="btn btn-danger right" ng-click="removeExtra(extraTypeIndex, extraIndex)"><i class="fas fa-trash-alt"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12" ng-if="multipleSizes" style="margin-top:-20px">
+                                        <div class="row">
+                                            <div class="col-lg-3" ng-repeat="sizePrice in extra.sizeToppingPrices">
+                                                <div class="form-group">
+                                                    <label>{{sizePrice.sizeName}}</label>
+                                                    <input type="number" min="0" class="form-control" placeholder="{{sizePrice.sizeName}}" ng-model="sizePrice.price" />
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-lg-1"></div>
                         </div>
-                        <div class="col-lg-1">
-                            <div class="form-group null-marbottom right">
-                                <div class="form-line">
-                                    <label>Actions</label><br />
-                                    <button class="btn btn-danger" ng-click="removeExtraType($index)"><i class="fas fa-trash-alt"></i></button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-1"></div>
-                        <div class="col-lg-10">
-                            <span style="font-weight:bold">Dish Toppings</span>
-                            <button ng-click="pushDishExtra($index)" type="button" class="btn bg-orange btn-circle waves-effect waves-circle waves-float right">
-                                <i class="fa fa-plus"></i>
-                            </button>
-                            <div class="row clearfix" ng-if="extraType.dishExtras.length > 0" style="margin-top:30px">
-                                <div class="col-lg-3"><label>Topping Name <span class="text-danger">*</span></label></div>
-                                <div class="col-lg-3"><label>Topping Price <span class="text-danger">*</span></label></div>
-                                <div class="col-lg-3"><label>Allergies</label></div>
-                                <div class="col-lg-2"><label class="right">Actions</label></div>
-                            </div>
-                            <div class="row clearfix" ng-repeat="extra in extraType.dishExtras" ng-init="extraIndex=$index">
-                                <div class="col-lg-3">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="Topping" ng-model="extra.extraName"
-                                               required>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3">
-                                    <input type="number" class="form-control" placeholder="$$" ng-model="extra.extraPrice"
-                                           required>
-                                </div>
-                                <div class="col-lg-3">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="Allergies" ng-model="extra.allergies" />
-                                    </div>
-                                </div>
-                                <div class="col-lg-2">
-                                    <button class="btn btn-danger right" ng-click="removeExtra(extraTypeIndex, extraIndex)"><i class="fas fa-trash-alt"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-1"></div>
                     </div>
 
                     <button class="btn btn-info" style="float:right; margin-right:5px">Clear</button>

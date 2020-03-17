@@ -314,71 +314,66 @@
                     </form>
 
 
-                    <h4 class="card-inside-title">
-                        Dish Sizes 
-                        <button class="btn btn-primary right" onclick="$('#add-dish-size').toggle()"><i class="fa fa-plus"></i></button>
-                    </h4>
-                    @if (Model.DishSizes.Count() > 0)
-                    {
-                        <div class="row">
-                            <div class="col-12">
-                                <table>
-                                    <tr>
-                                        <th>Size</th>
-                                        <th>Price</th>
-                                        <th>Diameter</th>
-                                        <th></th>
-                                    </tr>
-                                </table>
-                                @foreach (var size in Model.DishSizes)
-                                {
-                                    <form method="post" action="~/Dishes/EditDishSize">
-                                        <input type="hidden" name="DishSizeId" value="@size.DishSizeId" />
-                                        <input type="hidden" name="DishId" value="@Model.DishId" />
-                                        <table class="table table-striped">
-                                            <tr>
-                                                <td>
-                                                    <div class="form-group">
-                                                        <input type="text" class="form-control" name="Size" value="@size.Size" />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-group">
-                                                        <input type="text" class="form-control" name="BasePrice" value="@size.BasePrice" />
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="form-group"><input type="text" class="form-control" name="Diameter" value="@size.Diameter" /></div>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-primary"><i class="fas fa-save"></i></button>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </form>
-                                }
-                                <form id="add-dish-size" style="display:none" method="post" action="~/Dishes/AddDishSize">
+                    <h4 class="card-inside-title"> Dish Sizes </h4>
+                    <div class="row">
+                        <div class="col-12">
+                            <table>
+                                <tr>
+                                    <th width="30%">Size</th>
+                                    <th width="30%">Price</th>
+                                    <th width="30%">Diameter</th>
+                                    <th width="10%"><button class="btn btn-primary" onclick="$('#add-dish-size').toggle()"><i class="fa fa-plus"></i></button></th>
+                                </tr>
+                            </table>
+                            @foreach (var size in Model.DishSizes)
+                            {
+                                <form method="post" action="~/Dishes/EditDishSize">
+                                    <input type="hidden" name="DishSizeId" value="@size.DishSizeId" />
                                     <input type="hidden" name="DishId" value="@Model.DishId" />
                                     <table>
                                         <tr>
-                                            <td>
-                                                <div class="form-group"><input type="text" class="form-control" name="Size" /></div>
+                                            <td width="30%">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" placeholder="Size" name="Size" value="@size.Size" />
+                                                </div>
                                             </td>
-                                            <td>
-                                                <div class="form-group"><input type="text" class="form-control" name="BasePrice" /></div>
+                                            <td width="30%">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" placeholder="Price" name="BasePrice" value="@size.BasePrice" />
+                                                </div>
                                             </td>
-                                            <td>
-                                                <div class="form-group"><input type="text" class="form-control" name="Diameter" /></div>
+                                            <td width="30%">
+                                                <div class="form-group"><input type="text" class="form-control" placeholder="Diameter" name="Diameter" value="@size.Diameter" /></div>
                                             </td>
-                                            <td>
+                                            <td width="10%">
                                                 <button class="btn btn-primary"><i class="fas fa-save"></i></button>
+                                                <a href="~/Dishes/DeleteSize/@size.DishSizeId" class="btn btn-danger"><i class="fas fa-trash"></i></a>
                                             </td>
                                         </tr>
                                     </table>
                                 </form>
-                            </div>
+                            }
+                            <form id="add-dish-size" style="display:none" method="post" action="~/Dishes/AddDishSize">
+                                <input type="hidden" name="DishId" value="@Model.DishId" />
+                                <table>
+                                    <tr>
+                                        <td width="30%">
+                                            <div class="form-group"><input type="text" class="form-control" placeholder="Size" name="Size" /></div>
+                                        </td>
+                                        <td width="30%">
+                                            <div class="form-group"><input type="text" class="form-control" placeholder="Price" name="BasePrice" /></div>
+                                        </td>
+                                        <td width="30%">
+                                            <div class="form-group"><input type="text" class="form-control" placeholder="Diameter" name="Diameter" /></div>
+                                        </td>
+                                        <td width="10%">
+                                            <button class="btn btn-primary"><i class="fas fa-save"></i></button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </form>
                         </div>
-                    }
+                    </div>
 
 
                     <h2 class="card-inside-title">

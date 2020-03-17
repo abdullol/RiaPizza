@@ -166,7 +166,7 @@ body {
 }
 
 .navbar #myModal .my-modal .modal-content .modal-header {
-  background: black;
+  background: #f83;
   border-radius: 0;
   height: 175px;
   border: 0;
@@ -309,7 +309,7 @@ body {
 .navbar #loginModal .my-modal .modal-content .pass-link {
   text-align: center !important;
   text-decoration: none;
-  color: black;
+  color: #f83;
 }
 
 .navbar #productInfo .my-modal {
@@ -456,7 +456,7 @@ body {
 .navbar #signModal .my-modal .modal-content .pass-link {
   text-align: center !important;
   text-decoration: none;
-  color: black;
+  color: #f83;
 }
 
 .navbar #infoModal .my-modal {
@@ -598,9 +598,9 @@ body {
 }
 
 .navbar #orderModal .my-modal .modal-content .pass-link {
-    text-align: center !important;
-    text-decoration: none;
-    color: black;
+  text-align: center !important;
+  text-decoration: none;
+  color: #f83;
 }
 
 .navbar #favoritesModal .my-modal {
@@ -720,9 +720,9 @@ body {
 }
 
 .navbar #favoritesModal .my-modal .modal-content .pass-link {
-    text-align: center !important;
-    text-decoration: none;
-    color: black;
+  text-align: center !important;
+  text-decoration: none;
+  color: #f83;
 }
 
 .navbar .close {
@@ -832,7 +832,7 @@ body {
 .navbar #address2Modal .my-modal .modal-content .pass-link {
   text-align: center !important;
   text-decoration: none;
-  color: black;
+  color: #f83;
 }
 
 @media only screen and (max-width: 369px) {
@@ -1084,7 +1084,7 @@ body {
 }
 
 .work .easy {
-  color: black;
+  color: #f83;
   font-size: 28px;
   font-weight: 600;
 }
@@ -1126,7 +1126,7 @@ body {
 }
 
 .time .easy {
-  color: black;
+  color: #f83;
   font-size: 28px;
   font-weight: 600;
 }
@@ -2092,7 +2092,7 @@ section {
   font-weight: 600;
   padding-left: 15px;
   padding-bottom: 15px;
-  color: #ff8000;
+  color: black;
 }
 
 p {
@@ -2125,7 +2125,7 @@ p {
   margin: 0;
 }
 
-.qtvalue {
+input[value="0"] {
   color: #27f;
   font-size: 20px;
   width: 50px;
@@ -2133,40 +2133,29 @@ p {
   text-align: center;
   position: relative;
   border-radius: 0 !important;
-  background: #fff !important;
-  -webkit-box-shadow: none !important;
-          box-shadow: none !important;
-  outline: none !important;
 }
 
-.qtminus {
+input[value="-"] {
   color: #666;
   font-size: 22px;
   font-weight: 600;
   width: 50px;
-  background: #fff !important;
   height: 45px;
   margin-right: -3.5px;
   border-right: 0;
   border-radius: 0 !important;
-  -webkit-box-shadow: none !important;
-          box-shadow: none !important;
-  outline: none !important;
+  outline: none;
 }
 
-.qtplus {
+input[value="+"] {
   color: #666;
   font-size: 22px;
   font-weight: 600;
-  background: #fff !important;
   width: 50px;
   height: 45px;
   margin-left: -3.5px;
   border-left: 0;
   border-radius: 0 !important;
-  -webkit-box-shadow: none !important;
-          box-shadow: none !important;
-  outline: none !important;
 }
 
 .order-btn {
@@ -2177,12 +2166,12 @@ p {
 }
 
 @media only screen and (max-width: 767px) and (min-width: 451px) {
-  .qtvalue {
+  input[value="0"] {
     width: 40px !important;
     height: 35px !important;
     text-align: center !important;
   }
-  .qtplus {
+  input[value="+"] {
     width: 40px !important;
     height: 35px !important;
     margin-left: -4px !important;
@@ -2191,7 +2180,7 @@ p {
         -ms-grid-row-align: center;
         align-self: center;
   }
-  .qtminus {
+  input[value="-"] {
     width: 40px;
     height: 35px;
     margin-right: -4px;
@@ -2200,19 +2189,20 @@ p {
 }
 
 @media only screen and (max-width: 511px) {
-  .qtvalue {
+  input[value="0"] {
     width: 30px;
     height: 45px;
     text-align: center;
     position: relative;
+    top: 1px;
   }
-  .qtplus {
+  input[value="+"] {
     width: 30px;
     height: 45px;
     margin-left: -4px;
     border-left: 0;
   }
-  .qtminus {
+  input[value="-"] {
     width: 30px;
     height: 45px;
     margin-right: -4px;
@@ -2224,14 +2214,14 @@ p {
   #myform {
     width: 100px !important;
   }
-  .qtvalue {
+  input[value="0"] {
     color: #27f;
     font-size: 14px !important;
     width: 35px !important;
     height: 35px !important;
     text-align: center;
   }
-  .qtminus {
+  input[value="-"] {
     color: #666;
     font-size: 14px !important;
     width: 30px !important;
@@ -2239,7 +2229,7 @@ p {
     margin-right: -4px;
     border-right: 0;
   }
-  .qtplus {
+  input[value="+"] {
     color: #666;
     font-size: 14px !important;
     width: 30px !important;
@@ -2357,17 +2347,12 @@ input::placeholder {
 }
 
 #product-info {
-  font-size: 11px !important;
+  font-size: 13px !important;
   color: #17f !important;
-  display: inline-block;
-  position: relative;
-  top: -40px;
-  left: 105px;
-}
-
-.pm {
-  margin-top: -50px !important;
-  font-style: italic;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  margin-top: -17px;
 }
 
 #header-s {
@@ -2768,20 +2753,11 @@ input::placeholder {
   }
 }
 
-@media only screen and (min-width: 1403px) {
-  #header-s {
-    height: 31vh !important;
-  }
-  .personal-container {
-    height: 100vh !important;
-  }
-}
-
 .password-container {
   max-width: 1300px !important;
   width: 1200px;
   margin: 70px auto 0 auto;
-  height: 60vh;
+  height: 50vh;
 }
 
 .personal-h {
@@ -2809,7 +2785,7 @@ input::placeholder {
 .pass-sidebar {
   width: 300px;
   position: relative;
-  height: 335px !important;
+  height: 375px !important;
   left: -5%;
   bottom: 0;
   margin-left: 60px;
@@ -2873,7 +2849,7 @@ input::placeholder {
 
 .services .service-h {
   font-size: 35px;
-  color: black;
+  color: #f83;
   letter-spacing: 0px;
   margin-top: 14px;
   line-height: 39px;

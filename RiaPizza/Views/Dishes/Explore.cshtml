@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "DeliveryArea";
     Layout = "~/Views/Shared/_LayoutSite.cshtml";
+    List<DishCategory> dishCategories = ViewBag.Categories;
 }
 @section css{
     <link rel="stylesheet" type="text/css" href="~/client-assets/swiper.css">
@@ -43,20 +44,40 @@
             .order-btn{
                 height:35px;
             }
+            .groups{
+                margin-right:0px !important;
+            }
+            .dishDetails{
+                width:100% !important;
+            }
+            #myBtn{
+                bottom:90px !important;
+            }
         }
-        #cart-btn-mob{
-            display:none;
+        .product-info-btn {
+            display:block !important;
+            padding: 2px 15px 10px 0 !important;
+            font-size: 15px;
+            color: #1574F5 !important;
+        }
+        .groups {
+            margin-right: 360px;
+        }
+
+        #cart-btn-mob {
+            display: none;
             position: fixed;
             bottom: 0;
             z-index: 1000;
         }
-        .carousel-indicators li{
+
+        .carousel-indicators li {
             width: auto !important;
             margin-right: 0 !important;
         }
         #cart-btn-mob .p1[data-count]:after{
           position:absolute;
-          right:20%;
+          right:50%;
           top:8%;
           content: attr(data-count);
           font-size:40%;
@@ -68,8 +89,21 @@
           text-align:center;
           min-width: 1em;
         }
-        #cart-btn-mob .p1{
-            margin-left:-20px;
+        .cart-btn-section{
+            position: fixed;
+            bottom: 0;
+            z-index: 1999;
+            width: -webkit-fill-available;
+            border-top: 1px solid black;
+        }
+        #cart-btn-mob {
+            border: 10px solid white;
+            width: -webkit-fill-available;
+            height: 80px;
+        }
+        #cart-icon-mob {
+            font-size: 20px;
+            margin: -7px 0 0 -25px;
         }
     </style>
 }
@@ -122,6 +156,7 @@
         $scope.cart = [];
         $scope.ordertotalPrice = { subtotal: 0, totalPrice: 0, tax: 0, deliveryCharges: 0 };
         $scope.deliveryTimings = [];
+        $scope.dishSizeIdSelectedDish = "0";
         //End Choose Dishes Attributes
 
         //Start Ordering Attributes
@@ -284,7 +319,7 @@
         };
         $scope.addToCart = function (dish) {
             if ($scope.shopschedule.isOpen) {
-                var alreadyExistDishIndex = $scope.cart.findIndex(x => x.dishId === dish.dishId && x.toppings.sort().join(',') === $scope.toppings.sort().join(','));
+                var alreadyExistDishIndex = $scope.cart.findIndex(x => x.dishId === dish.dishId && x.toppings.sort().join(',') === $scope.toppings.sort().join(',') && x.dishSize.dishSizeId == $scope.dishSizeIdSelectedDish);
                 if (alreadyExistDishIndex > -1) {
                     $scope.cart[alreadyExistDishIndex].quantity = $scope.cart[alreadyExistDishIndex].quantity + $scope.cartItem.quantity;
                     $scope.cart[alreadyExistDishIndex].totalPrice = $scope.cart[alreadyExistDishIndex].totalPrice + $scope.cartItem.totalPrice;
@@ -293,6 +328,11 @@
                     $scope.cartItem.dishId = dish.dishId;
                     $scope.cartItem.dishName = dish.dishName;
                     $scope.cartItem.toppings = $scope.toppings;
+                    if (dish.dishSizes.length > 0)
+                        $scope.cartItem.dishSize = dish.dishSizes.find(s => s.dishSizeId === $scope.dishSizeIdSelectedDish);
+                    else
+                        $scope.cartItem.dishSize = { dishSizeId: 0};
+
                     $scope.cart.push($scope.cartItem);
                 }
                 $scope.saveCart();
@@ -326,12 +366,12 @@
             $scope.loadCart();
         }
         $scope.saveRemarks = function (index) {
-            $('#commentinput-' + index).toggle();
+            $('.commentinput-' + index).toggle();
             $scope.saveCart();
             $scope.loadCart();
         }
         $scope.showRemarkBar = function (index) {
-            $('#commentinput-' + index).toggle();
+            $('.commentinput-' + index).toggle();
         }
         //End Cart Manager Methods
 
@@ -341,18 +381,27 @@
             if (list != null) {
                 $scope.dishCategories = list;
             }
+            
         };
+        $scope.getDishCategories();
         $scope.LoadDishExtras = function (Id, categoryIndex, dishIndex, price) {
-            JsonCallParam("Dishes", "GetDishesExtraTypes", { id: Id })
-            if (list != null) {
-                $scope.dishCategories[categoryIndex].dishes[dishIndex].dishExtraTypes = list;
-            }
+            JsonCallParam("Dishes", "GetDishesExtraTypes", { id: Id });
             $scope.cartItem = { quantity: 1, dishPrice: price, priceWithExtras: price, totalPrice: price };
-            $("#qty-" + Id).val(1);
-
-            $('.collapse').collapse('hide');
-            $('#collapse_' + Id).collapse("toggle");
-            $scope.toppings = [];
+            if (list.length != 0) {
+                $scope.dishCategories[categoryIndex].dishes[dishIndex].dishExtraTypes = list;
+                
+                $scope.toppings = [];
+                $scope.dishSizeIdSelectedDish = "0";
+                $('.collapse').collapse('hide');
+                $("#qty-" + Id).val(1);
+                $('#collapse_' + Id).collapse("toggle");
+            }
+            else {
+                $scope.toppings = [];
+                $scope.dishSizeIdSelectedDish = "0";
+                $('.collapse').collapse('hide');
+                $scope.addToCart($scope.dishCategories[categoryIndex].dishes[dishIndex]);
+            }
         };
         $scope.showMoreExtras = function (dishExtraTypeId) {
             var list = document.getElementsByClassName('extraType-' + dishExtraTypeId);
@@ -373,8 +422,12 @@
             $('#more-btn-' + dishExtraTypeId).show();
             $('#less-btn-' + dishExtraTypeId).hide();
         };
-        $scope.toggleToppings = function (extraName, price) {
+        $scope.toggleToppings = function (extraName, price, sizeToppingPrices) {
             var idx = $scope.toppings.indexOf(extraName);
+
+            if (sizeToppingPrices.length > 0) {
+                price = sizeToppingPrices.find(s => s.dishSizeId === $scope.dishSizeIdSelectedDish).price;
+            }
 
             if (idx > -1) {
                 $scope.toppings.splice(idx, 1);
@@ -392,11 +445,19 @@
             var extra = JSON.parse(obj);
             let extraName = extra.extraName;
             let price = extra.extraPrice;
+            if (extra.sizeToppingPrices.length > 0) {
+                price = extra.sizeToppingPrices.find(s => s.dishSizeId === $scope.dishSizeIdSelectedDish).price;
+            }
             for (var i = 0; i < extras.length; i++) {
                 var idx = $scope.toppings.indexOf(extras[i].extraName);
                 if (idx > -1) {
                     $scope.toppings.splice(idx, 1);
-                    $scope.cartItem.priceWithExtras = $scope.cartItem.priceWithExtras - extras[i].extraPrice;
+                    if (extra.sizeToppingPrices.length > 0) {
+                        let priceToMinus = extras[i].sizeToppingPrices.find(s => s.dishSizeId === $scope.dishSizeIdSelectedDish).price;
+                        $scope.cartItem.priceWithExtras = $scope.cartItem.priceWithExtras - priceToMinus;
+                    }
+                    else
+                        $scope.cartItem.priceWithExtras = $scope.cartItem.priceWithExtras - extras[i].extraPrice;
                 }
             }
 
@@ -412,15 +473,20 @@
             let size = dishSize.size;
             let baseprice = dishSize.basePrice;
             $scope.cartItem.dishSize = dishSize;
+            $scope.dishSizeIdSelectedDish = dishSize.dishSizeId;
             if (baseprice !== 0) {
-                $scope.cartItem.priceWithExtras = ($scope.cartItem.priceWithExtras - $scope.cartItem.dishPrice) + baseprice;
+                //$scope.cartItem.priceWithExtras = ($scope.cartItem.priceWithExtras - $scope.cartItem.dishPrice) + baseprice;
+                $scope.cartItem.priceWithExtras = baseprice;
                 $scope.cartItem.dishPrice = baseprice;
             }
             else {
-                $scope.cartItem.priceWithExtras = ($scope.cartItem.priceWithExtras - $scope.cartItem.dishPrice) + dishPrice;
+                //$scope.cartItem.priceWithExtras = ($scope.cartItem.priceWithExtras - $scope.cartItem.dishPrice) + dishPrice;
+                $scope.cartItem.priceWithExtras = baseprice;
                 $scope.cartItem.dishPrice = dishPrice;
             }
-
+            $('.topping-select').attr('checked', false);
+            $('.topping-dropdown').attr('value', 'Select Value');
+            $scope.toppings = [];
             updatePrice();
             $('#dishSize-' + id).html(size);
         };
@@ -455,17 +521,19 @@
         }
 
         $scope.proceedOrder = function () {
-            if ($scope.shopschedule.isOpen) {
-                $('#chooseDishes').hide();
-                $('#orderTab').show();
-                $('#orderBtn').hide();
-
-                $('#paypalbtn').hide();
-                $scope.loadUserDataInCheckOut();
-            }
-            else {
+            if (!$scope.shopschedule.isOpen) {
                 $('.shopClosed').modal();
+                return;
             }
+            if ($scope.cart.length < 1) {
+                return;
+            }
+            $('#chooseDishes').hide();
+            $('#orderTab').show();
+            $('#orderBtn').hide();
+
+            $('#paypalbtn').hide();
+            $scope.loadUserDataInCheckOut();
         }
         $scope.backToDishes = function () {
             $('#chooseDishes').show();
@@ -532,10 +600,9 @@
                             <a class="btn" ng-click="removeItem($index)" style="padding: 0 0 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-trash-alt"></i></a>
                         </div>
                     </div>
-
-                    <p class="cartToppings" ng-if="item.toppings.length>0"> <span ng-if="item.dishSize">Size: {{item.dishSize.size}} Ø{{item.dishSize.diameter}}cm,</span> <span ng-repeat="topping in item.toppings" ng-init="toppingIndex = $index">{{topping}} <i ng-if="toppingIndex < item.toppings.length - 1">,</i></span> </p>
+                    <p class="cartToppings"><span ng-if="item.dishSize.dishSizeId > 0">Size: {{item.dishSize.size}} Ø{{item.dishSize.diameter}}cm. </span> <span ng-if="item.toppings.length>0" ng-repeat="topping in item.toppings" ng-init="toppingIndex = $index">{{topping}} <i ng-if="toppingIndex < item.toppings.length - 1">,</i></span> </p>
                     <p class="cartToppings" ng-if="item.remarks!=''" style="margin-bottom:5% !important">{{item.remarks}}</p>
-                    <div id="commentinput-{{$index}}" class="commentBox hide" style="margin-bottom:10% !important">
+                    <div class="commentBox hide commentinput-{{$index}}" style="margin-bottom:10% !important">
                         <label>Remarks</label>
                         <textarea class="form-control" placeholder="Enter Remarks" ng-model="item.remarks"></textarea>
                         <a role="button" class="text-primary pointer" style="margin-left:10px">Clear</a>
@@ -567,21 +634,25 @@
                 <div class="col-12 p-0 text-center">
                     <p ng-if="ordertotalPrice.totalPrice < @Model.MinOrderCharges" class="text-muted my-3" style=" font-size: 13px; color: #7d7d7d;">Unfortunately We only delivers from a minimum order value of € @Model.MinOrderCharges (excl. Delivery costs)</p>
                     <p ng-if="ordertotalPrice.totalPrice > @Model.MinOrderCharges" class="text-muted my-3" style=" font-size: 13px; color: #7d7d7d;">You have reached the minimum order amount of @Model.MinOrderCharges € to checkout</p>
-                    <a id="orderBtn" ng-click="proceedOrder()" ng-if="ordertotalPrice.totalPrice > @Model.MinOrderCharges" role="button" class="btn btn-block py-3 mx-auto text-center bg-primary"
+                    <a id="orderBtn" ng-disabled="cart.length === 0" ng-click="proceedOrder()" ng-if="ordertotalPrice.totalPrice > @Model.MinOrderCharges" role="button" class="btn btn-block py-3 mx-auto text-center bg-primary"
                        style="color: #fff; width:95%">Order</a>
                 </div>
             </div>
         </div>
     </div>
     <!-- Sidebar ends -->
-    <div class="car-btn-section">
-        <button id="cart-btn-mob" class="rounded-0 btn btn-block py-3 text-center bg-primary text-white">
-            Cart
-            <span class="p1 fa-stack fa-2x has-badge" data-count="{{cart.length}}">
-                <!--<i class="p2 fa fa-circle fa-stack-2x"></i>-->
-                <i style="font-size:20px" class="p3 fa fa-shopping-cart fa-stack-1x xfa-inverse" data-count="4b"></i>
-            </span>
-        </button>
+    <div class="cart-btn-section" ng-if="cart.length > 0">
+        <div id="cart-btn-mob" onclick="$('#cart-modal').modal();" class="rounded-0 btn btn-block text-center bg-primary text-white">
+            <div style="float:left; width:25%">
+                <span class="p1 fa-stack fa-2x has-badge" data-count="{{cart.length}}">
+                    <i id="cart-icon-mob" class="p3 fa fa-shopping-cart fa-stack-1x xfa-inverse" data-count="4b"></i>
+                </span>
+            </div>
+            <div class="text-center" style="float:none; width:50%; padding: 10px; margin-left: 25%; font-weight:bold">
+                Cart ({{ordertotalPrice.totalPrice}} €)
+            </div>
+            <div style="float:right; width:25%"></div>
+        </div>
     </div>
     <div id="cart-modal" data-backdrop-limit="1" tabindex="-1" role="dialog"
              aria-labelledby="myModalLabel" aria-hidden="true" class="modal">
@@ -625,7 +696,7 @@
 
                             <p class="cartToppings" ng-if="item.toppings.length>0"> <span ng-if="item.dishSize">Size: {{item.dishSize.size}} Ø{{item.dishSize.diameter}}cm,</span> <span ng-repeat="topping in item.toppings" ng-init="toppingIndex = $index">{{topping}} <i ng-if="toppingIndex < item.toppings.length - 1">,</i></span> </p>
                             <p class="cartToppings" ng-if="item.remarks!=''" style="margin-bottom:5% !important">{{item.remarks}}</p>
-                            <div id="commentinput-{{$index}}" class="commentBox hide" style="margin-bottom:10% !important">
+                            <div class="commentBox hide commentinput-{{$index}}" style="margin-bottom:10% !important">
                                 <label>Remarks</label>
                                 <textarea class="form-control" placeholder="Enter Remarks" ng-model="item.remarks"></textarea>
                                 <a role="button" class="text-primary pointer" style="margin-left:10px">Clear</a>
@@ -657,8 +728,8 @@
                         <div class="col-12 p-0 text-center">
                             <p ng-if="ordertotalPrice.totalPrice < @Model.MinOrderCharges" class="text-muted my-3" style=" font-size: 13px; color: #7d7d7d;">Unfortunately We only delivers from a minimum order value of € @Model.MinOrderCharges (excl. Delivery costs)</p>
                             <p ng-if="ordertotalPrice.totalPrice > @Model.MinOrderCharges" class="text-muted my-3" style=" font-size: 13px; color: #7d7d7d;">You have reached the minimum order amount of @Model.MinOrderCharges € to checkout</p>
-                            <a id="orderBtn" ng-click="proceedOrder()" ng-if="ordertotalPrice.totalPrice > @Model.MinOrderCharges" role="button" class="btn btn-block py-3 mx-auto text-center bg-primary"
-                               style="color: #fff; width:95%" data-dismiss="modal">Order</a>
+                            <a id="orderBtn" ng-disabled="cart.length === 0" ng-click="proceedOrder()" ng-if="ordertotalPrice.totalPrice > @Model.MinOrderCharges" role="button" class="btn btn-block py-3 mx-auto text-center bg-primary"
+                               style="color: #fff; width:95%" data-dismiss="modal" onclick="$('#cart-modal').modal('hide')">Order</a>
                         </div>
                     </div>
                 </div>
@@ -875,52 +946,50 @@
             </div>
         </section>
         <!-- Restaurant Description ends -->
-        <!-- Swiper -->
-        <div class="js-menu-category-bar-sticky sticky-top mr" id="mainNav" ng-init="getDishCategories()">
-            <div class="swiper-container container" style="max-width: 1050px;">
-                <button type="button" onclick="showSearchBar()" class="left fas fa-search fa-1x border-0 bg-transparent" id="search-btn"></button>
+
+        <div class="js-menu-category-bar-sticky sticky-top mr" id="mainNav">
+            <div class="swiper-container container">
+                <button type="button" onclick="showSearchBar()" class="left fas fa-search fa-1x border-0 bg-transparent" id="search-btn" style="background:#f8f5f2 !important; top:0"></button>
                 <div class="swiper-wrapper container" id="dish-list">
-                    <a ng-repeat="cat in dishCategories" href="#cat_{{$index}}" data-category="{{$index}}" class="swiper-slide nav-link js-scroll-trigger dishlink" style="color:black;font-weight: bold;">{{cat.categoryName}}</a>
+                    @for (int i = 0; i < dishCategories.Count(); i++)
+                    {
+                        <a href="#cat-@i" data-category="@i" class="swiper-slide nav-link js-scroll-trigger dishlink" style="width:auto; font-weight:bold">@dishCategories[i].CategoryName</a>
+                    }
                 </div>
                 <div class="input-group mb-3" id="search-box">
                     <input type="text" class="form-control" placeholder="Search for meals, etc.." style="border-radius: 0 !important;">
                     <div class="input-group-append">
-                        <button type="button" onclick="hideSearchBar()" class="input-group-text bg-white" id="cross-btn" style="border-radius: 0 !important;"><i class="fas fa-times"></i></button>
+                        <button type="button" onclick="hideSearchBar()" class="input-group-text bg-white" id="cross-btn" style="border-radius: 0 !important; top:0"><i class="fas fa-times"></i></button>
                     </div>
                 </div>
-                <a href="#" class="swiper-next right fas fa-angle-right fa-2x mr-3" id="swiper-next"></a>
+                <a href="#" class="swiper-next right fas fa-angle-right fa-2x mr-3 hide" id="swiper-next"></a>
                 <!-- Add Pagination -->
                 <div class="swiper-pagination">
                 </div>
             </div>
         </div>
-        <!-- Swiper ends -->
         <!-- Dish list -->
-        <div class="groups mr">
-            <section ng-repeat="dishCategory in dishCategories" ng-init="categoryIndex=$index" id="cat_{{categoryIndex}}" class="group-item">
+        <div class="groups">
+            <section ng-repeat="dishCategory in dishCategories | orderBy : 'orderBy' " ng-init="categoryIndex=$index" id="cat-{{categoryIndex}}" class="group-item">
                 <div class="container">
-                    <div class="row mx-md-4 mx-1 mt-3 dish-head">
+                    <div class="row mx-md-2 mx-0 mt-3 dish-head">
                         <div class="col-12 ml-5 py-3 mb-4 mx-auto dish-col" style="background:url(/Uploads/{{dishCategory.image}});">
                             <h5> {{dishCategory.categoryName}} </h5>
                         </div>
                     </div>
                     <div class="row mx-md-2 mx-0 px-0" ng-repeat="dish in dishCategory.dishes" ng-init="dishIndex = $index">
-                        <div class="col-12 ml-5 py-3 mx-auto">
+                        <div class="col-12 ml-5 py-1 pl-0 pr-0 mx-auto">
                             <div class="panel-group" id="accordion_{{dish.dishId}}" role="tablist" aria-multiselectable="true">
                                 <div class="panel panel-default">
                                     <div class="panel-heading border pointer" role="tab" id="heading_{{dish.dishId}}" ng-click="LoadDishExtras(dish.dishId,categoryIndex,dishIndex, dish.basePrice)">
                                         <div class="row">
-                                            <div class="col-6">
-                                                <div class="row">
-                                                    <h5 class="panel-title row" style="padding-left:30px">
-                                                        {{dish.dishName}}
-                                                        <a href="#" ng-click="showDishDesc(dish.allergies)" style="font-size: 10px; color: #1574F5">
-                                                            Product info
-                                                        </a>
-                                                    </h5>
-                                                </div>
+                                            <div class="col-9">
+                                                <h5 class="panel-title row" style="padding-right:8px">
+                                                    {{dish.dishName}} &nbsp;
+                                                    <i class="fas fa-info-circle product-info-btn" onclick="event.preventDefault()" ng-click="showDishDesc(dish.allergies)"> </i>
+                                                </h5>
                                             </div>
-                                            <div class="col-6 text-right w-25">
+                                            <div class="col-3 text-right w-25">
                                                 <i class="fas fa-plus fa-lg border p-3" style="font-weight: 500; color: #1474F5"></i>
                                             </div>
                                         </div>
@@ -932,14 +1001,14 @@
                                         <div class="panel-body align-items-center py-4">
                                             <div class="container align-items-center">
                                                 <div class="row" ng-if="dish.dishSizes.length > 0">
-                                                    <div class="col-8 mt-4 mx-auto" ng-if="!extratype.chooseMultiple">
+                                                    <div class="col-lg-8 col-md-8 col-sm-10 col-xs-10 mx-auto" ng-if="!extratype.chooseMultiple">
                                                         <label class="d-block">
                                                             lhre Sauce:
                                                         </label>
                                                         <select class="custom-select mt-2 pointer"
-                                                                ng-model="temp" id="sizeSelect-{{dish.dishId}}"
+                                                                ng-model="dishSizeIdSelectedDish" id="sizeSelect-{{dish.dishId}}"
                                                                 ng-change="selectDishSize(dish.dishId, dish.basePrice)">
-                                                            <option style="font-size:14px;" hidden value="Select Value">Select Size</option>
+                                                            <option style="font-size:14px;" hidden value="0">Select Size</option>
                                                             <option style="font-size:14px;" ng-repeat="size in dish.dishSizes" value="{{size}}">{{size.size}} Ø {{size.diameter}}cm ({{size.basePrice}}€)</option>
                                                         </select>
                                                         <p class="m-0 mb-3 p-2">
@@ -948,20 +1017,20 @@
                                                     </div>
                                                 </div>
                                                 <div class="row" ng-repeat="extratype in dish.dishExtraTypes" ng-init="dishExtraTypeIndex = $index">
-                                                    <div class="col-8 mx-auto" ng-if="extratype.chooseMultiple" style="margin-bottom:20px">
-                                                        <label class="d-block">
-                                                            {{extratype.typeName}}
-                                                        </label>
+                                                    <div class="col-lg-8 col-md-8 col-sm-10 col-xs-10 mx-auto" ng-if="extratype.chooseMultiple" style="margin-bottom:20px">
+                                                        <label class="d-block"> {{extratype.typeName}} </label>
                                                         <div ng-repeat="extra in extratype.dishExtras" ng-init="extraIndex=$index" class="custom-control custom-checkbox mb-2 extraType-{{extratype.dishExtraTypeId}}" ng-class="{ 'hide': extraIndex > 2 }">
-                                                            <input type="checkbox" class="custom-control-input pointer"
+                                                            <input ng-disabled="dish.dishSizes.length > 0 && dishSizeIdSelectedDish==='0'" type="checkbox" class="custom-control-input pointer topping-dropdown"
                                                                    id="{{extra.dishExtraId}}_{{extraIndex}}"
                                                                    value="{{extra.extraName}}"
                                                                    ng-checked="toppings.indexOf(extra.extraName) > -1"
-                                                                   ng-click="toggleToppings(extra.extraName,extra.extraPrice)">
-                                                            <label class="custom-control-label pointer" for="{{extra.dishExtraId}}_{{extraIndex}}" style="font-size: 12px;">{{extra.extraName}} <span ng-if="extra.extraPrice>0"> (+{{extra.extraPrice}}€)</span></label>
-                                                            <a role="button" class="pointer" ng-click="showDishDesc(extra.allergies)" style="font-size: 10px; color: #1574F5; float:right">
-                                                                Product info
-                                                            </a>
+                                                                   ng-click="toggleToppings(extra.extraName,extra.extraPrice,extra.sizeToppingPrices)">
+                                                            <label class="custom-control-label pointer" for="{{extra.dishExtraId}}_{{extraIndex}}" style="font-size: 12px;">
+                                                                {{extra.extraName}}
+                                                                <span ng-if="dish.dishSizes.length > 0" ng-repeat="toppingPrice in extra.sizeToppingPrices | filter : {'dishSizeId' : dishSizeIdSelectedDish}"> (+{{toppingPrice.price}}€)</span>
+                                                                <span ng-if="dish.dishSizes.length === 0"> (+{{extra.extraPrice}}€)</span>
+                                                            </label>
+                                                            <i role="button" class="fas fa-info-circle pointer" ng-click="showDishDesc(extra.allergies)" style="color: #1574F5; float:right"> </i>
                                                         </div>
                                                         <button ng-click="showMoreExtras(extratype.dishExtraTypeId)" id="more-btn-{{extratype.dishExtraTypeId}}" ng-if="extratype.dishExtras.length > 3" class="more-btn">
                                                             <i class="fas fa-angle-down mr-3 text-dark"></i>Show More
@@ -970,18 +1039,22 @@
                                                             <i class="fas fa-angle-up mr-3 text-dark"></i>Show Less
                                                         </button>
                                                     </div>
-                                                    <div class="col-8 mx-auto" ng-if="!extratype.chooseMultiple">
+                                                    <div class="col-lg-8 col-md-8 col-sm-10 col-xs-10 mx-auto" ng-if="!extratype.chooseMultiple">
                                                         <label class="d-block">
                                                             {{extratype.typeName}}
                                                         </label>
-                                                        <select class="custom-select mt-2 pointer"
+                                                        <select ng-disabled="dish.dishSizes.length > 0 && dishSizeIdSelectedDish==='0'" class="custom-select mt-2 pointer topping-select"
                                                                 ng-model="temp" id="inputGroupSelect-{{extratype.dishExtraTypeId}}"
                                                                 ng-change="selectToppingDropdown(extratype.dishExtraTypeId, extratype.dishExtras)">
                                                             <option style="font-size:14px;" hidden value="Select Value">Select Value</option>
-                                                            <option style="font-size:14px;" ng-repeat="extra in extratype.dishExtras" value="{{extra}}">{{extra.extraName}} (+{{extra.extraPrice}}€)</option>
+                                                            <option style="font-size:14px;" ng-repeat="extra in extratype.dishExtras" value="{{extra}}">
+                                                                {{extra.extraName}}
+                                                                @*<span ng-if="dish.dishSizes.length > 0"> (+{{sizePrice}}€)</span>*@
+                                                                <span ng-if="dish.dishSizes.length === 0"> (+{{extra.extraPrice}}€)</span>
+                                                            </option>
                                                         </select>
                                                         <p class="m-0 mb-3 p-2">
-                                                            <span id="inputSelectedValue-{{extratype.dishExtraTypeId}}"></span> <a href="#">Product info</a>
+                                                            <span id="inputSelectedValue-{{extratype.dishExtraTypeId}}"></span> @*<i class="fas fa-info-circle" href="#"></i>*@
                                                         </p>
                                                     </div>
                                                 </div>
@@ -994,7 +1067,7 @@
                                                         </form>
                                                     </div>
                                                     <div class="text-left" style="width:60%; float:right">
-                                                        <button class="btn btn-primary order-btn" ng-click="addToCart(dish)" id="totalPrice-{{dishIndex}}">{{cartItem.totalPrice}} €</button>
+                                                        <button ng-disabled="dish.dishSizes.length > 0 && dishSizeIdSelectedDish==='0'" class="btn btn-primary order-btn" ng-click="addToCart(dish)" id="totalPrice-{{dishIndex}}">{{cartItem.totalPrice}} €</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1007,88 +1080,6 @@
                     </div>
                 </div>
             </section>
-        </div>
-
-        <div class="row mx-md-2 mx-0" ng-repeat="dish in dishCategory.dishes" ng-init="dishIndex = $index">
-            <div class="col-12 ml-5 py-3 mx-auto">
-                <div class="panel-group" id="accordion_{{dish.dishId}}" role="tablist" aria-multiselectable="true">
-                    <div class="panel panel-default">
-                        <div class="panel-heading border pointer" role="tab" id="heading_{{dish.dishId}}" ng-click="LoadDishExtras(dish.dishId,categoryIndex,dishIndex, dish.basePrice)">
-                            <div class="row">
-                                <div class="col-6">
-                                    <h5 class="panel-title">
-                                        <a role="button">
-                                            {{dish.dishName}}
-                                        </a>
-                                    </h5>
-                                </div>
-                                <div class="col-6 text-right w-25">
-                                    <i class="fas fa-plus fa-lg border p-3" style="font-weight: 500; color: #1474f5"></i>
-                                </div>
-                            </div>
-                            <p>{{dish.description}}</p>
-                            <h4>{{dish.basePrice}} €</h4>
-                        </div>
-                        <div id="collapse_{{dish.dishId}}" class="panel-collapse collapse in" role="tabpanel"
-                             aria-labelledby="heading_{{dish.dishId}}">
-                            <div class="panel-body align-items-center py-4">
-                                <div class="container align-items-center">
-
-                                    <div class="row" ng-repeat="extratype in dish.dishExtraTypes" ng-init="dishExtraTypeIndex = $index">
-                                        <div class="col-8 mx-auto" ng-if="extratype.chooseMultiple" style="margin-bottom:20px">
-                                            <label class="d-block">
-                                                {{extratype.typeName}}
-                                            </label>
-
-                                            <div ng-repeat="extra in extratype.dishExtras" ng-init="extraIndex=$index" class="custom-control custom-checkbox mb-2 extraType-{{extratype.dishExtraTypeId}}" ng-class="{ 'hide': extraIndex > 2 }">
-                                                <input type="checkbox" class="custom-control-input pointer"
-                                                       id="{{extra.dishExtraId}}_{{extraIndex}}"
-                                                       value="{{extra.extraName}}"
-                                                       ng-checked="toppings.indexOf(extra.extraName) > -1"
-                                                       ng-click="toggleToppings(extra.extraName,extra.extraPrice)">
-                                                <label class="custom-control-label pointer" for="{{extra.dishExtraId}}_{{extraIndex}}" style="font-size: 12px;">{{extra.extraName}} <span ng-if="extra.extraPrice>0"> (+{{extra.extraPrice}}€)</span></label>
-                                            </div>
-
-                                            <button ng-click="showMoreExtras(extratype.dishExtraTypeId)" id="more-btn-{{extratype.dishExtraTypeId}}" ng-if="extratype.dishExtras.length > 3" class="more-btn">
-                                                <i class="fas fa-angle-down mr-3 text-dark"></i>Show More
-                                            </button>
-                                            <button ng-click="hideMoreExtras(extratype.dishExtraTypeId)" id="less-btn-{{extratype.dishExtraTypeId}}" ng-init="hideListinit(extratype.dishExtraTypeId)" class="less-btn hide">
-                                                <i class="fas fa-angle-up mr-3 text-dark"></i>Show Less
-                                            </button>
-                                        </div>
-                                        <div class="col-8 mx-auto" ng-if="!extratype.chooseMultiple">
-                                            <label class="d-block">
-                                                {{extratype.typeName}}
-                                            </label>
-                                            <select class="custom-select mt-2 pointer"
-                                                    ng-model="temp" id="inputGroupSelect-{{extratype.dishExtraTypeId}}"
-                                                    ng-change="selectToppingDropdown(extratype.dishExtraTypeId, extratype.dishExtras)">
-                                                <option hidden value="Select Value">Select Value</option>
-                                                <option ng-repeat="extra in extratype.dishExtras" value="{{extra}}">{{extra.extraName}} (+{{extra.extraPrice}}€)</option>
-                                            </select>
-                                            <p class="m-0 mb-3 p-2">
-                                                <span id="inputSelectedValue-{{extratype.dishExtraTypeId}}"></span> <a href="#">Product info</a>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-4 text-right">
-                                            <form method='POST' action='#' class="d-inline-block">
-                                                <input type='button' value='-' class='qtminus btn' ng-click="addQty(dishIndex,'less')" />
-                                                <input id="qty-{{dishIndex}}" type='text' name='quantity' value='0' class='qtvalue btn' disabled />
-                                                <input type='button' value='+' class='qtplus btn' ng-click="addQty(dishIndex,'add')" />
-                                            </form>
-                                        </div>
-                                        <div class="col-8 d-inline-block">
-                                            <button class="btn btn-primary order-btn" ng-click="addToCart(dish)" id="totalPrice-{{dishIndex}}">{{cartItem.totalPrice}} €</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
 
     </div>
@@ -1290,10 +1281,6 @@
     </section>
     <!-- Ready to eat section ends -->
 </div>
-<!-- Dish list ends -->
-
-
-
 
 @section scripts{
     <script src="https://unpkg.com/swiper/js/swiper.min.js"></script>
@@ -1303,14 +1290,7 @@
     <script src="~/client-assets/res/js/myswiper.js"></script>
     <script>
         $(document).ready(function(){
-            $("#cart-btn-mob").click(function(){
-                $('#cart-modal').modal();
-            });
-            //$('.dishlink').css({"margin-right":"0"});
             $('.dishlink').css({"width":"auto"});
         });
-        //$(window).on('load',function(){
-        //    $('.swiper-slide').modal('show');
-        //});
     </script>
 }

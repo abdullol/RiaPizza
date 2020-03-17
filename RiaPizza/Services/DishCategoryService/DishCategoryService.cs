@@ -35,7 +35,7 @@ namespace RiaPizza.Services.DishCategoryService
 
         public async Task<List<DishCategory>> AllDishCategories()
         {
-            var allAreas = await _context.DishCategories.ToListAsync();
+            var allAreas = await _context.DishCategories.OrderBy(s=>s.OrderBy).Where(s => s.Dishes.Any(s => s.Status == true)).ToListAsync();
             return allAreas;
         }
 
@@ -43,10 +43,14 @@ namespace RiaPizza.Services.DishCategoryService
         {
             try
             {
-                var categories = await _context.DishCategories.Include(s => s.Dishes).ThenInclude(s=>s.DishSizes).IncludeFilter(s => s.Dishes.Where(s => s.Status == true)).ToListAsync();
+                var categories = await _context.DishCategories.Include(s => s.Dishes).ThenInclude(s => s.DishSizes).Where(s=>s.Dishes.Any(s=>s.Status == true)).ToListAsync();
                 categories.ForEach(s => s.Dishes.ToList().ForEach(a => a.DishCategory = null ));
                 categories.ForEach(s => s.Dishes.ToList().ForEach(a => a.DishSizes.ToList().ForEach(s => s.Dish = null)));
-                
+                foreach (var cat in categories)
+                {
+                    var dishes = cat.Dishes.Where(s => s.Status == true);
+                    cat.Dishes = dishes;
+                }
                 return categories;
             }
             catch(Exception ex)

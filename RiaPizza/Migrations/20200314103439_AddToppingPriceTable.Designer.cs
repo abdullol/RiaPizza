@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RiaPizza.Data;
 
 namespace RiaPizza.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200314103439_AddToppingPriceTable")]
+    partial class AddToppingPriceTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -665,21 +667,15 @@ namespace RiaPizza.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("DishExtraId")
-                        .HasColumnType("int");
-
                     b.Property<int>("DishSizeId")
                         .HasColumnType("int");
 
-                    b.Property<float>("Price")
-                        .HasColumnType("real");
-
-                    b.Property<string>("SizeName")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
 
                     b.HasKey("SizeToppingPriceId");
 
-                    b.HasIndex("DishExtraId");
+                    b.HasIndex("DishSizeId");
 
                     b.ToTable("SizeToppingPrices");
                 });
@@ -824,9 +820,9 @@ namespace RiaPizza.Migrations
 
             modelBuilder.Entity("RiaPizza.Models.SizeToppingPrice", b =>
                 {
-                    b.HasOne("RiaPizza.Models.DishExtra", "DishExtra")
-                        .WithMany("SizeToppingPrices")
-                        .HasForeignKey("DishExtraId")
+                    b.HasOne("RiaPizza.Models.DishSize", "DishSize")
+                        .WithMany()
+                        .HasForeignKey("DishSizeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

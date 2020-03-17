@@ -168,7 +168,7 @@
                         <ul class="translation-links">
                             <li>
                                 <i class="sl-flag flag-usa">
-                                    <div id="germany"></div>
+                                    @*<div id="germany"></div>*@
                                 </i>
                                 <a href="#" data-lang="English" class="english">
                                     <span class="active">English</span>
@@ -176,7 +176,7 @@
                             </li>
                             <li>
                                 <i class="sl-flag flag-de">
-                                    <div id="germany"></div>
+                                    @*<div id="germany"></div>*@
                                 </i>
                                 <a href="#" data-lang="German" class="german">
                                     <span>Deutsch</span>
@@ -532,22 +532,22 @@
     </footer>
     <!-- Footer Ends -->
     <!-- jQuery -->
-    <script src="~/client-assets/res/jquery-3.4.1.js" type="text/javascript"></script>
-    <!-- Bootstrap JS -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    @*<script src="~/client-assets/res/jquery-3.4.1.js" type="text/javascript"></script>*@
+
     <script src="~/client-assets/res/bootstrap.bundle.js" type="text/javascript"></script>
-    <!-- FontAwesome Icons -->
     <script src="https://kit.fontawesome.com/2def6b71ee.js" crossorigin="anonymous" type="text/javascript"></script>
-    <!-- Custom JS -->
     <script src="~/client-assets/res/js/index.js" type="text/javascript"></script>
 
-
+    <!--Google Translator Start-->
     <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement({ pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE }, 'google_translate_element');
         }
     </script>
     <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!--Google Translator End-->
+
     <script>
         function toggleRegister() {
             $('#loginModal').modal('hide');

@@ -51,13 +51,20 @@ namespace RiaPizza.Controllers
         [Authorize(Roles = "Manager,Admin")]
         public async Task<JsonResult> CreateDish(IFormCollection form)
         {
-            var dish = JsonConvert.DeserializeObject<Dish>(form["dish"]);
-            var dishExtraTypes = JsonConvert.DeserializeObject<List<DishExtraType>>(form["dishExtraTypes"]);
+            try
+            {
+                var dish = JsonConvert.DeserializeObject<Dish>(form["dish"]);
+                var dishExtraTypes = JsonConvert.DeserializeObject<List<DishExtraType>>(form["dishExtraTypes"]);
 
-            dish.DishExtraTypes = dishExtraTypes;
+                dish.DishExtraTypes = dishExtraTypes;
 
-            await _service.AddDish(dish);
-            return Json("Success");
+                await _service.AddDish(dish);
+                return Json("Success");
+            }
+            catch(Exception ex)
+            {
+                return Json("Failed");
+            }
         }
 
         [Authorize(Roles = "Manager,Admin")]
@@ -184,6 +191,7 @@ namespace RiaPizza.Controllers
                 ViewBag.Error = "No Area Found!";
                 return RedirectToAction("Index", "Home", new { error = "Error" });
             }
+            ViewBag.Categories = await _categoryService.AllDishCategories();
             return View(area);
         }
 

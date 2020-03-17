@@ -2815,15 +2815,10 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
 
 .dropdown-toggle::after {
   display: inline-block;
-  width: 0;
+  width: 100%;
   height: 0;
-  margin-left: 0.255em;
-  vertical-align: 0.255em;
-  content: "";
-  border-top: 0.3em solid;
-  border-right: 0.3em solid transparent;
-  border-bottom: 0;
-  border-left: 0.3em solid transparent;
+  margin-left: auto;
+  content: "+";
 }
 
 .dropdown-toggle:empty::after {
@@ -2834,11 +2829,13 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
   position: absolute;
   top: 100%;
   left: 0;
+  right: 0;
   z-index: 1000;
   display: none;
   float: left;
   min-width: 10rem;
   padding: 0.5rem 0;
+  width: 100%;
   margin: 0.125rem 0 0;
   font-size: 1rem;
   color: #212529;
@@ -3268,11 +3265,13 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
   position: absolute;
   z-index: -1;
   opacity: 0;
+  font-size: 13px;
+  box-shadow: inset 0 0 1px 1px #000, 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
-.custom-control-input:checked~.custom-control-label::before {
-  color: #f36f37;
-  background-color: #f36f37;
+:checked~.custom-control-label::before {
+  color: #fff;
+  background-color: #007bff;
 }
 
 .custom-control-input:focus~.custom-control-label::before {
@@ -3280,7 +3279,7 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
 }
 
 .custom-control-input:active~.custom-control-label::before {
-  color: #f36f37;
+  
   background-color: #fff;
 }
 
@@ -3295,6 +3294,8 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
 .custom-control-label {
   position: relative;
   margin-bottom: 0;
+  font-size: 12px;
+  color: #676767;
 }
 
 .custom-control-label::before {
@@ -3651,7 +3652,6 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
 
 .nav-link {
   display: block;
-  padding: 0.5rem 1rem;
 }
 
 .nav-link:hover, .nav-link:focus {

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RiaPizza.Data;
 
 namespace RiaPizza.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200314125526_AddNameInSizeTopping")]
+    partial class AddNameInSizeTopping
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -671,8 +673,8 @@ namespace RiaPizza.Migrations
                     b.Property<int>("DishSizeId")
                         .HasColumnType("int");
 
-                    b.Property<float>("Price")
-                        .HasColumnType("real");
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
 
                     b.Property<string>("SizeName")
                         .HasColumnType("nvarchar(max)");
@@ -825,7 +827,7 @@ namespace RiaPizza.Migrations
             modelBuilder.Entity("RiaPizza.Models.SizeToppingPrice", b =>
                 {
                     b.HasOne("RiaPizza.Models.DishExtra", "DishExtra")
-                        .WithMany("SizeToppingPrices")
+                        .WithMany()
                         .HasForeignKey("DishExtraId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
