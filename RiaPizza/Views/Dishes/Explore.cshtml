@@ -14,32 +14,37 @@
             width: 0;
             height: 0;
         }
-        /* IMAGE STYLES */
-        .payment-selection + .payment-img {
-            cursor: pointer;
-        }
+            /* IMAGE STYLES */
+            .payment-selection + .payment-img {
+                cursor: pointer;
+            }
 
-        /* CHECKED STYLES */
-        .payment-selection:checked + .payment-img {
-            background: linear-gradient(#142209, #142209);
-        }
-        .pointer{
+            /* CHECKED STYLES */
+            .payment-selection:checked + .payment-img {
+                background: linear-gradient(#142209, #142209);
+            }
+
+        .pointer {
             cursor: pointer !important;
         }
+
         @@media only screen and (max-width: 992px) {
-            #sidebar{
-                display:none
+            #sidebar {
+                display: none
             }
-            #mainNav{
-                margin-right:10px !important;
-                width:100%;
+
+            #mainNav {
+                margin-right: 10px !important;
+                width: 100%;
             }
-            #cart-btn-mob{
-                display:block !important;
+
+            #cart-btn-mob {
+                display: block !important;
             }
         }
-        #cart-btn-mob{
-            display:none;
+
+        #cart-btn-mob {
+            display: none;
             position: fixed;
             bottom: 0;
             z-index: 1000;
@@ -421,8 +426,8 @@
 
         $scope.showDishDesc = function (allergies) {
             $(".dishDetails").modal();
-            if (allergies !=='' && allergies !== null)
-                $(".dishAllergies").html("<h6 style='font-weight:bold'>Substances or products causing allergies or intolerances</h6> <ul> <li>"+allergies+"</li></ul>");
+            if (allergies !== '' && allergies !== null)
+                $(".dishAllergies").html("<h6 style='font-weight:bold'>Substances or products causing allergies or intolerances</h6> <ul> <li>" + allergies + "</li></ul>");
             else
                 $(".dishAllergies").html("<h6 style='font-weight:bold'>No Allergies Found</h6>");
         }
@@ -436,7 +441,7 @@
             else {
                 $('.shopClosed').modal();
             }
-            
+
         }
 
     });
@@ -519,7 +524,7 @@
         <button id="cart-btn-mob" class="btn btn-block py-3 text-center bg-primary text-white"><i class="fas fa-shopping-cart"></i> &nbsp; Cart</button>
     </div>
     <div id="cart-modal" data-backdrop-limit="1" tabindex="-1" role="dialog"
-             aria-labelledby="myModalLabel" aria-hidden="true" class="modal">
+         aria-labelledby="myModalLabel" aria-hidden="true" class="modal">
         <div class="modal-dialog modal-dialog-centered mx-auto my-modal">
             <!-- Modal content-->
             <div class="modal-content">
@@ -1296,9 +1301,6 @@
 </div>
 <!-- Dish list ends -->
 
-
-
-
 @section scripts{
     <script src="https://unpkg.com/swiper/js/swiper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
@@ -1306,12 +1308,12 @@
     <script src="~/client-assets/res/js/myscroller.js"></script>
     <script src="~/client-assets/res/js/myswiper.js"></script>
     <script>
-        $(document).ready(function(){
-          $("#cart-btn-mob").click(function(){
-              //$("#sidenav").addClass("modal");
-              //$('#sidenav').attr("role", "dialoge");
-              $('#cart-modal').modal();
-          });
+        $(document).ready(function () {
+            $("#cart-btn-mob").click(function () {
+                //$("#sidenav").addClass("modal");
+                //$('#sidenav').attr("role", "dialoge");
+                $('#cart-modal').modal();
+            });
         });
-    </script>
+    </script>  
 }

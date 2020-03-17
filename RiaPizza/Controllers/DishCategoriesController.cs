@@ -31,6 +31,12 @@ namespace RiaPizza.Controllers
         {
             return View();
         }
+        
+        public async Task<IActionResult> ToggleDishCategories(int id)
+        {
+            await _service.ChangeDishCategoryStatus(id);
+            return RedirectToAction("Index", "DishCategories");
+        }
 
         public async Task<JsonResult> Delete(int id)
         {

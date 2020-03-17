@@ -1,0 +1,39 @@
+﻿@model List<RiaPizza.DTOs.Auth.UseRoleDto>
+@{
+    ViewData["Title"] = "ManageUserRoles";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@{
+    var userId = ViewBag.userId;
+}
+
+<form asp-action="ManageUserRoles" asp-controller="Auth" method="post">
+    <div class="card">
+        <div class="card-header">
+            <h2>Manage User Roles</h2>
+        </div>
+        <div class="card-body">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <div class="form-check m-1">
+                    <input type="hidden" asp-for="@Model[i].RoleId" />
+                    <input type="hidden" asp-for="@Model[i].RoleName" />
+                    <label asp-for="@Model[i].IsSelected">
+                        <input type="checkbox" class="filled-in" asp-for="@Model[i].IsSelected" />
+                        <span>
+                            @Model[i].RoleName
+                        </span>
+                    </label>
+                </div>
+            }
+        </div>
+        <div class="card-footer">
+            <input type="submit" value="Update" class="btn btn-primary"
+                   style="width:auto" />
+            <a asp-action="Edit" asp-route-id="@userId"
+               class="btn btn-primary" style="width:auto">Cancel</a>
+        </div>
+    </div>
+</form>
+

@@ -14,5 +14,6 @@ namespace RiaPizza.Services.DishCategoryService
         Task<List<DishCategory>> AllDishCategories();
         Task<List<DishCategory>> CategoriesWithDishes();
         Task Delete(int id);
+        Task ChangeDishCategoryStatus(int id);
     }
 }

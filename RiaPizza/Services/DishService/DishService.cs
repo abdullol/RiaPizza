@@ -128,5 +128,23 @@ namespace RiaPizza.Services.DishService
             _context.Dishes.Remove(dish);
             await _context.SaveChangesAsync();
         }
+
+        public async Task ChangeDishStatus(int id)
+        {
+            Dish dish = await _context.Dishes.FindAsync(id);
+            if (dish.Status == true)
+            {
+                dish.Status = false;
+                _context.Dishes.Update(dish);
+
+                await _context.SaveChangesAsync();
+            }
+            else if (dish.Status == false)
+            {
+                dish.Status = true;
+                _context.Dishes.Update(dish);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

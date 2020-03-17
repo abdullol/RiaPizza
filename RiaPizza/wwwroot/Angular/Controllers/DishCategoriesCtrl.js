@@ -37,8 +37,8 @@
     }
 
     $scope.allCategories = [];
-    $scope.addCategoryObj = { categoryName: '', isAvailable: true };
-    $scope.editCategoryObj = { dishCategoryId: 0, categoryName: '', isAvailable: true };
+    $scope.addCategoryObj = { categoryName: '', isAvailable: false };
+    $scope.editCategoryObj = { dishCategoryId: 0, categoryName: '', isAvailable: false };
     $scope.category = new FormData();
 
     $scope.getAllCategories = function () {
@@ -50,10 +50,8 @@
 
     $scope.openEditModal = function (category) {
         $scope.editCategoryObj = { dishCategoryId: category.dishCategoryId, categoryName: category.categoryName, isAvailable: category.isAvailable };
-
         $('#ImageTabEdit').append('<img style="cursor:pointer" src="/Uploads/' + category.image + '" alt="' + category.categoryName + '" /> <i onclick="ClearFileEdit()" class="fas fa-window-close centerBtn"></i>');
         $('#selectImageBtnEdit').hide();
-
         $("#editModal").modal();
     }
 
@@ -72,7 +70,7 @@
             if (xhr.readyState === 4 && xhr.status === 200) {
                 $("#addModal").modal("hide");
                 swal("Added", "Dish Category Added!", "success");
-                $scope.addCategoryObj = { categoryName: '', isAvailable: true };
+                $scope.addCategoryObj = { categoryName: '', isAvailable: false };
                 $scope.getAllCategories();
                 location.reload();
             }
@@ -117,7 +115,7 @@
             if (xhr.readyState === 4 && xhr.status === 200) {
                 $("#editModal").modal("hide");
                 swal("Added", "Dish Category Edit!", "success");
-                $scope.editCategoryObj = { dishCategoryId: 0, categoryName: '', isAvailable: true };
+                $scope.editCategoryObj = { dishCategoryId: 0, categoryName: '', isAvailable: false };
                 location.reload();
             }
         };

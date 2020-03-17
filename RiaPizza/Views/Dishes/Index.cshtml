@@ -7,8 +7,9 @@
     .heading {
         color: #212529;
     }
-    .align-center{
-        text-align:center;
+
+    .align-center {
+        text-align: center;
     }
 </style>
 <div class="container-fluid">
@@ -42,7 +43,7 @@
                         <button style="float:right" class="btn btn-primary filter-button">Filter</button>
                     </h2>
                 </div>
-                
+
                 <div class="body">
                     <form id="searchForm" action="~/Dishes/Index" method="post" style="display:none">
                         <div class="row clearfix">
@@ -89,6 +90,7 @@
                                             <a class="btn btn-success" href="~/Dishes/Edit/@dish.DishId"><i class="fas fa-pencil-alt"></i></a>
                                             <button class="btn btn-info" data-toggle="modal" data-target=".details_@count"><i class="fas fa-list-ul"></i></button>
                                             <button class="btn btn-danger" onclick="confirmDeletionPermanent(@dish.DishId)"><i class="fas fa-trash-alt"></i></button>
+                                            <a href="~/Dishes/ToggleDish/@dish.DishId" class="btn btn-success"><i class="fas fa-toggle-on"></i></a>
                                             @*@if (dish.Status)
         {
             <button class="btn btn-primary" onclick="confirmDeletion(@dish.DishId)"><i class="fas fa-trash-alt"></i></button>
@@ -217,7 +219,7 @@
                         swal("Error", "Please Try again later!", "error");
                     }
                 });
-                
+
             });
         }
         function confirmDeletion(Id) {
@@ -242,7 +244,7 @@
                         swal("Error", "Please Try again later!", "error");
                     }
                 });
-                
+
             });
         }
 
@@ -268,7 +270,7 @@
                         swal("Error", "Please Try again later!", "error");
                     }
                 });
-                
+
             });
         }
         $(document).ready(function () {

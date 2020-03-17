@@ -260,6 +260,18 @@
 @section scripts{
     <script src="~/js/signalr/dist/browser/signalr.js"></script>
     <script src="~/Notifications/notifyorder.js"></script>
+    
+    <script src="https://www.google.com/cloudprint/client/cpgadget.js">
+    </script>
+    <script>
+        window.onload = function () {
+            var gadget = new cloudprint.Gadget();
+            gadget.setPrintButton(
+                cloudprint.Gadget.createDefaultPrintButton("print_button_container")); // div id to contain the button
+            gadget.setPrintDocument("url", "Test Page", "https://www.google.com/landing/cloudprint/testpage.pdf");
+        }
+    </script>
+
     <script>
         function setValue(id, status) {
             $("#orderId").val(id);
