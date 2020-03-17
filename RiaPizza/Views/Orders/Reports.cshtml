@@ -76,17 +76,38 @@
                 <div class="header">
                     <h2>
                         <strong>Search Orders</strong>
-                        <button style="float:right; margin-left:10px" class="btn btn-primary btn-border-radius waves-effect m-b-15" type="button"
-                                onclick="$('#statusSearch').hide(200); $('#dateRange').show(200);">
-                            Search By Date Range
+                        <button style="float:right; margin-left:5px" class="btn btn-primary btn-border-radius waves-effect m-b-15" type="button"
+                                onclick="$('#statusSearch').hide(200); $('#searchByNumber').hide(200); $('#searchByDish').hide(200);$('#searchByDishCat').hide(200); $('#searchByAddress').hide(200);$('#searchByUser').hide(200); $('#dateRange').show(200);">
+                            Search By Date
                         </button>
-                        <button style="float:right" class="btn btn-success btn-border-radius waves-effect m-b-15" type="button"
-                                onclick="$('#dateRange').hide(200); $('#statusSearch').show(200);">
+                        <button style="float:right;margin-left:5px;background-color:#e91e63 !important" class="btn btn-success btn-border-radius waves-effect m-b-15" type="button"
+                                onclick="$('#dateRange').hide(200); $('#searchByNumber').hide(200); $('#searchByDish').hide(200);$('#searchByDishCat').hide(200); $('#searchByAddress').hide(200);$('#searchByUser').hide(200); $('#statusSearch').show(200);">
                             Search By Status
+                        </button>
+                        <button style="float:right;margin-left:5px;background-color:#59bf70 !important" class="btn btn-success btn-border-radius waves-effect m-b-15" type="button"
+                                onclick="$('#numberRange').hide(200); $('#statusSearch').hide(200);$('#searchByDish').hide(200);$('#searchByDishCat').hide(200); $('#searchByAddress').hide(200);$('#searchByUser').hide(200);$('#searchByNumber').show(200)">
+                            Search By Number
+                        </button>
+                        <button style="float:right;margin-left:5px;background-color:#2ab9d0  !important" class="btn btn-success btn-border-radius waves-effect m-b-15" type="button"
+                                onclick="$('#numberRange').hide(200); $('#statusSearch').hide(200); $('#searchByNumber').hide(200); $('#searchByDishCat').hide(200); $('#searchByAddress').hide(200);$('#searchByUser').hide(200);$('#searchByDish').show(200)">
+                            Search By Dish
+                        </button>
+                        <button style="float:right;margin-left:5px;background-color:darkgoldenrod  !important" class="btn btn-success btn-border-radius waves-effect m-b-15" type="button"
+                                onclick="$('#numberRange').hide(200); $('#statusSearch').hide(200); $('#searchByNumber').hide(200); $('#searchByDish').hide(200); $('#searchByAddress').hide(200);$('#searchByUser').hide(200);$('#searchByDishCat').show(200)">
+                            Search By DishCat
+                        </button>
+                        <button style="float:right;margin-left:5px;background-color:cornflowerblue  !important" class="btn btn-success btn-border-radius waves-effect m-b-15" type="button"
+                                onclick="$('#numberRange').hide(200); $('#statusSearch').hide(200); $('#searchByNumber').hide(200); $('#searchByDish').hide(200); $('#searchByDishCat').hide(200);$('#searchByUser').hide(200);$('#searchByAddress').show(200)">
+                            Search By Address
+                        </button>
+                        <button style="float:right;margin-left:5px;background-color:#666  !important" class="btn btn-success btn-border-radius waves-effect m-b-15" type="button"
+                                onclick="$('#numberRange').hide(200); $('#statusSearch').hide(200); $('#searchByNumber').hide(200); $('#searchByDish').hide(200); $('#searchByDishCat').hide(200); $('#searchByAddress').hide(200); $('#searchByUser').show(200);">
+                            Search By User
                         </button>
                     </h2>
                 </div>
                 <div class="body">
+                    <!--searchByDate-->
                     <div class="collapse" id="dateRange" style="display:none">
                         <form method="post" action="~/Orders/ReportByDate">
                             <div class="row clearfix">
@@ -131,20 +152,152 @@
                             </div>
                         </form>
                     </div>
+
+                    <!--searchBystatus-->
                     <div class="collapse" id="statusSearch" style="display:none">
-                        <form method="post" action="~/Orders/ReportByStatus">
+                        <form method="post" action="~/Orders/ReportByFilter">
                             <div class="row clearfix">
                                 <div class="col-lg-10 col-md-12 col-sm-12">
                                     <div class="form-group">
                                         <div class="form-line">
                                             <div class="select-wrapper">
                                                 <select id="statusList" class="form-control statusList" name="status">
+                                                    <option hidden>Search By Status</option>
                                                     <option value="Pending">Pending</option>
                                                     <option value="Baked">Baked</option>
                                                     <option value="Enroute">Enroute</option>
                                                     <option value="Delivered">Delivered</option>
                                                     <option value="Cancelled">Cancelled</option>
                                                     <option value="Returned">Returned</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-12 col-sm-12" style="text-align:center">
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <button style="text-align:center" class="btn btn-primary">Search</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!--searchByNumber-->
+                    <div class="collapse" id="searchByNumber" style="display:none">
+                        <form method="post" action="~/Orders/ReportByFilter">
+                            <div class="row clearfix">
+                                <div class="col-lg-10 col-md-12 col-sm-12">
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <input type="text" name="number" class="form-control" placeholder="Search by number">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-12 col-sm-12" style="text-align:center">
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <button style="text-align:center" class="btn btn-primary">Search</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+
+                    <!--searchByAddress-->
+                    <div class="collapse" id="searchByAddress" style="display:none">
+                        <form method="post" action="~/Orders/ReportByFilter">
+                            <div class="row clearfix">
+                                <div class="col-lg-10 col-md-12 col-sm-12">
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <input type="text" name="address" class="form-control" placeholder="Search by address">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-12 col-sm-12" style="text-align:center">
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <button style="text-align:center" class="btn btn-primary">Search</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+
+                    <!--searchByDish-->
+                    <div class="collapse" id="searchByDish" style="display:none">
+                        <form method="post" action="~/Orders/ReportByFilter">
+                            <div class="row clearfix">
+                                <div class="col-lg-10 col-md-12 col-sm-12">
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <div class="select-wrapper">
+                                                <select id="statusList" class="form-control statusList" asp-items="@(new SelectList(ViewBag.DishList,"DishId","DishName"))" name="DishId">
+                                                    <option hidden>Select Dish</option>
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-12 col-sm-12" style="text-align:center">
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <button style="text-align:center" class="btn btn-primary">Search</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!--search By DishCategory-->
+                    <div class="collapse" id="searchByDishCat" style="display:none">
+                        <form method="post" action="~/Orders/ReportByFilter">
+                            <div class="row clearfix">
+                                <div class="col-lg-10 col-md-12 col-sm-12">
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <div class="select-wrapper">
+                                                <select id="statusList" class="form-control statusList" asp-items="@(new SelectList(ViewBag.DishCatList,"DishCategoryId","CategoryName"))" name="DishCatId">
+                                                    <option hidden>Select Dish Category</option>
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-12 col-sm-12" style="text-align:center">
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <button style="text-align:center" class="btn btn-primary">Search</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!--search By Users-->
+                    <div class="collapse" id="searchByUser" style="display:none">
+                        <form method="post" action="~/Orders/ReportByFilter">
+                            <div class="row clearfix">
+                                <div class="col-lg-10 col-md-12 col-sm-12">
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <div class="select-wrapper">
+                                                <select id="statusList" class="form-control statusList" asp-items="@(new SelectList(ViewBag.Users,"Id","UserName"))" name="userId">
+                                                    <option hidden>Select User</option>
+
                                                 </select>
                                             </div>
                                         </div>
