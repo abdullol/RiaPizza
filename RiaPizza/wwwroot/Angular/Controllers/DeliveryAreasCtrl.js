@@ -62,7 +62,7 @@
             }
         }
     };
-
+    //edit
     $scope.editArea = function () {
         if ($scope.editAreaObj.areaName !== "" && $scope.editAreaObj.postalCode !== "" && $scope.editAreaObj.city !== "") {
             var pram = { "DeliveryArea": JSON.stringify($scope.editAreaObj) };
@@ -73,10 +73,34 @@
                 $scope.editAreaObj = { areaName: '', postalCode: '', city: '', status: false, isDeliveryAvailable: false, deliveryCharges: 0, minOrderCharges: 0 };
                 swal("Edited", "Delivery Area Edited!", "success");
             } else if (list == "PostalCodeExists") {
-                swal("Error", "Postal Code already exists", "error");
+                swal("Error", "Please Try again later!", "error");
             }
         }
     };
+    //delete
+    
+    $scope.delDeliveryArea = function (Id) {
+        swal({
+            title: "Are you sure?",
+            text: "Your Delivery Area will be deleted!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes, delete it!",
+            closeOnConfirm: false
+        }, function () {
+                JsonCallParam("DeliveryAreas", "Delete", { id: Id });
+                if (list === "Success") {
+                    $scope.getAllAreas();
+                swal("Deleted", "DeliveryArea Deleted!", "success");
+            }
+            else {
+                swal("Error", "Please Try again later!", "error");
+            }
+        });
+
+    };
+
 
     $scope.openEditModal = function (area) {
         $scope.editAreaObj = { deliveryAreaId: area.deliveryAreaId, areaName: area.areaName, postalCode: area.postalCode, city: area.city, status: area.status, isDeliveryAvailable: area.isDeliveryAvailable, deliveryCharges: area.deliveryCharges, minOrderCharges: area.minOrderCharges };
