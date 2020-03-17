@@ -127,7 +127,7 @@ namespace RiaPizza.Services.OrderService
                 .Include(s => s.OrderBy).ToListAsync();
             return todayDeliveredOrders;
         }
-        public async Task<int> TodaySale() {
+        public async Task<float> TodaySale() {
            var todaySale=await _context.Orders.Where(s => s.OrderDateTime.Year == DateTime.Now.Year && s.OrderDateTime.Month == DateTime.Now.Month && s.OrderDateTime.Day == DateTime.Now.Day && s.IsCompleted == true)
                 .Select(s=>s.TotalBill).SumAsync();
             return todaySale;
@@ -258,6 +258,38 @@ namespace RiaPizza.Services.OrderService
             Order order = await _context.Orders.FindAsync(id);
             _context.Orders.Remove(order);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<Order>> SearchByNumber(string number)
+        {
+            var orderByNumber = new List<Order>();
+            orderByNumber = await _context.Orders.Include(s => s.OrderBy).Where(s => s.OrderBy.Contact==number).ToListAsync();
+            return orderByNumber;
+        }
+        public async Task<List<Order>> SearchByDish(int DishId)
+        {
+            
+            var searchByDish = await _context.Orders.Include(s => s.OrderBy).Include(s=>s.OrderItems).Where(s=>s.OrderItems.Any(x=>x.DishId==DishId)).ToListAsync();
+            var test = searchByDish;
+            return searchByDish;
+        }
+
+        public async Task<List<Order>> SearchByDishCat(int DishCatId)
+        {
+            var searchByDishCat = await _context.Orders.Include(s => s.OrderBy).Include(s => s.OrderItems).Where(s => s.OrderItems.Any(x => x.Dish.DishCategoryId == DishCatId)).ToListAsync();
+            return searchByDishCat;
+        }
+
+        public async Task<List<Order>> SearchByAddress(string address)
+        {
+            var searchByAddress = await _context.Orders.Include(s => s.OrderBy).Include(s => s.OrderDeliveryAddress).Where(s => s.OrderDeliveryAddress.Address.Contains(address)).ToListAsync();
+            return searchByAddress;
+        }
+
+        public async Task<List<Order>> SearchByUser(int userId)
+        {
+            var serchByUser = await _context.Orders.Include(s => s.OrderBy).Where(x => x.UserId == userId).ToListAsync();
+            return serchByUser;
         }
     }     
 }          

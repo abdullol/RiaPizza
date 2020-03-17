@@ -166,7 +166,7 @@ body {
 }
 
 .navbar #myModal .my-modal .modal-content .modal-header {
-  background: #f83;
+  background: black;
   border-radius: 0;
   height: 175px;
   border: 0;
@@ -309,7 +309,7 @@ body {
 .navbar #loginModal .my-modal .modal-content .pass-link {
   text-align: center !important;
   text-decoration: none;
-  color: #f83;
+  color: black;
 }
 
 .navbar #productInfo .my-modal {
@@ -456,7 +456,7 @@ body {
 .navbar #signModal .my-modal .modal-content .pass-link {
   text-align: center !important;
   text-decoration: none;
-  color: #f83;
+  color: black;
 }
 
 .navbar #infoModal .my-modal {
@@ -598,9 +598,9 @@ body {
 }
 
 .navbar #orderModal .my-modal .modal-content .pass-link {
-  text-align: center !important;
-  text-decoration: none;
-  color: #f83;
+    text-align: center !important;
+    text-decoration: none;
+    color: black;
 }
 
 .navbar #favoritesModal .my-modal {
@@ -720,9 +720,9 @@ body {
 }
 
 .navbar #favoritesModal .my-modal .modal-content .pass-link {
-  text-align: center !important;
-  text-decoration: none;
-  color: #f83;
+    text-align: center !important;
+    text-decoration: none;
+    color: black;
 }
 
 .navbar .close {
@@ -832,7 +832,7 @@ body {
 .navbar #address2Modal .my-modal .modal-content .pass-link {
   text-align: center !important;
   text-decoration: none;
-  color: #f83;
+  color: black;
 }
 
 @media only screen and (max-width: 369px) {
@@ -1084,7 +1084,7 @@ body {
 }
 
 .work .easy {
-  color: #f83;
+  color: black;
   font-size: 28px;
   font-weight: 600;
 }
@@ -1126,7 +1126,7 @@ body {
 }
 
 .time .easy {
-  color: #f83;
+  color: black;
   font-size: 28px;
   font-weight: 600;
 }
@@ -2873,7 +2873,7 @@ input::placeholder {
 
 .services .service-h {
   font-size: 35px;
-  color: #f83;
+  color: black;
   letter-spacing: 0px;
   margin-top: 14px;
   line-height: 39px;

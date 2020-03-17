@@ -14,40 +14,62 @@
             width: 0;
             height: 0;
         }
-            /* IMAGE STYLES */
-            .payment-selection + .payment-img {
-                cursor: pointer;
-            }
-
-            /* CHECKED STYLES */
-            .payment-selection:checked + .payment-img {
-                background: linear-gradient(#142209, #142209);
-            }
-
-        .pointer {
-            cursor: pointer !important;
+        /* IMAGE STYLES */
+        .payment-selection + .payment-img {
+            cursor: pointer;
         }
 
+        /* CHECKED STYLES */
+        .payment-selection:checked + .payment-img {
+            background: linear-gradient(#142209, #142209);
+        }
+        .pointer{
+            cursor: pointer !important;
+        }
+        .order-btn{
+            height:45px;
+        }
         @@media only screen and (max-width: 992px) {
-            #sidebar {
-                display: none
+            #sidebar{
+                display:none
             }
-
-            #mainNav {
-                margin-right: 10px !important;
-                width: 100%;
+            #mainNav{
+                margin-right:10px !important;
+                width:100%;
             }
-
             #cart-btn-mob {
                 display: block !important;
             }
+            .order-btn{
+                height:35px;
+            }
         }
-
-        #cart-btn-mob {
-            display: none;
+        #cart-btn-mob{
+            display:none;
             position: fixed;
             bottom: 0;
             z-index: 1000;
+        }
+        .carousel-indicators li{
+            width: auto !important;
+            margin-right: 0 !important;
+        }
+        #cart-btn-mob .p1[data-count]:after{
+          position:absolute;
+          right:20%;
+          top:8%;
+          content: attr(data-count);
+          font-size:40%;
+          padding:.2em;
+          border-radius:50%;
+          line-height:1em;
+          color: white;
+          background:rgba(255,0,0,.85);
+          text-align:center;
+          min-width: 1em;
+        }
+        #cart-btn-mob .p1{
+            margin-left:-20px;
         }
     </style>
 }
@@ -96,9 +118,10 @@
         $scope.dishCategories = [];
         $scope.toppings = [];
         $scope.temp = "Select Value";
-        $scope.cartItem = { dishId: 0, dishName: "", quantity: 0, dishPrice: 0, priceWithExtras: 0, totalPrice: 0, remarks: "", toppings: [] };
+        $scope.cartItem = { dishId: 0, dishName: "", quantity: 0, dishPrice: 0, priceWithExtras: 0, totalPrice: 0, remarks: "", toppings: [], dishSize: {} };
         $scope.cart = [];
         $scope.ordertotalPrice = { subtotal: 0, totalPrice: 0, tax: 0, deliveryCharges: 0 };
+        $scope.deliveryTimings = [];
         //End Choose Dishes Attributes
 
         //Start Ordering Attributes
@@ -220,7 +243,10 @@
         }
         function pushCartItemInOrderItems() {
             for (var i = 0; i < $scope.cart.length; i++) {
-                var dishToppings = '';
+                if ($scope.cart[i].dishSize) 
+                    var dishToppings = "Size: "+ $scope.cart[i].dishSize.size + "Ø "+$scope.cart[i].dishSize.diameter+"cm, ";
+                else
+                    var dishToppings = "";
                 for (var j = 0; j < $scope.cart[i].toppings.length; j++) {
                     if (j < $scope.cart[i].toppings.length - 1)
                         dishToppings += $scope.cart[i].toppings[j] + ', ';
@@ -271,6 +297,7 @@
                 }
                 $scope.saveCart();
                 $scope.loadCart();
+                cartButtonEffect();
             }
             else {
                 $('.shopClosed').modal();
@@ -379,6 +406,24 @@
             updatePrice();
             $('#inputSelectedValue-' + id).html(extraName);
         };
+        $scope.selectDishSize = function (id, dishPrice) {
+            var obj = document.getElementById('sizeSelect-' + id).value;
+            var dishSize = JSON.parse(obj);
+            let size = dishSize.size;
+            let baseprice = dishSize.basePrice;
+            $scope.cartItem.dishSize = dishSize;
+            if (baseprice !== 0) {
+                $scope.cartItem.priceWithExtras = ($scope.cartItem.priceWithExtras - $scope.cartItem.dishPrice) + baseprice;
+                $scope.cartItem.dishPrice = baseprice;
+            }
+            else {
+                $scope.cartItem.priceWithExtras = ($scope.cartItem.priceWithExtras - $scope.cartItem.dishPrice) + dishPrice;
+                $scope.cartItem.dishPrice = dishPrice;
+            }
+
+            updatePrice();
+            $('#dishSize-' + id).html(size);
+        };
         function updatePrice() {
             $scope.cartItem.totalPrice = $scope.cartItem.priceWithExtras * $scope.cartItem.quantity;
         };
@@ -404,6 +449,11 @@
         }
         //End Choose Dishes Methods
 
+        $scope.getDeliveryTiming = function () {
+            JsonCall("DeliveryTiming", "GetDeliveryTimes");
+            $scope.deliveryTimings = list;
+        }
+
         $scope.proceedOrder = function () {
             if ($scope.shopschedule.isOpen) {
                 $('#chooseDishes').hide();
@@ -417,21 +467,18 @@
                 $('.shopClosed').modal();
             }
         }
-
         $scope.backToDishes = function () {
             $('#chooseDishes').show();
             $('#orderTab').hide();
             $('#orderBtn').show();
         }
-
         $scope.showDishDesc = function (allergies) {
             $(".dishDetails").modal();
-            if (allergies !== '' && allergies !== null)
-                $(".dishAllergies").html("<h6 style='font-weight:bold'>Substances or products causing allergies or intolerances</h6> <ul> <li>" + allergies + "</li></ul>");
+            if (allergies !=='' && allergies !== null)
+                $(".dishAllergies").html("<h6 style='font-weight:bold'>Substances or products causing allergies or intolerances</h6> <ul> <li>"+allergies+"</li></ul>");
             else
                 $(".dishAllergies").html("<h6 style='font-weight:bold'>No Allergies Found</h6>");
         }
-
         $scope.showPaypalBtn = function () {
             if ($scope.shopschedule.isOpen) {
                 $scope.order.totalBill = $scope.ordertotalPrice.totalPrice;
@@ -441,9 +488,16 @@
             else {
                 $('.shopClosed').modal();
             }
-
+            
         }
-
+        function cartButtonEffect() {
+            var time = 700;
+            setTimeout(function () {
+                $('#cart-btn-mob').removeClass("bg-warning").addClass("bg-primary");
+            }, time);
+            $('#cart-btn-mob').removeClass("bg-primary").addClass("bg-warning");
+            
+        }
     });
 </script>
 <div ng-controller="ViewDishes" id="ViewDishes">
@@ -479,7 +533,7 @@
                         </div>
                     </div>
 
-                    <p class="cartToppings" ng-if="item.toppings.length>0"> <span ng-repeat="topping in item.toppings" ng-init="toppingIndex = $index">{{topping}} <i ng-if="toppingIndex < item.toppings.length - 1">,</i></span> </p>
+                    <p class="cartToppings" ng-if="item.toppings.length>0"> <span ng-if="item.dishSize">Size: {{item.dishSize.size}} Ø{{item.dishSize.diameter}}cm,</span> <span ng-repeat="topping in item.toppings" ng-init="toppingIndex = $index">{{topping}} <i ng-if="toppingIndex < item.toppings.length - 1">,</i></span> </p>
                     <p class="cartToppings" ng-if="item.remarks!=''" style="margin-bottom:5% !important">{{item.remarks}}</p>
                     <div id="commentinput-{{$index}}" class="commentBox hide" style="margin-bottom:10% !important">
                         <label>Remarks</label>
@@ -521,10 +575,16 @@
     </div>
     <!-- Sidebar ends -->
     <div class="car-btn-section">
-        <button id="cart-btn-mob" class="btn btn-block py-3 text-center bg-primary text-white"><i class="fas fa-shopping-cart"></i> &nbsp; Cart</button>
+        <button id="cart-btn-mob" class="rounded-0 btn btn-block py-3 text-center bg-primary text-white">
+            Cart
+            <span class="p1 fa-stack fa-2x has-badge" data-count="{{cart.length}}">
+                <!--<i class="p2 fa fa-circle fa-stack-2x"></i>-->
+                <i style="font-size:20px" class="p3 fa fa-shopping-cart fa-stack-1x xfa-inverse" data-count="4b"></i>
+            </span>
+        </button>
     </div>
     <div id="cart-modal" data-backdrop-limit="1" tabindex="-1" role="dialog"
-         aria-labelledby="myModalLabel" aria-hidden="true" class="modal">
+             aria-labelledby="myModalLabel" aria-hidden="true" class="modal">
         <div class="modal-dialog modal-dialog-centered mx-auto my-modal">
             <!-- Modal content-->
             <div class="modal-content">
@@ -563,7 +623,7 @@
                                 </div>
                             </div>
 
-                            <p class="cartToppings" ng-if="item.toppings.length>0"> <span ng-repeat="topping in item.toppings" ng-init="toppingIndex = $index">{{topping}} <i ng-if="toppingIndex < item.toppings.length - 1">,</i></span> </p>
+                            <p class="cartToppings" ng-if="item.toppings.length>0"> <span ng-if="item.dishSize">Size: {{item.dishSize.size}} Ø{{item.dishSize.diameter}}cm,</span> <span ng-repeat="topping in item.toppings" ng-init="toppingIndex = $index">{{topping}} <i ng-if="toppingIndex < item.toppings.length - 1">,</i></span> </p>
                             <p class="cartToppings" ng-if="item.remarks!=''" style="margin-bottom:5% !important">{{item.remarks}}</p>
                             <div id="commentinput-{{$index}}" class="commentBox hide" style="margin-bottom:10% !important">
                                 <label>Remarks</label>
@@ -647,63 +707,15 @@
                                 </div>
                                 <div class="row my-3 p-3" style="background-color: #f8f5f2;">
                                     <div class="col-6">
-                                        <p class="mb-2"
+                                        <p class="mb-2" ng-repeat="timing in deliveryTimings"
                                            style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            Monday
-                                        </p>
-                                        <p class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            Tuesday
-                                        </p>
-                                        <p class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            Wednesday
-                                        </p>
-                                        <p class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            Thursday
-                                        </p>
-                                        <p class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            Friday
-                                        </p>
-                                        <p class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            Saturday
-                                        </p>
-                                        <p class=""
-                                           style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            Sunday
+                                            {{timing.day}}
                                         </p>
                                     </div>
-                                    <div class="col-6 text-right">
+                                    <div class="col-6 text-right" ng-repeat="timing in deliveryTimings">
                                         <p class="mb-2"
                                            style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            17:00 - 22:30
-                                        </p>
-                                        <p class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            17:00 - 22:30
-                                        </p>
-                                        <p class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            17:00 - 22:30
-                                        </p>
-                                        <p class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            17:00 - 22:30
-                                        </p>
-                                        <p class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            17:00 - 00:00
-                                        </p>
-                                        <p class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            12:00 - 00:00
-                                        </p>
-                                        <p class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            12:00 - 22:30
+                                            {{timing.timings}}
                                         </p>
                                     </div>
                                 </div>
@@ -729,29 +741,12 @@
                                     <div class="col-6 text-right">
                                         <p class="mb-2"
                                            style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            10.00 €
+                                            @Model.MinOrderCharges €
                                         </p>
                                         <p class="mb-2"
                                            style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            Free
+                                            @Model.DeliveryCharges €
                                         </p>
-                                    </div>
-                                </div>
-                                <div class="row mt-4 align-items-center">
-                                    <div class="col-md-1 col-2">
-                                        <i class="far fa-window-maximize fa-2x"></i>
-                                    </div>
-                                    <div class="col-md-11 col-10">
-                                        <h5>Website</h5>
-                                    </div>
-                                </div>
-                                <div class="row my-3 p-3" style="background-color: #f8f5f2;">
-                                    <div class="col-6">
-                                        <a class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; text-decoration: none;"
-                                           href="#">
-                                            riapizza-herrenberg.de
-                                        </a>
                                     </div>
                                 </div>
                                 <div class="row mt-4 align-items-center">
@@ -765,28 +760,10 @@
                                 <div class="row text-center align-items-center my-3 mx-auto p-3"
                                      style="background-color: #f8f5f2;">
                                     <div class="col-2 bg-white p-2 border m-2">
-                                        <img src="./res/img/payment_0.png" alt="payment_0" class="img-fluid" />
+                                        <img src="~/client-assets/res/img/payment_0.png" alt="payment_0" class="img-fluid" />
                                     </div>
                                     <div class="col-2 bg-white p-2 border m-2">
-                                        <img src="./res/img/payment_1.png" alt="payment_1" class="img-fluid" />
-                                    </div>
-                                    <div class="col-2 bg-white p-2 border m-2">
-                                        <img src="./res/img/payment_2.png" alt="payment_2" class="img-fluid" />
-                                    </div>
-                                    <div class="col-2 bg-white p-2 border m-2">
-                                        <img src="./res/img/payment_3.png" alt="payment_3" class="img-fluid" />
-                                    </div>
-                                    <div class="col-2 bg-white p-2 border m-2">
-                                        <img src="./res/img/payment_4.png" alt="payment_4" class="img-fluid" />
-                                    </div>
-                                    <div class="col-2 bg-white p-2 border m-2">
-                                        <img src="./res/img/payment_5.png" alt="payment_5" class="img-fluid" />
-                                    </div>
-                                    <div class="col-2 bg-white p-2 border m-2">
-                                        <img src="./res/img/payment_6.png" alt="payment_6" class="img-fluid" />
-                                    </div>
-                                    <div class="col-2 bg-white p-2 border m-2">
-                                        <img src="./res/img/payment_7.png" alt="payment_7" class="img-fluid" />
+                                        <img src="~/client-assets/res/img/payment_6.png" alt="payment_1" class="img-fluid" />
                                     </div>
                                 </div>
                                 <div class="row mt-4 align-items-center">
@@ -879,7 +856,7 @@
                 <div class="row align-items-center mb-3">
                     <ul class="list-unstyled text-right ml-auto">
                         <li class="d-inline-block">
-                            <button type="button" href="#infoModal" role="button" class="border"
+                            <button ng-click="getDeliveryTiming()" type="button" href="#infoModal" role="button" class="border"
                                     data-toggle="modal" id="info">
                                 <i class="fas fa-info fa-md info align-self-center"></i>
                             </button>
@@ -901,9 +878,9 @@
         <!-- Swiper -->
         <div class="js-menu-category-bar-sticky sticky-top mr" id="mainNav" ng-init="getDishCategories()">
             <div class="swiper-container container" style="max-width: 1050px;">
-                @*<button type="button" onclick="showSearchBar()" class="left fas fa-search fa-1x border-0 bg-transparent" id="search-btn"></button>*@
+                <button type="button" onclick="showSearchBar()" class="left fas fa-search fa-1x border-0 bg-transparent" id="search-btn"></button>
                 <div class="swiper-wrapper container" id="dish-list">
-                    <a style="color:black; font-weight: bold" ng-repeat="cat in dishCategories" href="#cat_{{$index}}" data-category="{{$index}}" class="swiper-slide nav-link js-scroll-trigger dishlink">{{cat.categoryName}}</a>
+                    <a ng-repeat="cat in dishCategories" href="#cat_{{$index}}" data-category="{{$index}}" class="swiper-slide nav-link js-scroll-trigger dishlink" style="color:black;font-weight: bold;">{{cat.categoryName}}</a>
                 </div>
                 <div class="input-group mb-3" id="search-box">
                     <input type="text" class="form-control" placeholder="Search for meals, etc.." style="border-radius: 0 !important;">
@@ -922,14 +899,12 @@
         <div class="groups mr">
             <section ng-repeat="dishCategory in dishCategories" ng-init="categoryIndex=$index" id="cat_{{categoryIndex}}" class="group-item">
                 <div class="container">
-                    <div class="row mx-md-4 mx-1 mt-3">
-                        <div class="col-12 ml-5 py-3 mx-auto dish-col" style="background:url(/Uploads/{{dishCategory.image}});">
-                            <h5>
-                                {{dishCategory.categoryName}}
-                            </h5>
+                    <div class="row mx-md-4 mx-1 mt-3 dish-head">
+                        <div class="col-12 ml-5 py-3 mb-4 mx-auto dish-col" style="background:url(/Uploads/{{dishCategory.image}});">
+                            <h5> {{dishCategory.categoryName}} </h5>
                         </div>
                     </div>
-                    <div class="row mx-md-2 mx-0" ng-repeat="dish in dishCategory.dishes" ng-init="dishIndex = $index">
+                    <div class="row mx-md-2 mx-0 px-0" ng-repeat="dish in dishCategory.dishes" ng-init="dishIndex = $index">
                         <div class="col-12 ml-5 py-3 mx-auto">
                             <div class="panel-group" id="accordion_{{dish.dishId}}" role="tablist" aria-multiselectable="true">
                                 <div class="panel panel-default">
@@ -956,6 +931,22 @@
                                          aria-labelledby="heading_{{dish.dishId}}">
                                         <div class="panel-body align-items-center py-4">
                                             <div class="container align-items-center">
+                                                <div class="row" ng-if="dish.dishSizes.length > 0">
+                                                    <div class="col-8 mt-4 mx-auto" ng-if="!extratype.chooseMultiple">
+                                                        <label class="d-block">
+                                                            lhre Sauce:
+                                                        </label>
+                                                        <select class="custom-select mt-2 pointer"
+                                                                ng-model="temp" id="sizeSelect-{{dish.dishId}}"
+                                                                ng-change="selectDishSize(dish.dishId, dish.basePrice)">
+                                                            <option style="font-size:14px;" hidden value="Select Value">Select Size</option>
+                                                            <option style="font-size:14px;" ng-repeat="size in dish.dishSizes" value="{{size}}">{{size.size}} Ø {{size.diameter}}cm ({{size.basePrice}}€)</option>
+                                                        </select>
+                                                        <p class="m-0 mb-3 p-2">
+                                                            <span id="dishSize-{{dish.dishId}}"></span>
+                                                        </p>
+                                                    </div>
+                                                </div>
                                                 <div class="row" ng-repeat="extratype in dish.dishExtraTypes" ng-init="dishExtraTypeIndex = $index">
                                                     <div class="col-8 mx-auto" ng-if="extratype.chooseMultiple" style="margin-bottom:20px">
                                                         <label class="d-block">
@@ -994,15 +985,15 @@
                                                         </p>
                                                     </div>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="col-4 text-right">
+                                                <div style="width:100%; margin-bottom:6%">
+                                                    <div class="text-right" style="width:40%; float:left">
                                                         <form method='POST' action='#' class="d-inline-block">
                                                             <input type='button' value='-' class='qtminus btn' ng-click="addQty(dish.dishId,'less')" />
                                                             <input id="qty-{{dish.dishId}}" type='text' name='quantity' value='0' class='qtvalue btn' disabled />
                                                             <input type='button' value='+' class='qtplus btn' ng-click="addQty(dish.dishId,'add')" />
                                                         </form>
                                                     </div>
-                                                    <div class="col-8 d-inline-block">
+                                                    <div class="text-left" style="width:60%; float:right">
                                                         <button class="btn btn-primary order-btn" ng-click="addToCart(dish)" id="totalPrice-{{dishIndex}}">{{cartItem.totalPrice}} €</button>
                                                     </div>
                                                 </div>
@@ -1301,6 +1292,9 @@
 </div>
 <!-- Dish list ends -->
 
+
+
+
 @section scripts{
     <script src="https://unpkg.com/swiper/js/swiper.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
@@ -1308,12 +1302,15 @@
     <script src="~/client-assets/res/js/myscroller.js"></script>
     <script src="~/client-assets/res/js/myswiper.js"></script>
     <script>
-        $(document).ready(function () {
-            $("#cart-btn-mob").click(function () {
-                //$("#sidenav").addClass("modal");
-                //$('#sidenav').attr("role", "dialoge");
+        $(document).ready(function(){
+            $("#cart-btn-mob").click(function(){
                 $('#cart-modal').modal();
             });
+            //$('.dishlink').css({"margin-right":"0"});
+            $('.dishlink').css({"width":"auto"});
         });
-    </script>  
+        //$(window).on('load',function(){
+        //    $('.swiper-slide').modal('show');
+        //});
+    </script>
 }

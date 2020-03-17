@@ -148,6 +148,34 @@ namespace RiaPizza.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AddDishSize(DishSize dishSize)
+        {
+            try
+            {
+                await _service.AddDishSize(dishSize);
+                return RedirectToAction("Edit", "Dishes", new { @id = dishSize.DishId });
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Edit", "Dishes", new { @id = dishSize.DishId });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditDishSize(DishSize dishSize)
+        {
+            try
+            {
+                await _service.EditDishSize(dishSize);
+                return RedirectToAction("Edit", "Dishes", new { @id = dishSize.DishId });
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Edit", "Dishes", new { @id = dishSize.DishId });
+            }
+        }
+
         public async Task<IActionResult> Explore(string postalCode)
         {
             var area = await _areaService.GetDeliveryArea(postalCode);

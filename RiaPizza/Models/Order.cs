@@ -15,7 +15,7 @@ namespace RiaPizza.Models
         public string RecievingTime { get; set; }
         public string OrderCode { get; set; }
         public string Remarks { get; set; }
-        public int TotalBill { get; set; }
+        public float TotalBill { get; set; }
         public string PaymentMethod { get; set; }
         public bool IsPaymentConfirmed { get; set; }
         public DateTime OrderDateTime { get; set; }

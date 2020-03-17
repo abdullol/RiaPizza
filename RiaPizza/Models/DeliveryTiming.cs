@@ -8,7 +8,7 @@ namespace RiaPizza.Models
     public class DeliveryTiming
     {
         public int Id { get; set; }
-        public DayOfWeek Day { get; set; }
+        public string Day { get; set; }
         public string Timings { get; set; }
     }
 }

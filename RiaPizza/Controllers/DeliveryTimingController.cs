@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RiaPizza.Data;
@@ -17,21 +18,27 @@ namespace RiaPizza.Controllers
         {
             _Service = Service;
         }
-        // GET: DeliveryTiming
+
+        [Authorize(Roles = "Manager,Admin")]
         public async Task<ActionResult> Index()
         {
             var getAllTiming = await  _Service.GetAllTiming();
             return View(getAllTiming);
         }
 
+        public async Task<JsonResult> GetDeliveryTimes()
+        {
+            var getAllTiming = await _Service.GetAllTiming();
+            return Json(getAllTiming);
+        }
 
-        // GET: DeliveryTiming/Create
+        [Authorize(Roles = "Manager,Admin")]
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: DeliveryTiming/Create
+        [Authorize(Roles = "Manager,Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(DeliveryTiming deliveryTiming)
@@ -48,14 +55,14 @@ namespace RiaPizza.Controllers
             }
         }
 
-        // GET: DeliveryTiming/Edit/5
+        [Authorize(Roles = "Manager,Admin")]
         public async Task<ActionResult> Edit(int id)
         {
              var editdeliveryTiming =await _Service.GetById(id);
             return View(editdeliveryTiming);
         }
 
-        // POST: DeliveryTiming/Edit/5
+        [Authorize(Roles = "Manager,Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(DeliveryTiming deliveryTiming)
@@ -72,14 +79,14 @@ namespace RiaPizza.Controllers
             }
         }
 
-        // GET: DeliveryTiming/Delete/5
+        [Authorize(Roles = "Manager,Admin")]
         public async Task<ActionResult> Delete(int id)
         {
            await _Service.DeleteDeliveryTiming(id);
             return RedirectToAction(nameof(Index));
         }
 
-        // POST: DeliveryTiming/Delete/5
+        [Authorize(Roles = "Manager,Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

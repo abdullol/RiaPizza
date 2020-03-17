@@ -12,9 +12,9 @@ namespace RiaPizza.Models
         public virtual Dish Dish { get; set; }
         public string Extras { get; set; }
         public int Quantity { get; set; }
-        public int DishBasePrice { get; set; }
-        public int DishPriceWithAddOnes { get; set; }
-        public int TotalPrice { get; set; }
+        public float DishBasePrice { get; set; }
+        public float DishPriceWithAddOnes { get; set; }
+        public float TotalPrice { get; set; }
         public string Remarks { get; set; }
         public int OrderId { get; set; }
         public virtual Order Order { get; set; }

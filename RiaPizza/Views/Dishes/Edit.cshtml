@@ -10,6 +10,9 @@
         .null-marbottom {
             margin-bottom: 0 !important;
         }
+        .hide{
+            display:none;
+        }
     </style>
 }
 <script src="~/Angular/Controllers/DishCtrl.js"></script>
@@ -97,6 +100,7 @@
                                 <form method="post" action="~/Dishes/EditDishExtra" id="editDishExtraForm">
                                     <input type="hidden" name="returnId" value="@Model.DishId" />
                                     <input type="hidden" name="DishExtraId" id="DishExtraId" value="" />
+                                    <input type="hidden" name="DishExtraTypeId" id="DishExtraTypeId-ExtraEdit" />
                                     <label>Name <span class="text-danger">*</span></label>
                                     <div class="form-group">
                                         <div class="form-line">
@@ -109,6 +113,13 @@
                                         <div class="form-line">
                                             <input type="text" class="form-control" id="ExtraPrice"
                                                    placeholder="Enter Price" name="ExtraPrice">
+                                        </div>
+                                    </div>
+                                    <label>Allergies</label>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <input type="text" class="form-control" id="ExtraAllergies"
+                                                   placeholder="Enter Allergies" name="Allergies">
                                         </div>
                                     </div>
                                 </form>
@@ -302,6 +313,74 @@
                         </div>
                     </form>
 
+
+                    <h4 class="card-inside-title">
+                        Dish Sizes 
+                        <button class="btn btn-primary right" onclick="$('#add-dish-size').toggle()"><i class="fa fa-plus"></i></button>
+                    </h4>
+                    @if (Model.DishSizes.Count() > 0)
+                    {
+                        <div class="row">
+                            <div class="col-12">
+                                <table>
+                                    <tr>
+                                        <th>Size</th>
+                                        <th>Price</th>
+                                        <th>Diameter</th>
+                                        <th></th>
+                                    </tr>
+                                </table>
+                                @foreach (var size in Model.DishSizes)
+                                {
+                                    <form method="post" action="~/Dishes/EditDishSize">
+                                        <input type="hidden" name="DishSizeId" value="@size.DishSizeId" />
+                                        <input type="hidden" name="DishId" value="@Model.DishId" />
+                                        <table class="table table-striped">
+                                            <tr>
+                                                <td>
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" name="Size" value="@size.Size" />
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" name="BasePrice" value="@size.BasePrice" />
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="form-group"><input type="text" class="form-control" name="Diameter" value="@size.Diameter" /></div>
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-primary"><i class="fas fa-save"></i></button>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </form>
+                                }
+                                <form id="add-dish-size" style="display:none" method="post" action="~/Dishes/AddDishSize">
+                                    <input type="hidden" name="DishId" value="@Model.DishId" />
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <div class="form-group"><input type="text" class="form-control" name="Size" /></div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group"><input type="text" class="form-control" name="BasePrice" /></div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group"><input type="text" class="form-control" name="Diameter" /></div>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-primary"><i class="fas fa-save"></i></button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </form>
+                            </div>
+                        </div>
+                    }
+
+
                     <h2 class="card-inside-title">
                         Dish Topping Details
                         <button data-toggle="modal" data-target="#addDishExtra" class="btn btn-primary" style="float:right">
@@ -315,9 +394,10 @@
                         {
                             <thead>
                                 <tr>
-                                    <th>@extraType.TypeName</th>
-                                    <th>Price</th>
-                                    <th>
+                                    <th width="25%">@extraType.TypeName</th>
+                                    <th width="25%">Price</th>
+                                    <th width="35%">Alergies</th>
+                                    <th width="15%">
                                         <button onclick="setExtraTypeEditModalValues(@extraType.DishExtraTypeId,'@extraType.TypeName','@extraType.ChooseMultiple')" data-toggle="modal" data-target="#editExtraType" class="btn btn-warning" style="float:right">
                                             <i class="fa fa-pencil-alt"></i>
                                         </button>
@@ -334,8 +414,9 @@
                                     <tr>
                                         <td>@extra.ExtraName</td>
                                         <td>@extra.ExtraPrice $</td>
+                                        <td>@extra.Allergies</td>
                                         <td>
-                                            <button onclick="setExtraEditModalValues(@extra.DishExtraId,'@extra.ExtraName',@extra.ExtraPrice)" data-toggle="modal" data-target="#editExtra" class="btn btn-info" style="float:right"><i class="fa fa-pencil-alt"></i></button>
+                                            <button onclick="setExtraEditModalValues(@extra.DishExtraId,'@extra.ExtraName',@extra.ExtraPrice,'@extra.Allergies', @extra.DishExtraTypeId)" data-toggle="modal" data-target="#editExtra" class="btn btn-info" style="float:right"><i class="fa fa-pencil-alt"></i></button>
                                         </td>
                                     </tr>
                                 }
@@ -363,10 +444,12 @@
             else
                 $("#ChooseMultiple").val("false");
         }
-        function setExtraEditModalValues(id, name, price) {
+        function setExtraEditModalValues(id, name, price, allergies, extratype) {
             $("#DishExtraId").val(id);
             $("#ExtraName").val(name);
             $("#ExtraPrice").val(price);
+            $('#ExtraAllergies').val(allergies);
+            $('#DishExtraTypeId-ExtraEdit').val(extratype);
         }
     </script>
 }

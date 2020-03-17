@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RiaPizza.Data;
 
 namespace RiaPizza.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200311173227_ChangeTypesToFloat")]
+    partial class ChangeTypesToFloat
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -257,39 +259,6 @@ namespace RiaPizza.Migrations
                     b.ToTable("AspNetUserRoles");
                 });
 
-            modelBuilder.Entity("RiaPizza.Models.Coupon", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Code")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("DiscountPercent")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<bool>("IsExpired")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("ValidityFrom")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("ValidityTo")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Coupons");
-                });
-
             modelBuilder.Entity("RiaPizza.Models.DeliveryArea", b =>
                 {
                     b.Property<int>("DeliveryAreaId")
@@ -321,24 +290,6 @@ namespace RiaPizza.Migrations
                     b.HasKey("DeliveryAreaId");
 
                     b.ToTable("DeliveryAreas");
-                });
-
-            modelBuilder.Entity("RiaPizza.Models.DeliveryTiming", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Day")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Timings")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DeliveryTimings");
                 });
 
             modelBuilder.Entity("RiaPizza.Models.Dish", b =>
@@ -435,9 +386,6 @@ namespace RiaPizza.Migrations
 
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
-
-                    b.Property<int>("OrderBy")
-                        .HasColumnType("int");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");

@@ -43,8 +43,10 @@ namespace RiaPizza.Services.DishCategoryService
         {
             try
             {
-                var categories = await _context.DishCategories.Include(s => s.Dishes).IncludeFilter(s => s.Dishes.Where(s => s.Status == true)).ToListAsync();
-                categories.ForEach(s => s.Dishes.ToList().ForEach(a => a.DishCategory = null));
+                var categories = await _context.DishCategories.Include(s => s.Dishes).ThenInclude(s=>s.DishSizes).IncludeFilter(s => s.Dishes.Where(s => s.Status == true)).ToListAsync();
+                categories.ForEach(s => s.Dishes.ToList().ForEach(a => a.DishCategory = null ));
+                categories.ForEach(s => s.Dishes.ToList().ForEach(a => a.DishSizes.ToList().ForEach(s => s.Dish = null)));
+                
                 return categories;
             }
             catch (Exception ex)
@@ -62,6 +64,7 @@ namespace RiaPizza.Services.DishCategoryService
                 dishCategory.Image = editDishCategory.Image;
             }
             dishCategory.IsAvailable = editDishCategory.IsAvailable;
+            dishCategory.OrderBy = editDishCategory.OrderBy;
 
             _context.DishCategories.Update(dishCategory);
             await _context.SaveChangesAsync();

@@ -3,6 +3,14 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_LayoutSite.cshtml";
 }
+@section css{
+    <style>
+        .carousel-indicators .active{
+            background-color:#DE0019 !important;
+        }
+    </style>
+
+}
 <!-- Header -->
 <header id="header" class="mt-n5">
     <div class="bg-img-overlay">
@@ -25,7 +33,7 @@
                                 }
                             </datalist>
                             <div class="input-group-prepend">
-                                <button class="btn btn-primary btn-show font-weight-bold">Show</button>
+                                <button class="btn btn-disabled btn-show font-weight-bold text-white" style="background:#DE0019">Show</button>
                             </div>
                         </div>
                         <h6 class="text-white mt-4">@ViewBag.Error</h6>
@@ -47,7 +55,7 @@
         <div class="row text-center">
             <div class="col-12">
                 <h2 class="mb-3">How it works</h2>
-                <h1 class="easy mb-3">Easy as that!</h1>
+                <h1 class="text-dark easy mb-3">Easy as that!</h1>
             </div>
         </div>
         <div class="row text-center my-5 align-items-center d-lg-flex d-none">
@@ -106,7 +114,6 @@
     </div>
 </section>
 <!-- How it works ends -->
-
 <!-- More -->
 <section class="more">
     <div class="container p-4">

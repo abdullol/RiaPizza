@@ -20,7 +20,7 @@ namespace RiaPizza.Services.DishService
         //Interface Functions
         public async Task<Dish> GetDish(int id)
         {
-            var dish = await _context.Dishes.Include(s=>s.DishExtraTypes).ThenInclude(s=>s.DishExtras).SingleOrDefaultAsync(s=>s.DishId == id);
+            var dish = await _context.Dishes.Include(s=>s.DishSizes).Include(s=>s.DishExtraTypes).ThenInclude(s=>s.DishExtras).SingleOrDefaultAsync(s=>s.DishId == id);
             return dish;
         }
         public async Task<List<Dish>> GetDishes(int id)
@@ -129,22 +129,28 @@ namespace RiaPizza.Services.DishService
             await _context.SaveChangesAsync();
         }
 
-        public async Task ChangeDishStatus(int id)
+        public async Task AddDishSize(DishSize size)
         {
-            Dish dish = await _context.Dishes.FindAsync(id);
-            if (dish.Status == true)
-            {
-                dish.Status = false;
-                _context.Dishes.Update(dish);
+            await _context.DishSize.AddAsync(size);
+            await _context.SaveChangesAsync();
+        }
 
-                await _context.SaveChangesAsync();
-            }
-            else if (dish.Status == false)
-            {
-                dish.Status = true;
-                _context.Dishes.Update(dish);
-                await _context.SaveChangesAsync();
-            }
+        public async Task EditDishSize(DishSize size)
+        {
+            var dishSize = await _context.DishSize.FindAsync(size.DishSizeId);
+            dishSize.Size = size.Size;
+            dishSize.BasePrice = size.BasePrice;
+            dishSize.Diameter = size.Diameter;
+
+            _context.Update(dishSize);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteDishSize(int id)
+        {
+            var size = await _context.DishSize.FindAsync(id);
+            _context.DishSize.Remove(size);
+            await _context.SaveChangesAsync();
         }
     }
 }
