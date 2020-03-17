@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Z.EntityFramework.Plus;
 
 namespace RiaPizza.Services.DeliveryAreaService
 {
@@ -28,6 +29,32 @@ namespace RiaPizza.Services.DeliveryAreaService
         {
             var allAreas = await _context.DeliveryAreas.ToListAsync();
             return allAreas;
+        }
+
+        public async Task ChangeAreaStatus(int id)
+        {
+            DeliveryArea deliveryArea=await _context.DeliveryAreas.FindAsync(id);
+            if (deliveryArea.Status==true)
+            {
+                deliveryArea.Status = false;
+                _context.DeliveryAreas.Update(deliveryArea);
+                _context.SaveChanges();
+            }
+            else if (deliveryArea.Status == false) 
+            {
+                deliveryArea.Status = true;
+                _context.DeliveryAreas.Update(deliveryArea);
+                _context.SaveChanges();
+            }
+
+        }
+
+        public async Task Delete(int id)
+        {
+           DeliveryArea deliveryArea=await _context.DeliveryAreas.FindAsync(id);
+            _context.DeliveryAreas.Remove(deliveryArea);
+           await _context.SaveChangesAsync();
+
         }
 
         public async Task EditDeliveryArea(DeliveryArea editDeliveryArea)
@@ -77,5 +104,6 @@ namespace RiaPizza.Services.DeliveryAreaService
             var exist = _context.DeliveryAreas.AnyAsync(s => s.PostalCode == postalCode);
             return exist;
         }
+
     }
 }

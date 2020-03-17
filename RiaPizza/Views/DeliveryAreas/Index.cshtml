@@ -148,6 +148,7 @@
                                     <th>Postal Code</th>
                                     <th>Delivery Charges</th>
                                     <th>Min Order Price</th>
+                                    <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -157,8 +158,13 @@
                                     <td>{{area.postalCode}}</td>
                                     <td>{{area.deliveryCharges}}</td>
                                     <td>{{area.minOrderCharges}}</td>
+                                    <td><div ng-if="area.status" class="badge col-green">available</div>
+                                        <div ng-if="!area.status" class="badge col-red">disable</div>
+                                    </td>
                                     <td>
                                         <button class="btn btn-primary" ng-click="openEditModal(area)"><i class="fas fa-pencil-alt"></i></button>
+                                        <a class="btn btn-danger" @*href="~/DeliveryAreas/Delete/{{area.deliveryAreaId}}"*@ ng-click="delDeliveryArea(area.deliveryAreaId)" ><i class="fas fa-trash-alt"></i></a>
+                                        <a href="~/DeliveryAreas/ChangeStatus/{{area.deliveryAreaId}}" class="btn btn-success"><i class="fas fa-toggle-on"></i></a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -168,6 +174,7 @@
                                     <th>Postal Code</th>
                                     <th>Order Charges</th>
                                     <th>Areawise Charges</th>
+                                    <th>status</th>
                                     <th>Actions</th>
                                 </tr>
                             </tfoot>

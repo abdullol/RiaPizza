@@ -259,5 +259,37 @@ namespace RiaPizza.Services.OrderService
             _context.Orders.Remove(order);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<Order>> SearchByNumber(string number)
+        {
+            var orderByNumber = new List<Order>();
+            orderByNumber = await _context.Orders.Include(s => s.OrderBy).Where(s => s.OrderBy.Contact==number).ToListAsync();
+            return orderByNumber;
+        }
+        public async Task<List<Order>> SearchByDish(int DishId)
+        {
+            
+            var searchByDish = await _context.Orders.Include(s => s.OrderBy).Include(s=>s.OrderItems).Where(s=>s.OrderItems.Any(x=>x.DishId==DishId)).ToListAsync();
+            var test = searchByDish;
+            return searchByDish;
+        }
+
+        public async Task<List<Order>> SearchByDishCat(int DishCatId)
+        {
+            var searchByDishCat = await _context.Orders.Include(s => s.OrderBy).Include(s => s.OrderItems).Where(s => s.OrderItems.Any(x => x.Dish.DishCategoryId == DishCatId)).ToListAsync();
+            return searchByDishCat;
+        }
+
+        public async Task<List<Order>> SearchByAddress(string address)
+        {
+            var searchByAddress = await _context.Orders.Include(s => s.OrderBy).Include(s => s.OrderDeliveryAddress).Where(s => s.OrderDeliveryAddress.Address.Contains(address)).ToListAsync();
+            return searchByAddress;
+        }
+
+        public async Task<List<Order>> SearchByUser(int userId)
+        {
+            var serchByUser = await _context.Orders.Include(s => s.OrderBy).Where(x => x.UserId == userId).ToListAsync();
+            return serchByUser;
+        }
     }     
 }          

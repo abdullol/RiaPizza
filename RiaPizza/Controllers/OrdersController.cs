@@ -1,16 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
+using MimeKit;
 using Newtonsoft.Json;
 using RiaPizza.Data;
 using RiaPizza.Data.ApplicationUser;
 using RiaPizza.Models;
 using RiaPizza.Services.AccountService;
+using RiaPizza.Services.DishCategoryService;
+using RiaPizza.Services.DishService;
 using RiaPizza.Services.NotifyOrder;
 using RiaPizza.Services.OrderService;
 
@@ -21,15 +29,27 @@ namespace RiaPizza.Controllers
         private readonly IOrderService _service;
         private readonly IAccountService _accountService;
         private readonly IHubContext<NotifyHub> _hubContext;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly IDishService _dishService;
+        private readonly IDishCategoryService _dishCatService;
+        private IHostingEnvironment _env;
         public OrdersController(
             IOrderService service,
             IAccountService accountService,
-            IHubContext<NotifyHub> hubContext
+            IHubContext<NotifyHub> hubContext,
+            UserManager<AppUser> userManager,
+            IHostingEnvironment env,
+            IDishService dishService,
+            IDishCategoryService dishCatService
             )
         {
             _service = service;
             _accountService = accountService;
             _hubContext = hubContext;
+            _userManager = userManager;
+            _env = env;
+            _dishService = dishService;
+            _dishCatService = dishCatService;
         }
 
         [Authorize(Roles = "Manager,Admin")]
@@ -93,8 +113,11 @@ namespace RiaPizza.Controllers
         }
 
         [Authorize(Roles = "Manager,Admin")]
-        public IActionResult Reports(List<Order> order)
+        public async  Task<IActionResult> Reports(List<Order> order)
         {
+            ViewBag.DishList = await _dishService.AllDishes();
+            ViewBag.DishCatList = await _dishCatService.AllDishCategories();
+            ViewBag.Users =await _userManager.Users.ToListAsync();
             return View(order);
         }
 
@@ -113,12 +136,46 @@ namespace RiaPizza.Controllers
         }
 
         [HttpPost]
-        [ActionName("ReportByStatus")]
+        [ActionName("ReportByFilter")]
         [Authorize(Roles = "Manager,Admin")]
-        public async Task<IActionResult> Reports(string status)
+        public async Task<IActionResult> Reports(string status,string number,string address, int DishId,int DishCatId,int userId)
         {
-            var orderStatus = await _service.SearchByStatus(status);
-            return View("Reports", orderStatus);
+            ViewBag.DishList = await _dishService.AllDishes();
+            ViewBag.DishCatList = await _dishCatService.AllDishCategories();
+            ViewBag.Users= _userManager.Users.Where(m => m.UserRoles.All(r => r.UserId != userId));
+
+            if (status != null)
+            {
+                var orderStatus = await _service.SearchByStatus(status);
+                return View("Reports", orderStatus);
+            }
+            else if (number != null)
+            {
+                var orderByNumber = await _service.SearchByNumber(number);
+                return View("Reports", orderByNumber);
+            }
+            else if (DishId != 0)
+            {
+                var searchByDish = await _service.SearchByDish(DishId);
+                return View("Reports", searchByDish);
+            }
+            else if (DishCatId != 0)
+            {
+                var searchByDishCat = await _service.SearchByDishCat(DishCatId);
+                return View("Reports", searchByDishCat);
+            }
+            else if (address != null)
+            {
+                var searchByAddress = await _service.SearchByAddress(address);
+                return View("Reports", searchByAddress);
+            }
+            else if (userId!=0) 
+            {
+                //var usersNotInRole = context.Users.Where(m => m.Roles.All(r => r.RoleId != role.Id));
+               var serchByUser= await _service.SearchByUser(userId);
+                return View("Reports", serchByUser);
+            }
+            return View();
         }
 
         [HttpPost]
@@ -147,7 +204,29 @@ namespace RiaPizza.Controllers
                 await _hubContext.Clients.All.SendAsync("notifyOrder", order);
 
                 if (orderId != 0)
+                { 
+                var user = await _userManager.GetUserAsync(User);
+                var email = new MimeMessage();
+                email.From.Add(new MailboxAddress("RiaPizza", "xyz@gmail.com"));
+                email.To.Add(new MailboxAddress("User", user.Email));
+                email.Subject = "Test Message";
+                email.Body = new TextPart("Plain")
+                {
+                    Text = "you have place order, your order is confiremed"
+                };
+
+                using (var client = new MailKit.Net.Smtp.SmtpClient())
+                {
+                    client.Connect("smtp.gmail.com", 587, false);
+                    //SMTP server authentication if needed
+                    client.Authenticate("xyz@gmail.com", "");
+
+                    client.Send(email);
+
+                    client.Disconnect(true);
+                };
                     return Json(order);
+            }
                 else
                     return Json("Failed");
 

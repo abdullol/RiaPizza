@@ -24,6 +24,11 @@ namespace RiaPizza.Services.OrderService
         Task ChangeStatus(int id, string status);
         Task<List<Order>> SearchByDate(string _dateFrom, string _dateTo);
         Task<List<Order>> SearchByStatus(string status);
+        Task<List<Order>> SearchByNumber(string number);
+        Task<List<Order>> SearchByDish(int DishId);
+        Task<List<Order>> SearchByDishCat(int DishCatId);
+        Task<List<Order>> SearchByAddress(string address);
+        Task<List<Order>> SearchByUser(int userId);
         Task<Order> GetOrder(int id);
         Task<List<OrderItem>> GetOrderItems(int id);
         Task<bool> IsCompleted(int id);

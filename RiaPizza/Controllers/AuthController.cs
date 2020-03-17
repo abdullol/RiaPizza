@@ -20,7 +20,9 @@ namespace RiaPizza.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly RoleManager<AppRole> _roleManager;
-        public AuthController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager)
+
+        public AuthController(UserManager<AppUser> userManager,
+            SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -73,13 +75,15 @@ namespace RiaPizza.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Manager,Admin")]
         public IActionResult Register()
         {
-            ViewBag.Rolelist =new SelectList( _roleManager.Roles,"Name","Name");
+            ViewBag.Rolelist = new SelectList(_roleManager.Roles, "Name", "Name");
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = "Manager,Admin")]
         public async Task<IActionResult> Register(RegisterDto registerDto)
         {
             try
@@ -99,12 +103,12 @@ namespace RiaPizza.Controllers
                     };
 
                     IdentityResult result = await _userManager.CreateAsync(user, registerDto.password);
-                    
+
                     ViewBag.Message = "User successfully created!";
-                    if (result.Succeeded) 
+                    if (result.Succeeded)
                     {
-                        await  _userManager.AddToRoleAsync(user, registerDto.RoleName);
-                        return RedirectToAction("AllUsers","Auth");    
+                        await _userManager.AddToRoleAsync(user, registerDto.RoleName);
+                        return RedirectToAction("AllUsers", "Auth");
                     }
                 }
             }
@@ -138,7 +142,7 @@ namespace RiaPizza.Controllers
                     };
 
                     IdentityResult result = await _userManager.CreateAsync(user, registerDto.password);
-                    
+
                     return result.Succeeded ? Json("Success") : Json("Failed");
                 }
                 else
@@ -170,7 +174,7 @@ namespace RiaPizza.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public IActionResult Roles() 
+        public IActionResult Roles()
         {
             RoleDto roleList = new RoleDto();
             roleList.RoleList = _roleManager.Roles;
@@ -179,28 +183,28 @@ namespace RiaPizza.Controllers
 
         [HttpGet]
         [Authorize]
-        public IActionResult ChangePassword() 
+        public IActionResult ChangePassword()
         {
             return View();
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> ChangePassword(ChangePasswordDto changePasswordDto) 
+        public async Task<ActionResult> ChangePassword(ChangePasswordDto changePasswordDto)
         {
-            if (ModelState.IsValid) 
+            if (ModelState.IsValid)
             {
                 var user = await _userManager.GetUserAsync(User);
-                if (user == null) 
+                if (user == null)
                 {
                     return RedirectToAction("Login");
                 }
                 var result = await _userManager.ChangePasswordAsync(user,
-                    changePasswordDto.CurrentPassword,changePasswordDto.NewPassword);
+                    changePasswordDto.CurrentPassword, changePasswordDto.NewPassword);
 
-                if (!result.Succeeded) 
+                if (!result.Succeeded)
                 {
-                    foreach (var error in result.Errors) 
+                    foreach (var error in result.Errors)
                     {
                         ModelState.AddModelError(string.Empty, error.Description);
                         ViewBag.Error = error.Description;
@@ -245,10 +249,11 @@ namespace RiaPizza.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> AllUsers() 
+
+        public async Task<ActionResult> AllUsers()
         {
-            var users =await _userManager.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role).ToListAsync();
+            ViewBag.Role = new SelectList(_roleManager.Roles, "Name", "Name");
+            var users = await _userManager.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role).ToListAsync();
             return View(users);
         }
 
@@ -269,6 +274,174 @@ namespace RiaPizza.Controllers
         public IActionResult MyAccount()
         {
             return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int Id)
+        {
+            string userId = Id.ToString();
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"User with Id =  { userId } can not be found";
+                return View("Not Found");
+            }
+
+            var userClaims = await _userManager.GetClaimsAsync(user);
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            var model = new UpdateUserDto
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                UserName = user.UserName,
+                PhoneNumber = user.PhoneNumber,
+                Claims = userClaims.Select(c => c.Value).ToList(),
+                Roles = userRoles
+            };
+
+            //getting roles in dropdown
+            ViewBag.Role = _roleManager.Roles.ToList();
+            ViewBag.UserRole = _userManager.GetRolesAsync(user);
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(UpdateUserDto usermodel)
+        {
+            string userId = usermodel.Id.ToString();
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"User with Id =  { userId } can not be found";
+                return View("Not Found");
+            }
+            else
+            {
+                user.FirstName = usermodel.FirstName;
+                user.LastName = usermodel.LastName;
+                user.UserName = usermodel.UserName;
+                user.PhoneNumber = usermodel.PhoneNumber;
+
+                var result = await _userManager.UpdateAsync(user);
+
+                if (result.Succeeded)
+                {
+                    RedirectToAction("AllUsers");
+                }
+
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+            }
+
+            return RedirectToAction("AllUsers");
+        }
+        [HttpPost]
+        public async Task<IActionResult> Delete(int Id)
+        {
+            string userId = Id.ToString();
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"User with Id =  { userId } can not be found";
+                return View("Not Found");
+            }
+            else
+            {
+                var result = await _userManager.DeleteAsync(user);
+
+                if (result.Succeeded)
+                {
+                    RedirectToAction("AllUsers");
+                }
+
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+
+                return RedirectToAction("AllUsers");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ManageUserRoles(int id)
+        {
+            ViewBag.userId = id;
+            var userid = id.ToString();
+            var user = await _userManager.FindByIdAsync(userid);
+
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"User with Id = {userid} cannot be found";
+                return View("Not Found");
+            }
+
+            var model = new List<UseRoleDto>();
+
+            foreach (var role in _roleManager.Roles)
+            {
+                var userRoleDto = new UseRoleDto
+                {
+                    RoleId = role.Id.ToString(),
+                    RoleName = role.Name
+                };
+
+                if (await _userManager.IsInRoleAsync(user, role.Name))
+                {
+                    userRoleDto.IsSelected = true;
+                }
+                else
+                {
+                    userRoleDto.IsSelected = false;
+                }
+
+                model.Add(userRoleDto);
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ManageUserRoles(UseRoleDto model, int id)
+        {
+            var userId = id.ToString();
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"User with Id = {userId} cannot be found";
+                return View("NotFound");
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+            var result = await _userManager.RemoveFromRolesAsync(user, roles);
+
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError("", "Cannot remove user existing roles");
+                return View(model);
+            }
+
+            result = await _userManager.AddToRoleAsync(user, model.RoleName);
+
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError("", "Cannot add selected roles to user");
+                return View(model);
+            }
+
+            return RedirectToAction("Edit", new { Id = userId });
         }
     }
 }

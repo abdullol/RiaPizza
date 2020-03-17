@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RiaPizza.Data;
 
 namespace RiaPizza.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200316125331_couponByBilal")]
+    partial class couponByBilal
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -691,32 +693,6 @@ namespace RiaPizza.Migrations
                     b.ToTable("ShopSchedule");
                 });
 
-            modelBuilder.Entity("RiaPizza.Models.SizeToppingPrice", b =>
-                {
-                    b.Property<int>("SizeToppingPriceId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("DishExtraId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DishSizeId")
-                        .HasColumnType("int");
-
-                    b.Property<float>("Price")
-                        .HasColumnType("real");
-
-                    b.Property<string>("SizeName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("SizeToppingPriceId");
-
-                    b.HasIndex("DishExtraId");
-
-                    b.ToTable("SizeToppingPrices");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.HasOne("RiaPizza.Data.ApplicationUser.AppRole", null)
@@ -851,15 +827,6 @@ namespace RiaPizza.Migrations
                     b.HasOne("RiaPizza.Models.Order", "Order")
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("RiaPizza.Models.SizeToppingPrice", b =>
-                {
-                    b.HasOne("RiaPizza.Models.DishExtra", "DishExtra")
-                        .WithMany("SizeToppingPrices")
-                        .HasForeignKey("DishExtraId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -15,5 +15,7 @@ namespace RiaPizza.Services.DeliveryAreaService
         Task ToggleDeliveryService(int id, bool isAvailable);
         Task<List<DeliveryArea>> AllDeliveryAreas();
         Task<bool> PostalCodeOtherThanThis(string postalCode, int id);
+        Task Delete(int id);
+        Task ChangeAreaStatus(int id);
     }
 }

@@ -53,7 +53,7 @@ namespace RiaPizza.Services.DishCategoryService
                 }
                 return categories;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return null;
             }
@@ -63,7 +63,7 @@ namespace RiaPizza.Services.DishCategoryService
         {
             var dishCategory = await _context.DishCategories.FindAsync(editDishCategory.DishCategoryId);
             dishCategory.CategoryName = editDishCategory.CategoryName;
-            if(editDishCategory.Image != null)
+            if (editDishCategory.Image != null)
             {
                 dishCategory.Image = editDishCategory.Image;
             }
@@ -87,6 +87,24 @@ namespace RiaPizza.Services.DishCategoryService
             DishCategory dishCategory = await _context.DishCategories.FindAsync(id);
             _context.DishCategories.Remove(dishCategory);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task ChangeDishCategoryStatus(int id)
+        {
+            DishCategory dishCategory = await _context.DishCategories.FindAsync(id);
+            if (dishCategory.Status == true)
+            {
+                dishCategory.Status = false;
+                _context.DishCategories.Update(dishCategory);
+
+                await _context.SaveChangesAsync();
+            }
+            else if (dishCategory.Status == false)
+            {
+                dishCategory.Status = true;
+                _context.DishCategories.Update(dishCategory);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

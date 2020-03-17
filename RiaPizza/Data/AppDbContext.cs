@@ -32,7 +32,6 @@ namespace RiaPizza.Data
         public DbSet<ShopSchedule> ShopSchedule { get; set; }
         public DbSet<DishSize> DishSize { get; set; }
         public DbSet<DeliveryTiming> DeliveryTimings { get; set; }
-        public DbSet<SizeToppingPrice> SizeToppingPrices { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
