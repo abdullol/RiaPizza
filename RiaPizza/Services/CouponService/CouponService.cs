@@ -40,5 +40,11 @@ namespace RiaPizza.Services.CouponService
             var allCoupons = await _context.Coupons.ToListAsync();
             return allCoupons;
         }
+
+        public async Task<Coupon> ValidateCoupon(string code)
+        {
+            var coupon = await _context.Coupons.SingleOrDefaultAsync(s => s.Code == code);
+            return coupon;
+        }
     }
 }

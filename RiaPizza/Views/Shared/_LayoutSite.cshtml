@@ -141,7 +141,9 @@
                 else {
                     var orders = localStorage.getItem('orders');
                     if (orders) {
-                        $scope.userOrders = JSON.parse(localStorage.orders);
+                        var ordersList = JSON.parse(localStorage.orders);
+                        JsonCallParam("Orders", "GetUserOrdersFromCodes", { "orderCodes": JSON.stringify(ordersList) });
+                        $scope.userOrders = list;
                     } else $scope.userOrders = [];
 
                 }
@@ -162,13 +164,13 @@
         <div class="nav-wrapper d-md-block d-none ml-auto mr-4 mt-2">
             <div class="sl-nav bg-white p-1 rounded-circle">
                 <ul>
-                    <li>
+                    <li style="width:17px;">
                         <i class="sl-flag flag-usa" aria-hidden="true"></i>
                         <div class="triangle"></div>
                         <ul class="translation-links">
                             <li>
                                 <i class="sl-flag flag-usa">
-                                    @*<div id="germany"></div>*@
+                                    <div id="germany"></div>
                                 </i>
                                 <a href="#" data-lang="English" class="english">
                                     <span class="active">English</span>
@@ -176,7 +178,7 @@
                             </li>
                             <li>
                                 <i class="sl-flag flag-de">
-                                    @*<div id="germany"></div>*@
+                                    <div id="germany"></div>
                                 </i>
                                 <a href="#" data-lang="German" class="german">
                                     <span>Deutsch</span>
@@ -468,7 +470,7 @@
                                     <span ng-if="!order.isPaymentConfirmed" class="badge badge-danger">Pending</span>
                                 </div>
                                 <div class="col-2">
-                                    {{order.orderStatus}}
+                                    <span class="badge badge-success">{{order.orderStatus}}</span>
                                 </div>
                                 <div class="col-6 text-md-left">
                                     <div class="row" ng-repeat="item in order.orderItems">

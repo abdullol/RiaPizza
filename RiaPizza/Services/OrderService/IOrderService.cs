@@ -35,6 +35,7 @@ namespace RiaPizza.Services.OrderService
         Task<string> GetOrderCode(int id);
         Task<OrderDetailsDto> GetOrderDetails(int id);
         Task<List<Order>> GetUserOrders(int id);
+        Task<List<Order>> GetUserOrdersFromCodes(List<string> codes);
         Task<List<Order>> TotalTodaySales();
         Task DeleteOrder(int id);
     }
