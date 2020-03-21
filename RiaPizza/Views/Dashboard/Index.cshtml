@@ -189,6 +189,8 @@
                                     <th>OrderBy</th>
                                     <th>OrderStatus</th>
                                     <th>RecievingTime</th>
+                                    <th>SubTotal</th>
+                                    <th>Discount</th>
                                     <th>TotalBill</th>
                                     <th>PaymentMethod</th>
                                     <th>Action</th>
@@ -220,6 +222,12 @@
                                             @Html.DisplayFor(modelItem => order.RecievingTime)
                                         </td>
                                         <td>
+                                            @Html.DisplayFor(modelItem => order.SubTotal)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.Discount)
+                                        </td>
+                                        <td>
                                             @Html.DisplayFor(modelItem => order.TotalBill)
                                         </td>
                                         <td>
@@ -243,6 +251,8 @@
                                     <th>OrderBy</th>
                                     <th>OrderStatus</th>
                                     <th>RecievingTime</th>
+                                    <th>SubTotal</th>
+                                    <th>Discount</th>
                                     <th>TotalBill</th>
                                     <th>PaymentMethod</th>
                                     <th>Action</th>

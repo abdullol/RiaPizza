@@ -20,7 +20,7 @@ namespace RiaPizza.Services.DishService
         //Interface Functions
         public async Task<Dish> GetDish(int id)
         {
-            var dish = await _context.Dishes.Include(s=>s.DishSizes).Include(s=>s.DishExtraTypes).ThenInclude(s=>s.DishExtras).SingleOrDefaultAsync(s=>s.DishId == id);
+            var dish = await _context.Dishes.Include(s=>s.DishSizes).Include(s=>s.DishExtraTypes).ThenInclude(s=>s.DishExtras).ThenInclude(s=>s.SizeToppingPrices).SingleOrDefaultAsync(s=>s.DishId == id);
             return dish;
         }
         public async Task<List<Dish>> GetDishes(int id)
@@ -152,7 +152,7 @@ namespace RiaPizza.Services.DishService
         }
         
         //Helper Functions
-        private async Task AddDishExtraType(DishExtraType dishExtraType)
+        public async Task AddDishExtraType(DishExtraType dishExtraType)
         {
             await _context.DishExtraTypes.AddAsync(dishExtraType);
             await _context.SaveChangesAsync();
@@ -186,6 +186,19 @@ namespace RiaPizza.Services.DishService
         {
             var size = await _context.DishSize.FindAsync(id);
             _context.DishSize.Remove(size);
+            await _context.SaveChangesAsync();
+        }
+        public async Task DeleteDishExtra(int id)
+        {
+            var dishextra = await _context.DishExtras.FindAsync(id);
+            _context.DishExtras.Remove(dishextra);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteDishExtraType(int id)
+        {
+            var dishextratype = await _context.DishExtraTypes.FindAsync(id);
+            _context.DishExtraTypes.Remove(dishextratype);
             await _context.SaveChangesAsync();
         }
 

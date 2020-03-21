@@ -111,13 +111,16 @@
                                                    placeholder="Enter Extra Name" name="ExtraName">
                                         </div>
                                     </div>
-                                    <label>Price <span class="text-danger">*</span></label>
-                                    <div class="form-group">
-                                        <div class="form-line">
-                                            <input type="text" class="form-control" id="ExtraPrice"
-                                                   placeholder="Enter Price" name="ExtraPrice">
+                                    @if (Model.DishSizes.Count() == 0)
+                                    {
+                                        <label>Price <span class="text-danger">*</span></label>
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <input type="number" class="form-control" id="ExtraPrice"
+                                                       placeholder="Enter Price" min="0" name="ExtraPrice">
+                                            </div>
                                         </div>
-                                    </div>
+                                    }
                                     <label>Allergies</label>
                                     <div class="form-group">
                                         <div class="form-line">
@@ -141,88 +144,43 @@
                      aria-labelledby="formModal" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="formModal">Add Topping</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body" ng-init="pushDishExtraType()">
-                                <h2 class="card-inside-title" style="margin-bottom:15px">
-                                    Dish Toppings
-                                    <button style="float:right" type="button" class="btn btn-primary" ng-click="pushDishExtraType()">
-                                        <i class="fa fa-plus"></i>
+                            <form method="post" action="~/Dishes/AddDishExtraType">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="formModal">Add Dish Topping Head</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
                                     </button>
-                                </h2>
-                                <div class="row clearfix" ng-repeat="extraType in addDishExtraTypes" ng-init="extraTypeIndex=$index">
-                                    <div class="col-lg-10 null-marbottom">
-                                        <div class="form-group null-marbottom">
-                                            <div class="form-line">
-                                                <label>Topping Category Head <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" placeholder="Enter Topping Name" ng-model="extraType.typeName">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-1">
-                                        <div class="form-group null-marbottom right">
-                                            <div class="form-line">
-                                                <label>Allow Multiple <span class="text-danger">*</span></label>
-                                                <div class="switch">
-                                                    <label>
-                                                        <input type="checkbox" ng-model="extraType.chooseMultiple">
-                                                        <span class="lever switch-col-light-blue"></span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-1">
-                                        <div class="form-group null-marbottom right">
-                                            <div class="form-line">
-                                                <label>Actions</label><br />
-                                                <button class="btn btn-danger" ng-click="removeExtraType($index)"><i class="fas fa-trash-alt"></i></button>
-                                            </div>
-                                        </div>
-                                    </div>
+                                </div>
+                                <div class="modal-body">
 
-                                    <div class="col-lg-1"></div>
-                                    <div class="col-lg-10">
-                                        <span style="font-weight:bold">Dish Toppings</span>
-                                        <button ng-click="pushDishExtra($index)" type="button" class="btn bg-orange btn-circle waves-effect waves-circle waves-float right">
-                                            <i class="fa fa-plus"></i>
-                                        </button>
-                                        <div class="row clearfix" ng-if="extraType.dishExtras.length > 0" style="margin-top:30px">
-                                            <div class="col-lg-5"><label>Topping Name <span class="text-danger">*</span></label></div>
-                                            <div class="col-lg-5"><label>Topping Price <span class="text-danger">*</span></label></div>
-                                            <div class="col-lg-2"><label class="right">Actions</label></div>
-                                        </div>
-                                        <div class="row clearfix" ng-repeat="extra in extraType.dishExtras" ng-init="extraIndex=$index">
-                                            <div class="col-lg-5">
-                                                <div class="form-group">
-                                                    <input type="text" class="form-control" placeholder="Topping" ng-model="extra.extraName"
-                                                           required>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-5">
-                                                <input type="number" class="form-control" placeholder="$$" ng-model="extra.extraPrice"
-                                                       required>
-                                            </div>
-                                            <div class="col-lg-2">
-                                                <button class="btn btn-danger right" ng-click="removeExtra(extraTypeIndex, extraIndex)"><i class="fas fa-trash-alt"></i></button>
-                                            </div>
+                                    <input type="hidden" name="returnId" value="@Model.DishId" />
+                                    <input type="hidden" name="DishId" value="@Model.DishId" />
+                                    <label>Type Name <span class="text-danger">*</span></label>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <input type="text" class="form-control"
+                                                   placeholder="Enter Extra Type Name" name="TypeName">
                                         </div>
                                     </div>
-                                    <div class="col-lg-1"></div>
+                                    <label>Choose Multiple <span class="text-danger">*</span></label>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <select class="form-control" name="ChooseMultiple">
+                                                <option value="True">Allow</option>
+                                                <option value="False">Disable</option>
+                                            </select>
+                                        </div>
+                                    </div>
 
                                 </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-info waves-effect" ng-click="saveDishExtraType()">Save</button>
-                                <button type="button" class="btn btn-danger waves-effect"
-                                        data-dismiss="modal">
-                                    Cancel
-                                </button>
-                            </div>
+                                <div class="modal-footer">
+                                    <input type="submit" class="btn btn-info waves-effect" value="Submit" />
+                                    <button type="button" class="btn btn-danger waves-effect"
+                                            data-dismiss="modal">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -247,13 +205,41 @@
                                                    placeholder="Enter Extra Name" name="ExtraName">
                                         </div>
                                     </div>
-                                    <label>Price <span class="text-danger">*</span></label>
+                                    <label>Allergies</label>
                                     <div class="form-group">
                                         <div class="form-line">
                                             <input type="text" class="form-control"
-                                                   placeholder="Enter Price" name="ExtraPrice">
+                                                   placeholder="Enter Allergies" name="Allergies">
                                         </div>
                                     </div>
+                                    @if (Model.DishSizes.Count() == 0)
+                                    {
+                                        <label>Price <span class="text-danger">*</span></label>
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <input type="text" class="form-control"
+                                                       placeholder="Enter Price" name="ExtraPrice">
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <label>Price <span class="text-danger">*</span></label>
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                @foreach (var price in Model.DishSizes)
+                                                {
+                                                    <input type="hidden" class="form-control"
+                                                           placeholder="Enter Price" name="DishSizeId[]" value="@price.DishSizeId">
+                                                    <input type="hidden" class="form-control"
+                                                           placeholder="Enter Price" name="SizeName[]" value="@price.Size">
+
+                                                    <input type="number" class="form-control"
+                                                           placeholder="@price.Size" name="Price[]">
+                                                }
+                                            </div>
+                                        </div>
+                                    }
                                 </form>
                             </div>
                             <div class="modal-footer">
@@ -412,7 +398,20 @@
                                 {
                                     <tr>
                                         <td>@extra.ExtraName</td>
-                                        <td>@extra.ExtraPrice $</td>
+                                        <td>
+                                            @if (Model.DishSizes.Count() == 0)
+                                            {
+                                                @extra.ExtraPrice
+                                            }
+                                            else
+                                            {
+                                                foreach (var price in extra.SizeToppingPrices)
+                                                {
+                                                    <span>@price.SizeName: @price.Price</span>
+                                                }
+                                            }
+                                        </td>
+
                                         <td>@extra.Allergies</td>
                                         <td>
                                             <a class="btn btn-danger right" href="~/Dishes/DeleteDishExtra?returnId=@Model.DishId&DishExtraId=@extra.DishExtraId"><i class="fa fa-trash"></i></a>

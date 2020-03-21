@@ -128,11 +128,25 @@ namespace RiaPizza.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddDishExtra(DishExtra extra, int returnId)
+        public async Task<IActionResult> AddDishExtra(DishExtra extra, SizeToppingPrice[] sizePrices, int returnId)
         {
             try
             {
                 await _service.AddDishExtra(extra);
+                return RedirectToAction("Edit", "Dishes", new { @id = returnId });
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Edit", "Dishes", new { @id = returnId });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddDishExtraType(DishExtraType extra, int returnId)
+        {
+            try
+            {
+                await _service.AddDishExtraType(extra);
                 return RedirectToAction("Edit", "Dishes", new { @id = returnId });
             }
             catch (Exception ex)
@@ -213,10 +227,35 @@ namespace RiaPizza.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> ToggleDish(int id)
+        public async Task<IActionResult> DeleteDishes(int[] dishIds)
         {
-            await _service.ChangeDishStatus(id);
-            return RedirectToAction("Index", "Dishes");
+            await _service.DelMultipleDish(dishIds);
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> DeleteDishExtra(int DishExtraId, int returnId)
+        {
+            try
+            {
+                await _service.DeleteDishExtra(DishExtraId);
+                return RedirectToAction("Edit", "Dishes", new { @id = returnId });
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Edit", "Dishes", new { @id = returnId });
+            }
+        }
+        public async Task<IActionResult> DeleteDishExtraType(int DishExtraTypeId, int returnId)
+        {
+            try
+            {
+                await _service.DeleteDishExtraType(DishExtraTypeId);
+                return RedirectToAction("Edit", "Dishes", new { @id = returnId });
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Edit", "Dishes", new { @id = returnId });
+            }
         }
 
     }

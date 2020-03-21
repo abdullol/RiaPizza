@@ -290,5 +290,64 @@ namespace RiaPizza.Services.OrderService
             var serchByUser = await _context.Orders.Include(s => s.OrderBy).Where(x => x.UserId == userId).ToListAsync();
             return serchByUser;
         }
+
+        public async Task<List<Order>> Filter(string DF, string DT, string status, string number, string address, int DishId, int DishCatId, int userId, string payment)
+        {
+            var result = await _context.Orders.Include(s => s.OrderBy).Include(s => s.OrderDeliveryAddress).Include(s => s.OrderItems).ToListAsync();
+            DateTime dateFrom, dateTo;
+            if (DF != null)
+            {
+                dateFrom = Convert.ToDateTime(DF);
+                result = result.Where(s => s.OrderDateTime >= dateFrom).ToList();
+            }
+            if (DT != null)
+            {
+                dateTo = Convert.ToDateTime(DT);
+                var DateTo = dateTo.AddDays(1);
+                result = result.Where(s => s.OrderDateTime <= DateTo).ToList();
+            }
+            if (userId != 0)
+            {
+                result = result.Where(s => s.UserId == userId).ToList();
+            }
+            if (status != null && status != "")
+            {
+                result = result.Where(s => s.OrderStatus == status).ToList();
+            }
+            if (payment != null && payment != "")
+            {
+                result = result.Where(s => s.PaymentMethod == payment).ToList();
+            }
+            if (number != null && number != "")
+            {
+                result = result.Where(s => s.OrderBy.Contact.Contains(number)).ToList();
+            }
+            if (address != null && address != "")
+            {
+                result = result.Where(s => s.OrderDeliveryAddress.Address.ToLower().Contains(address.ToLower())).ToList();
+            }
+            if (DishId != 0)
+            {
+                result = result.Where(s => s.OrderItems.Any(x => x.DishId == DishId)).ToList();
+            }
+            if (DishCatId != 0)
+            {
+                result = result.Where(s => s.OrderItems.Any(x => x.Dish.DishCategoryId == DishCatId)).ToList();
+            }
+            return result;
+        }
+
+        public async Task<List<Order>> GetUserOrders(int id)
+        {
+            var orders = await _context.Orders.Where(s => s.UserId == id).Include(s => s.OrderItems).ThenInclude(s => s.Dish).OrderByDescending(s => s.OrderDateTime).ToListAsync();
+            orders.ForEach(s => s.OrderItems.ToList().ForEach(s => s.Order = null));
+            return orders;
+        }
+        public async Task<List<Order>> GetUserOrdersFromCodes(List<string> codes)
+        {
+            var orders = await _context.Orders.Where(k => codes.Contains(k.OrderCode)).Include(s => s.OrderItems).ThenInclude(s => s.Dish).OrderByDescending(s => s.OrderDateTime).ToListAsync();
+            orders.ForEach(s => s.OrderItems.ToList().ForEach(s => s.Order = null));
+            return orders;
+        }
     }     
 }          
