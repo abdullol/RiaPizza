@@ -1,0 +1,104 @@
+﻿@model IEnumerable<RiaPizza.Models.Coupon>
+@{
+    ViewData["Title"] = "CreateRole";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="block-header">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="breadcrumb breadcrumb-style ">
+                    <li class="breadcrumb-item bcrumb-1">
+                        <a href="~/Home/Index">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item bcrumb-2">
+                        <a href="#" onClick="return false;">Coupons</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="body">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+
+                <div class="body">
+
+
+                    <div class="row clearfix">
+
+                        <div class="col-lg-12">
+                            <h2 class="card-inside-title">Coupons</h2>
+                            <a class="btn btn-success" href="~/Coupons/Create/" style="margin-left:90%">create</a>
+                            @*<a class="" asp-action="Create" style="margin-left:88%" value="Create">Create</a>*@
+                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                <thead>
+                                    <tr>
+                                        <th>Code</th>
+                                        <th>Name</th>
+                                        <th>Discount</th>
+                                        <th>Status</th>
+                                        <th>IsExpired</th>
+                                        <th>DateFrom</th>
+                                        <th>DateTo</th>
+                                        <th>Action</th>
+                                    </tr>
+
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td >@item.Code</td>
+                                            <td >@item.Name</td>
+                                            <td>@item.DiscountPercent</td>
+                                            <td>
+                                                @if (item.Status)
+                                                {<div class="badge col-green">available</div> }
+                                                else
+                                                { <div class="badge col-red">unavailable</div>}
+                                            </td>
+                                            <td>
+                                                @if (item.IsExpired)
+                                                {<div class="badge col-green">Active</div> }
+                                                else
+                                                { <div class="badge col-red">Expired</div>}
+                                            </td>
+                                            <td>@item.ValidityFrom.ToShortDateString()</td>
+                                            <td>@item.ValidityTo.ToShortDateString()</td>
+                                            <td>
+                                                <a class="btn btn-success" href="~/Coupons/Edit/@item.Id"><i class="fas fa-pencil-alt"></i></a>
+
+                                                <a class="btn btn-danger" href="~/Coupons/Delete/@item.Id"><i class="fas fa-trash-alt"></i></a>
+                                            </td>
+                                        </tr>
+
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>Code</th>
+                                        <th>Name</th>
+                                        <th>Discount</th>
+                                        <th>Status</th>
+                                        <th>IsExpired</th>
+                                        <th>DateFrom</th>
+                                        <th>DateTo</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
