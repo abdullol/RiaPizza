@@ -188,5 +188,18 @@ namespace RiaPizza.Services.DishService
             _context.DishSize.Remove(size);
             await _context.SaveChangesAsync();
         }
+
+        public async Task DelMultipleDish(int[] dishIds)
+        {
+            foreach (var item in dishIds)
+            { 
+                var delete=await _context.Dishes.FirstOrDefaultAsync(s => s.DishId == item);
+                if (delete != null)
+                {
+                     _context.Dishes.Remove(delete);
+                }
+            }
+           await _context.SaveChangesAsync();
+        }
     }
 }
