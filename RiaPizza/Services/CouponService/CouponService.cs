@@ -17,6 +17,8 @@ namespace RiaPizza.Services.CouponService
         }
         public async Task AddCoupon(Coupon addCoupon)
         {
+            addCoupon.Status = true;
+            addCoupon.IsExpired = false;
             await _context.Coupons.AddAsync(addCoupon);
             await _context.SaveChangesAsync();
         }
@@ -30,7 +32,12 @@ namespace RiaPizza.Services.CouponService
 
         public async Task EditCoupon(Coupon editCoupon)
         {
-            Coupon coupon = await _context.Coupons.FindAsync(editCoupon.Id);
+            var coupon = await _context.Coupons.FindAsync(editCoupon.Id);
+            coupon.Name = editCoupon.Name;
+            coupon.Code = editCoupon.Code;
+            coupon.DiscountPercent = editCoupon.DiscountPercent;
+            coupon.ValidityFrom = editCoupon.ValidityFrom;
+            coupon.ValidityTo = editCoupon.ValidityTo; 
            _context.Coupons.Update(coupon);
           await  _context.SaveChangesAsync();
         }
@@ -41,9 +48,9 @@ namespace RiaPizza.Services.CouponService
             return allCoupons;
         }
 
-        public async Task<Coupon> ValidateCoupon(string code)
+        public async Task<Coupon> GetById(int id)
         {
-            var coupon = await _context.Coupons.SingleOrDefaultAsync(s => s.Code == code);
+          var coupon= await _context.Coupons.FindAsync(id);
             return coupon;
         }
     }

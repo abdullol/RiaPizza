@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -19,19 +20,25 @@ namespace RiaPizza.Controllers
             _service = service;
         }
         // GET: Coupons
-        public async Task<JsonResult> Index()
+        public async Task<IActionResult> Index()
         {
             var allCoupons= await _service.GetAllCoupons();
-            return Json(allCoupons);
+            return View(allCoupons);
+        }
+        [Authorize(Roles = "Manager,Admin")]
+        public async Task<ActionResult> Create() 
+        {
+            return View();
         }
 
 
         // POST: Coupons/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<JsonResult> Create(IFormCollection form)
+        [Authorize(Roles = "Manager,Admin")]
+        public async Task<IActionResult> Create(Coupon addCoupon)
         {
-            var addCoupon = JsonConvert.DeserializeObject<Coupon>(form["coupon"]);
+           // var addCoupon = JsonConvert.DeserializeObject<Coupon>(form["coupon"]);
             string message;
             try
             {
@@ -43,16 +50,22 @@ namespace RiaPizza.Controllers
             {
                 message = ex.Message.ToString();
             }
-            return Json(message);
+            return RedirectToAction("Index");
         }
-
+        [Authorize(Roles = "Manager,Admin")]
+        public async Task<ActionResult> Edit(int id) 
+        {
+           var coupon=await _service.GetById(id);
+            return View(coupon);
+        }
 
         // POST: Coupons/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<JsonResult> Edit(IFormCollection form)
+        [Authorize(Roles = "Manager,Admin")]
+        public async Task<IActionResult> Edit(Coupon editCoupon)
         {
-            var editCoupon = JsonConvert.DeserializeObject<Coupon>(form["coupon"]);
+           // var editCoupon = JsonConvert.DeserializeObject<Coupon>(form["coupon"]);
             string message;
             try
             {
@@ -65,11 +78,11 @@ namespace RiaPizza.Controllers
             {
                 message = ex.Message.ToString();
             }
-            return Json(message);
+            return RedirectToAction(nameof(Index));
         }
 
-        
-        public async Task<JsonResult> Delete(int id)
+        [Authorize(Roles = "Manager,Admin")]
+        public async Task<ActionResult> Delete(int id)
         {
             string message;
             try
@@ -82,7 +95,7 @@ namespace RiaPizza.Controllers
             {
                 message = ex.Message.ToString();
             }
-            return Json(message);
+            return RedirectToAction("Index");
         }
 
         public async Task<JsonResult> ValidateCoupon(string code)

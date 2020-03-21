@@ -13,5 +13,6 @@ namespace RiaPizza.Services.CouponService
         Task<List<Coupon>> GetAllCoupons();
         Task EditCoupon(Coupon editCoupon);
         Task DeleteCoupon(int id);
+        Task<Coupon> GetById(int id);
     }
 }
