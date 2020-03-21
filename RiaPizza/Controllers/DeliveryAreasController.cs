@@ -41,18 +41,17 @@ namespace RiaPizza.Controllers
         public async Task<JsonResult> Create(IFormCollection form)
         {
             var deliveryArea = JsonConvert.DeserializeObject<DeliveryArea>(form["deliveryArea"]);
-            //if(await _service.ValidatePostalCode(deliveryArea.PostalCode))
-            //{
-            //    return Json("PostalCodeExists");
-            //}
-            //else
-            //{
+            if (await _service.ValidateArea(deliveryArea.AreaName))
+            {
+                return Json("PostalCodeExists");
+            }
+            else
+            {
                 await _service.AddDeliveryArea(deliveryArea);
                 return Json("Success");
-            //}
+            }
         }
 
-        
         [HttpPost]
         [Authorize(Roles = "Manager,Admin")]
         public async Task<JsonResult> Edit(IFormCollection form)
@@ -61,15 +60,15 @@ namespace RiaPizza.Controllers
             string message;
             try
             {
-               // if (await _service.PostalCodeOtherThanThis(deliveryArea.PostalCode, deliveryArea.DeliveryAreaId))
-               // {
-               //     return Json("PostalCodeExists");
-               // }
-               // else
-               // {
+                if (await _service.AreaOtherThanThis(deliveryArea.AreaName, deliveryArea.DeliveryAreaId))
+                {
+                    return Json("PostalCodeExists");
+                }
+                else
+                {
                     await _service.EditDeliveryArea(deliveryArea);
                     message = "Success";
-               // }
+                }
             }
             catch(Exception ex)
             {
@@ -77,7 +76,7 @@ namespace RiaPizza.Controllers
             }
             return Json(message);
         }
-        //delete
+
         public async Task<JsonResult> Delete(int id)
         {
             await _service.Delete(id);

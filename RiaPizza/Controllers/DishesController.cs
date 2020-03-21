@@ -183,9 +183,9 @@ namespace RiaPizza.Controllers
             }
         }
 
-        public async Task<IActionResult> Explore(string postalCode)
+        public async Task<IActionResult> Explore(string areaname)
         {
-            var area = await _areaService.GetDeliveryArea(postalCode);
+            var area = await _areaService.GetDeliveryArea(areaname);
             if(area == null)
             {
                 ViewBag.Error = "No Area Found!";
@@ -213,15 +213,11 @@ namespace RiaPizza.Controllers
             return RedirectToAction("Index");
         }
 
-        // public async Task<IActionResult> ToggleDish(int id)
-        // {
-        //     await _service.ChangeDishStatus(id);
-        //     return RedirectToAction("Index", "Dishes");
-        // }
-        public async Task<IActionResult> DeleteDishes(int[] dishIds) 
+        public async Task<IActionResult> ToggleDish(int id)
         {
-             await  _service.DelMultipleDish(dishIds);
-            return RedirectToAction("Index");
+            await _service.ChangeDishStatus(id);
+            return RedirectToAction("Index", "Dishes");
         }
+
     }
 }

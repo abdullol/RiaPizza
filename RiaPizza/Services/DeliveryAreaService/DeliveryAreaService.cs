@@ -70,26 +70,12 @@ namespace RiaPizza.Services.DeliveryAreaService
             await _context.SaveChangesAsync();
         }
 
-        public async Task<DeliveryArea> GetDeliveryArea(string postalCode)
+        public async Task<DeliveryArea> GetDeliveryArea(string area)
         {
-            var area = await _context.DeliveryAreas.SingleOrDefaultAsync(s => s.PostalCode == postalCode);
-            return area;
+            var _area = await _context.DeliveryAreas.SingleOrDefaultAsync(s => s.AreaName == area);
+            return _area;
         }
-
-        public async Task<bool> PostalCodeOtherThanThis(string postalCode, int id)
-        {
-            var exist = await _context.DeliveryAreas.AnyAsync(s => s.PostalCode == postalCode);
-            if (exist)
-            {
-                var area = await _context.DeliveryAreas.SingleOrDefaultAsync(s => s.PostalCode == postalCode);
-                if (area.DeliveryAreaId == id)
-                    return false;
-                else
-                    return true;
-            }
-            return false;
-        }
-
+        
         public async Task ToggleDeliveryService(int id, bool isAvailable)
         {
             var deliveryArea = await _context.DeliveryAreas.FindAsync(id);
@@ -99,9 +85,23 @@ namespace RiaPizza.Services.DeliveryAreaService
             await _context.SaveChangesAsync();
         }
 
-        public Task<bool> ValidatePostalCode(string postalCode)
+        public async Task<bool> AreaOtherThanThis(string area, int id)
         {
-            var exist = _context.DeliveryAreas.AnyAsync(s => s.PostalCode == postalCode);
+            var exist = await _context.DeliveryAreas.AnyAsync(s => s.AreaName == area);
+            if (exist)
+            {
+                var _area = await _context.DeliveryAreas.SingleOrDefaultAsync(s => s.AreaName == area);
+                if (_area.DeliveryAreaId == id)
+                    return false;
+                else
+                    return true;
+            }
+            return false;
+        }
+
+        public Task<bool> ValidateArea(string area)
+        {
+            var exist = _context.DeliveryAreas.AnyAsync(s => s.AreaName == area);
             return exist;
         }
 

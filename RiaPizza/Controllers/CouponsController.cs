@@ -97,5 +97,15 @@ namespace RiaPizza.Controllers
             }
             return RedirectToAction("Index");
         }
+
+        public async Task<JsonResult> ValidateCoupon(string code)
+        {
+            var _code = await _service.ValidateCoupon(code);
+            if (_code == null)
+                return Json(false);
+            else
+                return Json(_code);
+        }
+
     }
 }

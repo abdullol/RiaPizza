@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-
+using MimeKit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using MimeKit;
 using Newtonsoft.Json;
 using RiaPizza.Data;
 using RiaPizza.Data.ApplicationUser;
@@ -219,32 +218,33 @@ namespace RiaPizza.Controllers
                 order.OrderItems.ToList().ForEach(s => s.Order = null);
                 await _hubContext.Clients.All.SendAsync("notifyOrder", order);
 
-                if (orderId != 0)
-                { 
-                var user = await _userManager.GetUserAsync(User);
-                var email = new MimeMessage();
-                email.From.Add(new MailboxAddress("RiaPizza", "xyz@gmail.com"));
-                email.To.Add(new MailboxAddress("User", user.Email));
-                email.Subject = "Test Message";
-                email.Body = new TextPart("Plain")
-                {
-                    Text = "you have place order, your order is confiremed"
-                };
+                return Json(order);
+                //if (orderId != 0)
+                //{ 
+                //    var user = await _userManager.GetUserAsync(User);
+                //    var email = new MimeMessage();
+                //    email.From.Add(new MailboxAddress("RiaPizza", "xyz@gmail.com"));
+                //    email.To.Add(new MailboxAddress("User", user.Email));
+                //    email.Subject = "Test Message";
+                //    email.Body = new TextPart("Plain")
+                //    {
+                //        Text = "you have place order, your order is confiremed"
+                //    };
 
-                using (var client = new MailKit.Net.Smtp.SmtpClient())
-                {
-                    client.Connect("smtp.gmail.com", 587, false);
-                    //SMTP server authentication if needed
-                    client.Authenticate("xyz@gmail.com", "");
+                //    using (var client = new MailKit.Net.Smtp.SmtpClient())
+                //    {
+                //        client.Connect("smtp.gmail.com", 587, false);
+                //        //SMTP server authentication if needed
+                //        client.Authenticate("xyz@gmail.com", "");
 
-                    client.Send(email);
+                //        client.Send(email);
 
-                    client.Disconnect(true);
-                };
-                    return Json(order);
-            }
-                else
-                    return Json("Failed");
+                //        client.Disconnect(true);
+                //    };
+                //        return Json(order);
+                //}
+                //    else
+                //        return Json("Failed");
 
             }
             catch (Exception ex)
@@ -280,6 +280,13 @@ namespace RiaPizza.Controllers
         public async Task<JsonResult> GetUserOrders(int id)
         {
             var orders = await _service.GetUserOrders(id);
+            return Json(orders);
+        }
+
+        public async Task<JsonResult> GetUserOrdersFromCodes(IFormCollection form)
+        {
+            var list = JsonConvert.DeserializeObject<List<string>>(form["orderCodes"]).ToList();
+            var orders = await _service.GetUserOrdersFromCodes(list);
             return Json(orders);
         }
 

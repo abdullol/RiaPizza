@@ -1,87 +1,87 @@
 var lastCat = "cat1";
 var mySwiper = new Swiper(".swiper-container", {
-  // slidesPerView: 'auto',
-  slidesPerView: 6,
-  spaceBetween: 20,
-  freeMode: !0,
-  loop: !1,
-  watchOverflow: !0,
-  navigation: {
-    nextEl: ".swiper-next",
-    prevEl: ".swiper-prev"
-  }
+    // slidesPerView: 'auto',
+    slidesPerView: 6,
+    spaceBetween: 20,
+    freeMode: 0,
+    loop: 5,
+    watchOverflow: !0,
+    navigation: {
+        nextEl: ".swiper-next",
+        prevEl: ".swiper-prev"
+    }
 });
 
 mySwiper.slidesPerView = 8;
 mySwiper.update();
 
-mySwiper.on("reachBeginning", function() {
-  console.log("Swiper Beginning reached");
+mySwiper.on("reachBeginning", function () {
+    console.log("Swiper Beginning reached");
 });
 
-mySwiper.on("reachEnd", function() {
-  console.log("Swiper end reached");
+mySwiper.on("reachEnd", function () {
+    console.log("Swiper end reached");
 });
 
 function next() {
-  // mySwiper.slideTo(count++);
-  console.log("in next");
+    // mySwiper.slideTo(count++);
+    console.log("in next");
 
-  mySwiper.slideNext();
+    mySwiper.slideNext();
 }
 
 var waypoints = $(".group-item ").waypoint({
-  handler: function(direction) {
-    var index = this.element.getAttribute("index");
+    handler: function (direction) {
+        var index = this.element.getAttribute("index");
 
-    if (direction === "down") {
-      index = parseInt(index) - 1;
-    } else {
-      index = parseInt(index) - 2;
+        if (direction === "down") {
+            index = parseInt(index) - 1;
+        } else {
+            index = parseInt(index) - 2;
+        }
+
+        mySwiper.slideTo(index);
+        console.log("Last Cat2 : " + index);
     }
-
-    mySwiper.slideTo(index);
-    console.log("Last Cat2 : " + index);
-  }
 });
 
 // ? Show/Less grid checkboxes
 function show() {
-  var moreChecks = document.getElementById("more-checks");
-  var btn = document.getElementById("more-btn");
-  var btn2 = document.getElementById("less-btn")
+    var moreChecks = document.getElementById("more-checks");
+    var btn = document.getElementById("more-btn");
+    var btn2 = document.getElementById("less-btn")
 
-  moreChecks.style.display = "block";
-  btn.style.display = "none"
-  btn2.style.display = "block"
+    moreChecks.style.display = "block";
+    btn.style.display = "none"
+    btn2.style.display = "block"
 }
 function less() {
-  var moreChecks = document.getElementById("more-checks");
-  var btn = document.getElementById("more-btn");
-  var btn2 = document.getElementById("less-btn")
+    var moreChecks = document.getElementById("more-checks");
+    var btn = document.getElementById("more-btn");
+    var btn2 = document.getElementById("less-btn")
 
-  moreChecks.style.display = "none";
-  btn.style.display = "block"
-  btn2.style.display = "none"
+    moreChecks.style.display = "none";
+    btn.style.display = "block"
+    btn2.style.display = "none"
 }
 
 // ! Showing/Hiding Search Bar
 function showSearchBar() {
-  var searchBtn = document.getElementById("search-btn");
-  var dishList = document.getElementById("dish-list");
-  var searchBox = document.getElementById("search-box");
+    var searchBtn = document.getElementById("search-btn");
+    var dishList = document.getElementById("dish-list");
+    var searchBox = document.getElementById("search-box");
 
-  searchBtn.style.display = "none";
-  dishList.style.display = "none";
-  searchBox.style.display = "flex";
+    searchBtn.style.display = "none";
+    dishList.style.display = "none";
+    searchBox.style.display = "flex";
 }
 
 function hideSearchBar() {
-  var searchBtn = document.getElementById("search-btn");
-  var dishList = document.getElementById("dish-list");
-  var searchBox = document.getElementById("search-box");
+    var searchBtn = document.getElementById("search-btn");
+    var dishList = document.getElementById("dish-list");
+    var searchBox = document.getElementById("search-box");
 
-  searchBtn.style.display = "flex";
-  dishList.style.display = "flex";
-  searchBox.style.display = "none";
+    searchBtn.style.display = "flex";
+    dishList.style.display = "flex";
+    searchBox.style.display = "none";
 }

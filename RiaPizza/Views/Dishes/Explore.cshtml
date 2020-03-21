@@ -53,6 +53,16 @@
             #myBtn{
                 bottom:90px !important;
             }
+            #swiper-next{
+                display:none;
+            }
+            #search-btn{
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+        }
+        #swiper-next{
+            padding-left:8px;
         }
         .product-info-btn {
             display:block !important;
@@ -104,6 +114,12 @@
         #cart-icon-mob {
             font-size: 20px;
             margin: -7px 0 0 -25px;
+        }
+        #mainNav {
+            height:60px;
+        }
+        .swiper-container{
+            top:0.5em;
         }
     </style>
 }
@@ -157,10 +173,12 @@
         $scope.ordertotalPrice = { subtotal: 0, totalPrice: 0, tax: 0, deliveryCharges: 0 };
         $scope.deliveryTimings = [];
         $scope.dishSizeIdSelectedDish = "0";
+        $scope.coupon = { code: '' };
+        $scope.showDiscount = false;
         //End Choose Dishes Attributes
 
         //Start Ordering Attributes
-        $scope.order = { recievingTime: '', orderCode: '', remarks: '', totalBill: 0, paymentMethod: 'Cash', isPaymentConfirmed: false, orderStatus: '', userId: 0, orderBy: {}, orderDeliveryAddress: {}, orderItems: {} };
+        $scope.order = { recievingTime: '', orderCode: '', remarks: '', totalBill: 0, paymentMethod: 'Cash', isPaymentConfirmed: false, orderStatus: '', subTotal: 0, discount: 0, userId: 0, orderBy: {}, orderDeliveryAddress: {}, orderItems: {} };
         $scope.orderBy = { name: '', email: '', contact: '', company: '' };
         $scope.orderDeliveryAddress = { city: '', floor: '', address: '', postalCode: '' };
         $scope.orderItems = [];
@@ -216,45 +234,46 @@
             }
         }
         $scope.createOrder = function () {
-            if ($scope.shopschedule.isOpen) {
-                $scope.order.totalBill = $scope.ordertotalPrice.totalPrice;
-                pushCartItemInOrderItems();
-                $scope.order.orderBy = $scope.orderBy;
-                $scope.order.orderDeliveryAddress = $scope.orderDeliveryAddress;
-                $scope.order.orderItems = $scope.orderItems;
-                if ($scope.order.userId !== 0) {
-                    if (Number($scope.userAddressId) === 0)
-                        var pram = { "order": JSON.stringify($scope.order), "addAddress": JSON.stringify(true) };
-                    else
-                        var pram = { "order": JSON.stringify($scope.order), "addAddress": JSON.stringify(false) };
-                }
+            if (!$scope.shopschedule.isOpen) {
+                $('.shopClosed').modal();
+                return;
+            }
+
+            $scope.order.discount = $scope.discount;
+            $scope.order.subTotal = $scope.ordertotalPrice.subtotal;
+            $scope.order.totalBill = $scope.ordertotalPrice.totalPrice;
+            pushCartItemInOrderItems();
+            $scope.order.orderBy = $scope.orderBy;
+            $scope.order.orderDeliveryAddress = $scope.orderDeliveryAddress;
+            $scope.order.orderItems = $scope.orderItems;
+
+            if ($scope.order.userId !== 0) {
+                if (Number($scope.userAddressId) === 0)
+                    var pram = { "order": JSON.stringify($scope.order), "addAddress": JSON.stringify(true) };
                 else
                     var pram = { "order": JSON.stringify($scope.order), "addAddress": JSON.stringify(false) };
-
-
-                JsonCallParam("Orders", "Create", pram);
-                if (list != "Failed") {
-                    if ($scope.order.userId == 0) {
-                        $scope.order.orderCode = list.orderCode;
-                        $scope.order.orderStatus = list.orderStatus;
-                        var orderList = JSON.parse(localStorage.getItem('orders'));
-                        if (orderList == null) {
-                            orderList = [];
-                        }
-                        orderList.push($scope.order);
-                        localStorage.setItem('orders', JSON.stringify(orderList));
-
-                    }
-                    localStorage.removeItem('cart');
-                    window.location.href = "/Orders/ThankYou/?postalCode=" + $scope.postalCode + "&id=" + list.orderId;
-                }
-                else {
-                    alert("Please Try Later!");
-                }
             }
-            else {
-                $('.shopClosed').modal();
+            else
+                var pram = { "order": JSON.stringify($scope.order), "addAddress": JSON.stringify(false) };
+
+
+            JsonCallParam("Orders", "Create", pram);
+            if (list == "Failed") {
+                alert("Please Try Later!");
+                return;
             }
+            if ($scope.order.userId == 0) {
+                var orderCode = list.orderCode;
+                var orderList = JSON.parse(localStorage.getItem('orders'));
+                if (orderList == null) {
+                    orderList = [];
+                }
+                orderList.push(orderCode);
+                localStorage.setItem('orders', JSON.stringify(orderList));
+
+            }
+            localStorage.removeItem('cart');
+            window.location.href = "/Orders/ThankYou/?postalCode=" + $scope.postalCode + "&id=" + list.orderId;
         }
         $scope.fillUserAddress = function () {
             if (Number($scope.userAddressId) !== 0) {
@@ -519,7 +538,22 @@
             JsonCall("DeliveryTiming", "GetDeliveryTimes");
             $scope.deliveryTimings = list;
         }
-
+        $scope.validateCoupon = function () {
+            JsonCallParam("Coupons", "ValidateCoupon", { code: $scope.coupon.code });
+            if (list == false) {
+                $('#couponValidation').html('').removeClass("text-success").addClass("text-danger").append('Coupon is not valid');
+                $scope.showDiscount = false;
+                totalPriceGenerator();
+                $scope.discount = 0;
+                return;
+            }
+            $scope.coupon = list;
+            $scope.discount = $scope.ordertotalPrice.subtotal * $scope.coupon.discountPercent;
+            $scope.ordertotalPrice.totalPrice = ($scope.ordertotalPrice.subtotal + $scope.ordertotalPrice.deliveryCharges)  - $scope.discount;
+            //$scope.ordertotalPrice.totalPrice = $scope.ordertotalPrice.totalPrice - $scope.discount;
+            $scope.showDiscount = true;
+            $('#couponValidation').html('').removeClass("text-danger").addClass("text-success").append('Coupon found! Discount applied!');
+        }
         $scope.proceedOrder = function () {
             if (!$scope.shopschedule.isOpen) {
                 $('.shopClosed').modal();
@@ -616,6 +650,12 @@
                 </div>
                 <div class="col-6 text-right mt-2">
                     <p style="margin-right: -30px;font-size: 13px;" ng-init="postalCode = @Model.PostalCode">{{ordertotalPrice.subtotal}} €</p>
+                </div>
+                <div class="col-6 text-left mt-2 mb-0" style="margin-left: -20px;" ng-if="showDiscount">
+                    <p style="font-size: 13px;">Discount</p>
+                </div>
+                <div class="col-6 text-right mt-2" ng-if="showDiscount">
+                    <p style="margin-right: -30px;font-size: 13px;">- {{discount}} €</p>
                 </div>
                 <div class="col-6 text-left mb-2" style="margin-left: -20px;">
                     <p style="font-size: 13px;">Delivery costs</p>
@@ -953,7 +993,7 @@
                 <div class="swiper-wrapper container" id="dish-list">
                     @for (int i = 0; i < dishCategories.Count(); i++)
                     {
-                        <a href="#cat-@i" data-category="@i" class="swiper-slide nav-link js-scroll-trigger dishlink" style="width:auto; font-weight:bold">@dishCategories[i].CategoryName</a>
+                        <a href="#cat-@i" data-category="@i" class="swiper-slide nav-link js-scroll-trigger dishlink" style="width:auto; font-weight:bold; font-size:16px !important">@dishCategories[i].CategoryName</a>
                     }
                 </div>
                 <div class="input-group mb-3" id="search-box">
@@ -962,7 +1002,7 @@
                         <button type="button" onclick="hideSearchBar()" class="input-group-text bg-white" id="cross-btn" style="border-radius: 0 !important; top:0"><i class="fas fa-times"></i></button>
                     </div>
                 </div>
-                <a href="#" class="swiper-next right fas fa-angle-right fa-2x mr-3 hide" id="swiper-next"></a>
+                <a href="#" class="swiper-next right fas fa-angle-right fa-2x hide" id="swiper-next" style="background:#f8f5f2 !important; top:0"></a>
                 <!-- Add Pagination -->
                 <div class="swiper-pagination">
                 </div>
@@ -1245,16 +1285,17 @@
                     <div class="col-md-6">
                         <ul class="acc">
                             <li>
-                                <button class="acc_ctrl" onclick="$('#voucherPanel').slideToggle()"><span style="letter-spacing: 0 !important; text-decoration: underline; font-size: 13px; color: rgb(102, 102, 102);">Do you have a voucher or coupon?</span> </button>
+                                <button class="acc_ctrl" ><span style="letter-spacing: 0 !important; text-decoration: underline; font-size: 13px; color: rgb(102, 102, 102);">Do you have a voucher or coupon?</span> </button>
                                 <div class="small-panel" id="voucherPanel">
                                     <div class="acc_panel">
                                         <div class="input-group mb-3">
-                                            <input type="text" class="form-control" placeholder="Voucher code">
+                                            <input type="text" class="form-control" ng-model="coupon.code" placeholder="Voucher code">
                                             <div class="input-group-append">
-                                                <button class="btn-primary" id="basic-addon2">check</button>
+                                                <button onclick="event.preventDefault()" ng-click="validateCoupon()" class="btn-primary" id="basic-addon2">check</button>
                                             </div>
                                         </div>
                                     </div>
+                                    <p id="couponValidation"></p>
                                 </div>
                             </li>
                         </ul>
@@ -1290,7 +1331,11 @@
     <script src="~/client-assets/res/js/myswiper.js"></script>
     <script>
         $(document).ready(function(){
-            $('.dishlink').css({"width":"auto"});
+            $('.dishlink').css({ "width": "auto" });
         });
+        window.onscroll = function() {
+            $('.dishlink').css({ "width": "auto" });
+            scrollFunction();
+        };
     </script>
 }

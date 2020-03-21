@@ -98,7 +98,7 @@ namespace RiaPizza.Services.OrderService
         }
         public async Task<List<Order>> AllOrders()
         {
-            List<Order> allOrders = await _context.Orders.Include(s=>s.OrderBy).ToListAsync();
+            List<Order> allOrders = await _context.Orders.Include(s=>s.OrderBy).OrderByDescending(s => s.OrderDateTime).ToListAsync();
             return allOrders;
         }
         public async Task<int> TodayOrdersCount() {
@@ -107,7 +107,7 @@ namespace RiaPizza.Services.OrderService
         }
         public async Task<List<Order>> TodayOrders() {
             var todayOrders = await _context.Orders.Where(s => s.OrderDateTime.Year == DateTime.Now.Year && s.OrderDateTime.Month == DateTime.Now.Month && s.OrderDateTime.Day == DateTime.Now.Day)
-                .Include(s => s.OrderBy).ToListAsync();
+                .Include(s => s.OrderBy).OrderByDescending(s => s.OrderDateTime).ToListAsync();
             return todayOrders;
         }
         public async Task<int> PendingCount() {
@@ -115,7 +115,7 @@ namespace RiaPizza.Services.OrderService
             return pendingCount;
         }
         public async Task<List<Order>> PendingOrders() { 
-            var pendingOrders= await _context.Orders.Include(s=>s.OrderBy).Where(x => x.OrderStatus == "Pending").ToListAsync();
+            var pendingOrders= await _context.Orders.Include(s=>s.OrderBy).Where(x => x.OrderStatus == "Pending").OrderByDescending(s => s.OrderDateTime).ToListAsync();
             return pendingOrders;
         }
         public async Task<int> TodayDeliveredCount() {
@@ -124,7 +124,7 @@ namespace RiaPizza.Services.OrderService
         }
         public async Task<List<Order>> TodayDeliveredOrders() {
             var todayDeliveredOrders = await _context.Orders.Where(s => s.OrderDateTime.Year == DateTime.Now.Year && s.OrderDateTime.Month == DateTime.Now.Month && s.OrderDateTime.Day == DateTime.Now.Day && s.OrderStatus == "Delivered")
-                .Include(s => s.OrderBy).ToListAsync();
+                .Include(s => s.OrderBy).OrderByDescending(s => s.OrderDateTime).ToListAsync();
             return todayDeliveredOrders;
         }
         public async Task<float> TodaySale() {
@@ -135,12 +135,12 @@ namespace RiaPizza.Services.OrderService
         public async Task<List<Order>> TotalTodaySales()
         {
             var totalSales=await _context.Orders.Where(s=>s.OrderDateTime.Year==DateTime.Now.Year && s.OrderDateTime.Month==DateTime.Now.Month && s.OrderDateTime.Day==DateTime.Now.Day && s.OrderStatus== "Confirmed")
-                .Include(s => s.OrderBy).ToListAsync();
+                .Include(s => s.OrderBy).OrderByDescending(s => s.OrderDateTime).ToListAsync();
             return totalSales;
         }
         public async Task<List<Order>> InCompletedOrders()
         {
-            var uncompletedOrders = await _context.Orders.Where(x=>x.IsCompleted==false).Include(s => s.OrderBy).ToListAsync();
+            var uncompletedOrders = await _context.Orders.Where(x=>x.IsCompleted==false).Include(s => s.OrderBy).OrderByDescending(s => s.OrderDateTime).ToListAsync();
             return uncompletedOrders;
         }
         public async Task ChangeStatus(int id, string status)
@@ -220,12 +220,6 @@ namespace RiaPizza.Services.OrderService
             };
             return orderDetails;
         }
-        public async Task<List<Order>> GetUserOrders(int id)
-        {
-            var orders = await _context.Orders.Where(s => s.UserId == id).Include(s=>s.OrderItems).ThenInclude(s=>s.Dish).ToListAsync();
-            orders.ForEach(s => s.OrderItems.ToList().ForEach(s => s.Order = null));
-            return orders;
-        }
         public async Task DeleteOrder(int id)
         {
             Order order = await _context.Orders.FindAsync(id);
@@ -295,51 +289,6 @@ namespace RiaPizza.Services.OrderService
         {
             var serchByUser = await _context.Orders.Include(s => s.OrderBy).Where(x => x.UserId == userId).ToListAsync();
             return serchByUser;
-        }
-        public async Task<List<Order>> Filter(string DF, string DT, string status, string number, string address, int DishId, int DishCatId, int userId, string payment)
-        {
-            var result = await _context.Orders.Include(s => s.OrderBy).Include(s => s.OrderDeliveryAddress).Include(s => s.OrderItems).ToListAsync();
-            DateTime dateFrom, dateTo;
-            if (DF != null)
-            {
-                dateFrom = Convert.ToDateTime(DF);
-                result = result.Where(s => s.OrderDateTime >= dateFrom).ToList();
-            }
-            if (DT != null)
-            {
-                dateTo = Convert.ToDateTime(DT);
-                var DateTo = dateTo.AddDays(1);
-                result = result.Where(s => s.OrderDateTime <= DateTo).ToList();
-            }
-            if (userId != 0)
-            {
-                result = result.Where(s => s.UserId == userId).ToList();
-            }
-            if (status != null && status != "")
-            {
-                result = result.Where(s => s.OrderStatus == status).ToList();
-            }
-            if (payment != null && payment != "")
-            {
-                result = result.Where(s => s.PaymentMethod == payment).ToList();
-            }
-            if (number != null && number != "")
-            {
-                result = result.Where(s => s.OrderBy.Contact.Contains(number)).ToList();
-            }
-            if (address != null && address != "")
-            {
-                result = result.Where(s => s.OrderDeliveryAddress.Address.ToLower().Contains(address.ToLower())).ToList();
-            }
-            if (DishId != 0)
-            {
-                result = result.Where(s => s.OrderItems.Any(x => x.DishId == DishId)).ToList();
-            }
-            if (DishCatId != 0)
-            {
-                result = result.Where(s => s.OrderItems.Any(x => x.Dish.DishCategoryId == DishCatId)).ToList();
-            }
-            return result;
         }
     }     
 }          

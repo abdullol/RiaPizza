@@ -13,6 +13,9 @@
         .hide{
             display:none;
         }
+        .right{
+            float: right;
+        }
     </style>
 }
 <script src="~/Angular/Controllers/DishCtrl.js"></script>
@@ -393,10 +396,11 @@
                                     <th width="25%">Price</th>
                                     <th width="35%">Alergies</th>
                                     <th width="15%">
-                                        <button onclick="setExtraTypeEditModalValues(@extraType.DishExtraTypeId,'@extraType.TypeName','@extraType.ChooseMultiple')" data-toggle="modal" data-target="#editExtraType" class="btn btn-warning" style="float:right">
+                                        <a class="btn btn-danger right" href="~/Dishes/DeleteDishExtraType?returnId=@Model.DishId&DishExtraTypeId=@extraType.DishExtraTypeId"><i class="fa fa-trash"></i></a>
+                                        <button onclick="setExtraTypeEditModalValues(@extraType.DishExtraTypeId,'@extraType.TypeName','@extraType.ChooseMultiple')" data-toggle="modal" data-target="#editExtraType" class="btn btn-warning right">
                                             <i class="fa fa-pencil-alt"></i>
                                         </button>
-                                        <button onclick="$('#AddDishExtraTypeId').val(@extraType.DishExtraTypeId);" data-toggle="modal" data-target="#addExtra" class="btn btn-success" style="float:right">
+                                        <button onclick="$('#AddDishExtraTypeId').val(@extraType.DishExtraTypeId);" data-toggle="modal" data-target="#addExtra" class="btn btn-success right">
                                             <i class="fa fa-plus"></i>
                                         </button>
 
@@ -411,7 +415,8 @@
                                         <td>@extra.ExtraPrice $</td>
                                         <td>@extra.Allergies</td>
                                         <td>
-                                            <button onclick="setExtraEditModalValues(@extra.DishExtraId,'@extra.ExtraName',@extra.ExtraPrice,'@extra.Allergies', @extra.DishExtraTypeId)" data-toggle="modal" data-target="#editExtra" class="btn btn-info" style="float:right"><i class="fa fa-pencil-alt"></i></button>
+                                            <a class="btn btn-danger right" href="~/Dishes/DeleteDishExtra?returnId=@Model.DishId&DishExtraId=@extra.DishExtraId"><i class="fa fa-trash"></i></a>
+                                            <button onclick="setExtraEditModalValues(@extra.DishExtraId,'@extra.ExtraName',@extra.ExtraPrice,'@extra.Allergies', @extra.DishExtraTypeId)" data-toggle="modal" data-target="#editExtra" class="btn btn-info right"><i class="fa fa-pencil-alt"></i></button>
                                         </td>
                                     </tr>
                                 }
