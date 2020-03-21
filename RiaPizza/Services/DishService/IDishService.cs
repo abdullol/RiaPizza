@@ -25,7 +25,5 @@ namespace RiaPizza.Services.DishService
         Task AddDishSize(DishSize size);
         Task EditDishSize(DishSize size);
         Task DeleteDishSize(int id);
-        Task DeleteDishExtra(int id);
-        Task DeleteDishExtraType(int id);
     }
 }

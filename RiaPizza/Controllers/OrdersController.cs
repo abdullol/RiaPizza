@@ -125,6 +125,9 @@ namespace RiaPizza.Controllers
         [Authorize(Roles = "Manager,Admin")]
         public async Task<IActionResult> Reports(string DF, string DT, string status)
         {
+            ViewBag.DishList = await _dishService.AllDishes();
+            ViewBag.DishCatList = await _dishCatService.AllDishCategories();
+            ViewBag.Users =await _userManager.Users.ToListAsync();
             var orderSearch = await _service.SearchByDate(DF, DT);
             if(status != null && status != "")
             {
@@ -141,7 +144,7 @@ namespace RiaPizza.Controllers
         {
             ViewBag.DishList = await _dishService.AllDishes();
             ViewBag.DishCatList = await _dishCatService.AllDishCategories();
-            ViewBag.Users= _userManager.Users.Where(m => m.UserRoles.All(r => r.UserId != userId));
+            ViewBag.Users=await _userManager.Users.ToListAsync();
 
             if (status != null)
             {
@@ -175,6 +178,19 @@ namespace RiaPizza.Controllers
                 return View("Reports", serchByUser);
             }
             return View();
+        }
+
+        [HttpPost]
+        [ActionName("ReportFilter")]
+        [Authorize(Roles = "Manager,Admin")]
+        public async Task<IActionResult> Reports(string DF, string DT, string status, string number, string address, int DishId, int DishCatId, int userId, string payment)
+        {
+            ViewBag.DishList = await _dishService.AllDishes();
+            ViewBag.DishCatList = await _dishCatService.AllDishCategories();
+            ViewBag.Users = await _userManager.Users.ToListAsync();
+            var orderSearch = await _service.Filter(DF, DT, status, number, address, DishId, DishCatId, userId, payment);
+
+            return View("Reports", orderSearch);
         }
 
         [HttpPost]

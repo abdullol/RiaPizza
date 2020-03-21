@@ -60,6 +60,7 @@
                         </div>
                     </form>
                     <div class="table-responsive">
+
                         <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
                             <thead>
                                 <tr>
@@ -69,6 +70,8 @@
                                     <th>Price</th>
                                     <th>Status</th>
                                     <th>Actions</th>
+
+                                    <th><button type="submit" id="delBtn"value="DeleteDishes" class="btn btn-danger" ><i class="fas fa-trash-alt"></i></button></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -85,11 +88,14 @@
                                             {<div class="badge col-green">available</div> }
                                             else
                                             { <div class="badge col-red">unavailable</div>}
+
                                         </td>
                                         <td>
+
                                             <a class="btn btn-success" href="~/Dishes/Edit/@dish.DishId"><i class="fas fa-pencil-alt"></i></a>
                                             <button class="btn btn-info" data-toggle="modal" data-target=".details_@count"><i class="fas fa-list-ul"></i></button>
                                             <button class="btn btn-danger" onclick="confirmDeletionPermanent(@dish.DishId)"><i class="fas fa-trash-alt"></i></button>
+
                                             @if (dish.Status)
                                             {
                                                 <button class="btn btn-danger" onclick="confirmDeletion(@dish.DishId)"><i class="fas fa-toggle-off"></i></button>
@@ -166,10 +172,25 @@
                                                 </div>
                                             </div>
                                         </td>
+                                        <td>
+                                            @*  @dish.DishId*@
+                                           
+                                                <label class="form-check-label">
+                                                    <input onclick="addIntoListDelete(@dish.DishId)" class="form-check-input" name="dishIds" type="checkbox">
+                                                    <span class="form-check-sign">
+                                                        <span class="check"></span>
+                                                    </span>
+                                                </label>
+                                           
+
+
+                                        </td>
+
                                     </tr>
                                     count++;
                                 }
                             </tbody>
+
                             <tfoot>
                                 <tr>
                                     <th>Category</th>
@@ -178,9 +199,11 @@
                                     <th>Price</th>
                                     <th>Status</th>
                                     <th>Actions</th>
+                                    <th></th>
                                 </tr>
                             </tfoot>
                         </table>
+
                     </div>
                 </div>
             </div>
@@ -192,9 +215,65 @@
     <script src="~/assets/js/table.min.js"></script>
     <script src="~/assets/js/pages/tables/jquery-datatable.js"></script>
     <script>
+
+        var list = [];
+        function addIntoListDelete(id) {
+            var index = list.indexOf(id);
+            if (index > -1)
+                list.splice(index, 1);
+            else
+              list.push(id);
+        }
         function applyfilter() {
             $('#searchForm').submit();
         }
+        //multiple dish deletion
+        $("#delBtn").click(function () {
+            if (list != 0) {
+                swal({
+                    title: "Are you sure?",
+                    text: "Your Dish can not be restored!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    closeOnConfirm: false
+                }, function () {
+                    $.ajax({
+                        type: "POST",
+                        url: '/Dishes/DeleteDishes',
+                        data: { dishIds: list },
+                        success: function () {
+                            swal("Deleted!", "Your Dish is Deleted!", "success");
+                            window.location.href = "/Dishes/Index";
+                        },
+                        error: function (xhr) {
+                            swal("Error", "Please Try again later!", "error");
+                        }
+                    });
+
+                });
+            }
+            else
+                 swal({
+                    title: "Please Select At-Least One",
+                    
+                    type: "warning",
+                     showCancelButton: false,
+                   
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes,I got it!",
+                    closeOnConfirm: true
+                }, function () {
+                  
+
+                });
+        });
+
+        
+           
+       
+        /////
 
         function confirmDeletionPermanent(Id) {
             swal({

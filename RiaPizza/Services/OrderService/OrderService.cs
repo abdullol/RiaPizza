@@ -195,34 +195,7 @@ namespace RiaPizza.Services.OrderService
             _context.OrderDeliveryAddresses.Update(EditOrderDeliveryAddress);
            await _context.SaveChangesAsync();
         }
-        public async Task<List<Order>> SearchByDate(string _dateFrom, string _dateTo)
-        {
-            DateTime dateFrom, dateTo;
-            var orders = new List<Order>();
-            if (_dateFrom != null && _dateTo == null)
-            {
-                dateFrom = Convert.ToDateTime(_dateFrom);
-                orders = await _context.Orders.Where(s => s.OrderDateTime >= dateFrom).Include(s => s.OrderBy).ToListAsync();
-            }
-            else if (_dateFrom == null && _dateTo != null)
-            {
-                dateTo = Convert.ToDateTime(_dateTo);
-                orders = await _context.Orders.Where(s => s.OrderDateTime <= dateTo).Include(s => s.OrderBy).ToListAsync();
-            }
-            else if (_dateFrom != null && _dateTo != null)
-            {
-                dateFrom = Convert.ToDateTime(_dateFrom);
-                dateTo = Convert.ToDateTime(_dateTo);
-                orders = await _context.Orders.Where(s => s.OrderDateTime >= dateFrom && s.OrderDateTime <= dateTo).Include(s => s.OrderBy).ToListAsync();
-            }
-            return orders;
-        }
-        public async Task<List<Order>> SearchByStatus(string status)
-        {
-            var orderStatus = new List<Order>();
-            orderStatus = await _context.Orders.Where(s => s.OrderStatus == status).Include(s => s.OrderBy).ToListAsync();
-            return orderStatus;
-        }
+       
         public async Task<bool> IsCompleted(int id)
         {
             var order = await _context.Orders.FindAsync(id);
@@ -254,12 +227,44 @@ namespace RiaPizza.Services.OrderService
             await _context.SaveChangesAsync();
         }
 
+        //not in use
+        public async Task<List<Order>> SearchByDate(string _dateFrom, string _dateTo)
+        {
+            DateTime dateFrom, dateTo;
+            var orders = new List<Order>();
+            if (_dateFrom != null && _dateTo == null)
+            {
+                dateFrom = Convert.ToDateTime(_dateFrom);
+                orders = await _context.Orders.Where(s => s.OrderDateTime >= dateFrom).Include(s => s.OrderBy).ToListAsync();
+            }
+            else if (_dateFrom == null && _dateTo != null)
+            {
+                dateTo = Convert.ToDateTime(_dateTo);
+                orders = await _context.Orders.Where(s => s.OrderDateTime <= dateTo).Include(s => s.OrderBy).ToListAsync();
+            }
+            else if (_dateFrom != null && _dateTo != null)
+            {
+                dateFrom = Convert.ToDateTime(_dateFrom);
+                dateTo = Convert.ToDateTime(_dateTo);
+                orders = await _context.Orders.Where(s => s.OrderDateTime >= dateFrom && s.OrderDateTime <= dateTo).Include(s => s.OrderBy).ToListAsync();
+            }
+            return orders;
+        }
+        //not in use
+        public async Task<List<Order>> SearchByStatus(string status)
+        {
+            var orderStatus = new List<Order>();
+            orderStatus = await _context.Orders.Where(s => s.OrderStatus == status).Include(s => s.OrderBy).ToListAsync();
+            return orderStatus;
+        }
+        //not in use
         public async Task<List<Order>> SearchByNumber(string number)
         {
             var orderByNumber = new List<Order>();
             orderByNumber = await _context.Orders.Include(s => s.OrderBy).Where(s => s.OrderBy.Contact==number).ToListAsync();
             return orderByNumber;
         }
+        //not in use
         public async Task<List<Order>> SearchByDish(int DishId)
         {
             
@@ -267,35 +272,23 @@ namespace RiaPizza.Services.OrderService
             var test = searchByDish;
             return searchByDish;
         }
-
+        //not in use
         public async Task<List<Order>> SearchByDishCat(int DishCatId)
         {
             var searchByDishCat = await _context.Orders.Include(s => s.OrderBy).Include(s => s.OrderItems).Where(s => s.OrderItems.Any(x => x.Dish.DishCategoryId == DishCatId)).ToListAsync();
             return searchByDishCat;
         }
-
+        //not in use
         public async Task<List<Order>> SearchByAddress(string address)
         {
             var searchByAddress = await _context.Orders.Include(s => s.OrderBy).Include(s => s.OrderDeliveryAddress).Where(s => s.OrderDeliveryAddress.Address.Contains(address)).ToListAsync();
             return searchByAddress;
         }
-
+        //not in use
         public async Task<List<Order>> SearchByUser(int userId)
         {
             var serchByUser = await _context.Orders.Include(s => s.OrderBy).Where(x => x.UserId == userId).ToListAsync();
             return serchByUser;
-        }
-        public async Task<List<Order>> GetUserOrders(int id)
-        {
-            var orders = await _context.Orders.Where(s => s.UserId == id).Include(s => s.OrderItems).ThenInclude(s => s.Dish).OrderByDescending(s => s.OrderDateTime).ToListAsync();
-            orders.ForEach(s => s.OrderItems.ToList().ForEach(s => s.Order = null));
-            return orders;
-        }
-        public async Task<List<Order>> GetUserOrdersFromCodes(List<string> codes)
-        {
-            var orders = await _context.Orders.Where(k => codes.Contains(k.OrderCode)).Include(s => s.OrderItems).ThenInclude(s => s.Dish).OrderByDescending(s=>s.OrderDateTime).ToListAsync();
-            orders.ForEach(s => s.OrderItems.ToList().ForEach(s => s.Order = null));
-            return orders;
         }
     }     
 }          

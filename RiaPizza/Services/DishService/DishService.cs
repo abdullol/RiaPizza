@@ -189,18 +189,17 @@ namespace RiaPizza.Services.DishService
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteDishExtra(int id)
+        public async Task DelMultipleDish(int[] dishIds)
         {
-            var dishextra = await _context.DishExtras.FindAsync(id);
-            _context.DishExtras.Remove(dishextra);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeleteDishExtraType(int id)
-        {
-            var dishextratype = await _context.DishExtraTypes.FindAsync(id);
-            _context.DishExtraTypes.Remove(dishextratype);
-            await _context.SaveChangesAsync();
+            foreach (var item in dishIds)
+            { 
+                var delete=await _context.Dishes.FirstOrDefaultAsync(s => s.DishId == item);
+                if (delete != null)
+                {
+                     _context.Dishes.Remove(delete);
+                }
+            }
+           await _context.SaveChangesAsync();
         }
     }
 }

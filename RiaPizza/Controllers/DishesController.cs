@@ -213,29 +213,10 @@ namespace RiaPizza.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> DeleteDishExtra(int DishExtraId, int returnId)
+        public async Task<IActionResult> ToggleDish(int id)
         {
-            try
-            {
-                await _service.DeleteDishExtra(DishExtraId);
-                return RedirectToAction("Edit", "Dishes", new { @id = returnId });
-            }
-            catch (Exception ex)
-            {
-                return RedirectToAction("Edit", "Dishes", new { @id = returnId });
-            }
-        }
-        public async Task<IActionResult> DeleteDishExtraType(int DishExtraTypeId, int returnId)
-        {
-            try
-            {
-                await _service.DeleteDishExtraType(DishExtraTypeId);
-                return RedirectToAction("Edit", "Dishes", new { @id = returnId });
-            }
-            catch (Exception ex)
-            {
-                return RedirectToAction("Edit", "Dishes", new { @id = returnId });
-            }
+            await _service.ChangeDishStatus(id);
+            return RedirectToAction("Index", "Dishes");
         }
 
     }
