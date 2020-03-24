@@ -4,7 +4,7 @@ var mySwiper = new Swiper(".swiper-container", {
     slidesPerView: 6,
     spaceBetween: 20,
     freeMode: 0,
-    loop: 5,
+    loop: false,
     watchOverflow: !0,
     navigation: {
         nextEl: ".swiper-next",

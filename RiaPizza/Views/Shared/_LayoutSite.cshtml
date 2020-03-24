@@ -218,7 +218,7 @@
                                         <span ng-if="isLoggedIn">{{user.firstName}} {{user.lastName}}</span>
                                         <span ng-if="!isLoggedIn">My Account</span>
                                     </h3>
-                                    <a href="~/MyAccount/PersonalData" class="text-white pointer">View personal data</a>
+                                    <a ng-if="isLoggedIn" href="~/MyAccount/PersonalData" class="text-white pointer">View personal data</a>
                                 </div>
                             </div>
                         </div>

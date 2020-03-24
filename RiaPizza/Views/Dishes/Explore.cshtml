@@ -60,6 +60,9 @@
                 padding-left: 5px;
                 padding-right: 5px;
             }
+            .qtvalue{
+                margin-top:-3px;
+            }
         }
         #swiper-next{
             padding-left:8px;
@@ -715,33 +718,40 @@
                             <i class="fas fa-shopping-cart" style="font-size:-webkit-xxx-large; margin: auto; padding: 5% 0 0 40%;"></i>
                             <p class="basket-empty__text" style="text-align: center; margin: 10px;">Wähle leckere Gerichte aus der Karte und bestelle Dein Menü.</p>
                         </div>
-                        <div class="col-12" ng-repeat="item in cart track by $index">
+                        <div class="col-xs-12 col-sm-12" ng-repeat="item in cart track by $index">
                             <div class="row">
-                                <div class="col-1">
+                                <div class="col-xs-1 col-sm-1">
                                     <span style="font-size: 12px; color: #000; margin-right: 10px;">{{item.quantity}}x</span>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-xs-8 col-sm-8">
                                     <span style="font-size: 12px; color: #000; margin-right: 30px;">{{item.dishName}}</span>
+                                    <p class="cartToppings" ng-if="item.toppings.length>0"> <span ng-if="item.dishSize">Size: {{item.dishSize.size}} Ø{{item.dishSize.diameter}}cm,</span> <span ng-repeat="topping in item.toppings" ng-init="toppingIndex = $index">{{topping}} <i ng-if="toppingIndex < item.toppings.length - 1">,</i></span> </p>
                                 </div>
-                                <div class="col-3" style="padding:0">
+                                <div class="col-xs-3 col-sm-3">
+                                    @*<a role="button" ng-click="showRemarkBar($index)" class="btn" style="padding: 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-pencil"></i></a>*@
+                                    <span style="font-size: 12px; color: #000;">{{item.totalPrice}}€</span>
+                                    @*<a class="btn" ng-click="removeItem($index)" style="padding: 0 0 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-trash-alt"></i></a>*@
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-xs-8 col-sm-8">
+                                    product info
+                                </div>
+
+                                <div class="col-xs-4 col-sm-4" style="padding:0">
                                     <button class="cartIncreasBtn" ng-click="decreaseQty($index)">-</button>
                                     <button class="cartIncreasBtn" ng-click="increaseQty($index)">+</button>
                                 </div>
-                                <div class="col-4" style="padding:0">
-                                    <a role="button" ng-click="showRemarkBar($index)" class="btn" style="padding: 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-pencil"></i></a>
-                                    <span style="font-size: 12px; color: #000;">{{item.totalPrice}}€</span>
-                                    <a class="btn" ng-click="removeItem($index)" style="padding: 0 0 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-trash-alt"></i></a>
-                                </div>
                             </div>
 
-                            <p class="cartToppings" ng-if="item.toppings.length>0"> <span ng-if="item.dishSize">Size: {{item.dishSize.size}} Ø{{item.dishSize.diameter}}cm,</span> <span ng-repeat="topping in item.toppings" ng-init="toppingIndex = $index">{{topping}} <i ng-if="toppingIndex < item.toppings.length - 1">,</i></span> </p>
-                            <p class="cartToppings" ng-if="item.remarks!=''" style="margin-bottom:5% !important">{{item.remarks}}</p>
+                            @*<p class="cartToppings" ng-if="item.remarks!=''" style="margin-bottom:5% !important">{{item.remarks}}</p>
                             <div class="commentBox hide commentinput-{{$index}}" style="margin-bottom:10% !important">
                                 <label>Remarks</label>
                                 <textarea class="form-control" placeholder="Enter Remarks" ng-model="item.remarks"></textarea>
                                 <a role="button" class="text-primary pointer" style="margin-left:10px">Clear</a>
                                 <a role="button" class="text-primary pointer" ng-click="saveRemarks($index)">Save</a>
-                            </div>
+                            </div>*@
                         </div>
                     </div>
                     <div class="row pt-4 pb-0" style="border-bottom: 1px solid #eee;">
@@ -1010,7 +1020,7 @@
         </div>
         <!-- Dish list -->
         <div class="groups">
-            <section ng-repeat="dishCategory in dishCategories | orderBy : 'orderBy' " ng-init="categoryIndex=$index" id="cat-{{categoryIndex}}" class="group-item">
+            <section ng-repeat="dishCategory in dishCategories | orderBy : 'orderBy' " ng-init="categoryIndex=$index" id="cat-{{categoryIndex}}" class="group-item" index="{{$index}}">
                 <div class="container">
                     <div class="row mx-md-2 mx-0 mt-3 dish-head">
                         <div class="col-12 ml-5 py-3 mb-4 mx-auto dish-col" style="background:url(/Uploads/{{dishCategory.image}});">
@@ -1158,7 +1168,7 @@
                     <div class="col-md-3">
                         <div class="form-group mb-0 pl-2 mt-3">
                             <label class="label">Postcode</label>
-                            <input type="text" class="form-control address-option" ng-model="orderDeliveryAddress.postalCode" name="postalCode" required>
+                            <input type="text" class="form-control address-option" ng-init="orderDeliveryAddress.postalCode = @Model.PostalCode" disabled ng-model="orderDeliveryAddress.postalCode" name="postalCode" required>
                             <p class="text-danger pt-4" ng-show="checkoutForm.postalCode.$touched && checkoutForm.postalCode.$error.required">* PostalCode is required.</p>
                         </div>
                     </div>
@@ -1329,14 +1339,106 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
     <script src="~/client-assets/res/js/jquery.waypoints.js"></script>
     <script src="~/client-assets/res/js/myscroller.js"></script>
-    <script src="~/client-assets/res/js/myswiper.js"></script>
+    @*<script src="~/client-assets/res/js/myswiper.js"></script>*@
+<script>
+    var lastCat = "cat1";
+var mySwiper = new Swiper(".swiper-container", {
+    slidesPerView: 'auto',
+    //slidesPerView: 6,
+    spaceBetween: 20,
+    freeMode: false,
+    loop: false,
+    watchOverflow: !0,
+    navigation: {
+        nextEl: ".swiper-next",
+        prevEl: ".swiper-prev"
+    }
+});
+
+//mySwiper.slidesPerView = 8;
+mySwiper.update();
+
+mySwiper.on("reachBeginning", function () {
+    console.log("Swiper Beginning reached");
+});
+
+mySwiper.on("reachEnd", function () {
+    console.log("Swiper end reached");
+});
+
+function next() {
+    // mySwiper.slideTo(count++);
+    console.log("in next");
+
+    mySwiper.slideNext();
+}
+ 
+$(".group-item ").waypoint({
+    handler: function (direction) {
+        var index = this.element.getAttribute("index");
+        if (index === '{{$index}}')
+            index = 1;
+        if (direction === "down") {
+            index = parseInt(index) - 1;
+        } else {
+            index = parseInt(index) - 2;
+        }
+
+        
+
+        mySwiper.slideTo(index);
+        console.log("Last Cat2 : " + index);
+    }
+});
+
+// ? Show/Less grid checkboxes
+function show() {
+    var moreChecks = document.getElementById("more-checks");
+    var btn = document.getElementById("more-btn");
+    var btn2 = document.getElementById("less-btn")
+
+    moreChecks.style.display = "block";
+    btn.style.display = "none"
+    btn2.style.display = "block"
+}
+function less() {
+    var moreChecks = document.getElementById("more-checks");
+    var btn = document.getElementById("more-btn");
+    var btn2 = document.getElementById("less-btn")
+
+    moreChecks.style.display = "none";
+    btn.style.display = "block"
+    btn2.style.display = "none"
+}
+
+// ! Showing/Hiding Search Bar
+function showSearchBar() {
+    var searchBtn = document.getElementById("search-btn");
+    var dishList = document.getElementById("dish-list");
+    var searchBox = document.getElementById("search-box");
+
+    searchBtn.style.display = "none";
+    dishList.style.display = "none";
+    searchBox.style.display = "flex";
+}
+
+function hideSearchBar() {
+    var searchBtn = document.getElementById("search-btn");
+    var dishList = document.getElementById("dish-list");
+    var searchBox = document.getElementById("search-box");
+
+    searchBtn.style.display = "flex";
+    dishList.style.display = "flex";
+    searchBox.style.display = "none";
+}
+</script>
     <script>
         $(document).ready(function(){
             $('.dishlink').css({ "width": "auto" });
         });
-        window.onscroll = function() {
-            $('.dishlink').css({ "width": "auto" });
-            scrollFunction();
-        };
+        //window.onscroll = function() {
+        //    $('.dishlink').css({ "width": "auto" });
+        //    scrollFunction();
+        //};
     </script>
 }
