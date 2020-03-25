@@ -290,13 +290,13 @@ namespace RiaPizza.Controllers
             return Json(orders);
         }
 
-        public async Task<IActionResult> ThankYou(string postalCode, int id)
+        public async Task<IActionResult> ThankYou(string address, int id)
         {
             var isCompleted = await _service.IsCompleted(id);
             if (!isCompleted)
             {
                 var orderItems = await _service.GetOrderItems(id);
-                ViewBag.PostalCode = postalCode;
+                ViewBag.Address = address;
                 ViewBag.OrderCode = await _service.GetOrderCode(id);
                 return View(orderItems);
             }

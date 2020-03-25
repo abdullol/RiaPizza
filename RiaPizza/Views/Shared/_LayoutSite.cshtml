@@ -41,7 +41,8 @@
         var App = angular.module('RiaPizza', ['paypal-button']);
         
         paypal.Button.driver('angular', window.angular);
-        App.controller("Auth", function ($scope, $http) {
+
+        App.controller("Auth",['$scope',  '$rootScope', function ($scope, $rootScope) {
             function JsonCallParam(Controller, Action, Parameters) {
                 $.ajax({
                     type: "POST",
@@ -86,7 +87,6 @@
             $scope.isLoggedIn = false;
             $scope.user = {};
             $scope.userOrders = [];
-
             $scope.register = function () {
                 JsonCallParam("Auth", "RegisterUser", { "registerDto": JSON.stringify($scope.registerUser) });
                 if (list == "Success") {
@@ -116,10 +116,7 @@
                 if (list != false) {
                     $scope.isLoggedIn = true;
                     $scope.user = list;
-                    var viewDishesScope = angular.element(document.getElementById("ViewDishes")).scope();
-                    if (viewDishesScope !== undefined && viewDishesScope.$id) {
-                        viewDishesScope.loadUserDataInCheckOut();
-                    }
+                    $rootScope.$emit("LoadUserData", true);
                 }
                 else {
                     $scope.isLoggedIn = false;
@@ -148,7 +145,7 @@
 
                 }
             }
-        });
+        }]);
     </script>
     @RenderSection("css", required: false)
     <title>Ria Pizza</title>

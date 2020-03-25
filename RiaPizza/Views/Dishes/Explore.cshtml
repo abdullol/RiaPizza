@@ -63,6 +63,7 @@
             .qtvalue{
                 margin-top:-3px;
             }
+            
         }
         #swiper-next{
             padding-left:8px;
@@ -124,11 +125,28 @@
         .swiper-container{
             top:0.5em;
         }
+        .mob-cart-items div{
+            padding:0;
+        }
+        .mob-cart-items{
+            font-size:11px
+        }
+        .cartIncreasBtn-mob{
+            width:24px;
+            height:23px;
+        }
+        .swiper-wrapper{
+            margin-left:10px;
+            margin-right:10px;
+        }
+        /*#order-button-wrapper paypal-button{
+            display:none;
+        }*/
     </style>
 }
 <!-- <script src="~/Angular/Controllers/ViewDishesPage.js"></script> -->
 <script>
-    App.controller("ViewDishes", function ($scope, $http) {
+    App.controller("ViewDishes", ['$scope', '$rootScope','$http' , function ($scope, $rootScope, $http) {
 
         function JsonCallParam(Controller, Action, Parameters) {
             $.ajax({
@@ -188,6 +206,7 @@
         $scope.userAddresses = [];
         $scope.userAddressId = 0;
         $scope.postalCode = "";
+        $scope.postalArea = "";
         $scope.paypal = {
             env: 'sandbox',
             client: {
@@ -216,6 +235,12 @@
         $scope.shopschedule = { timeFrom: '', timeTo: '', isOpen: false };
         //End Ordering Attributes
 
+        $rootScope.$on("LoadUserData", function(e, args) {
+            if (args) {
+                $scope.loadUserDataInCheckOut();
+            }
+        });
+
         //Start Ordering Methods
         $scope.loadUserDataInCheckOut = function () {
             JsonCall("Auth", "GetLoggedInUser");
@@ -223,17 +248,18 @@
                 var user = list;
                 $scope.orderDeliveryAddress.address = user.address;
                 $scope.orderDeliveryAddress.city = user.city;
-                $scope.orderDeliveryAddress.postalCode = user.postalCode;
 
                 $scope.orderBy.name = user.firstName + ' ' + user.lastName;
                 $scope.orderBy.email = user.email;
                 $scope.orderBy.contact = user.phoneNumber;
                 $scope.orderBy.company = user.company;
 
+                var postalCode = $scope.orderDeliveryAddress.postalCode;
                 $scope.order.userId = user.id;
-                JsonCallParam("MyAccount", "GetUserAddresses", { id: user.id });
-                $scope.userAddresses = list;
-                //$scope.order.remarks = user.previousOrderRemarks;
+                $http.post('/MyAccount/GetUserAddresses?id=' + user.id + '&code=' + postalCode).then(function (response) {
+                    $scope.userAddresses = response.data;
+                });
+                $scope.order.remarks = user.previousOrderRemarks;
             }
         }
         $scope.createOrder = function () {
@@ -276,26 +302,18 @@
 
             }
             localStorage.removeItem('cart');
-            window.location.href = "/Orders/ThankYou/?postalCode=" + $scope.postalCode + "&id=" + list.orderId;
+            window.location.href = "/Orders/ThankYou/?address=" + $scope.postalArea + "&id=" + list.orderId;
         }
         $scope.fillUserAddress = function () {
             if (Number($scope.userAddressId) !== 0) {
                 var add = $scope.userAddresses.find(x => x.appUserAddressId === Number($scope.userAddressId))
-                $scope.orderDeliveryAddress = { city: add.city, floor: add.floor, address: add.address, postalCode: add.postalCode };
-                $('#checkoutForm input[name="address"]').prop("disabled", true);
-                $('#checkoutForm input[name="postalCode"]').prop("disabled", true);
-                $('#checkoutForm input[name="city"]').prop("disabled", true);
-                $('#checkoutForm input[name="floor"]').prop("disabled", true);
+                $scope.orderDeliveryAddress.city = add.city;
+                $scope.orderDeliveryAddress.floor = add.floor;
+                $scope.orderDeliveryAddress.address = add.address;
+
                 $('#checkoutForm input[name="address"]').val(add.address);
-                $('#checkoutForm input[name="postalCode"]').val(add.postalCode);
                 $('#checkoutForm input[name="city"]').val(add.city);
                 $('#checkoutForm input[name="floor"]').val(add.floor);
-            }
-            else {
-                $('#checkoutForm input[name="address"]').prop("disabled", false);
-                $('#checkoutForm input[name="postalCode"]').prop("disabled", false);
-                $('#checkoutForm input[name="city"]').prop("disabled", false);
-                $('#checkoutForm input[name="floor"]').prop("disabled", false);
             }
         }
         function pushCartItemInOrderItems() {
@@ -576,6 +594,7 @@
             $('#chooseDishes').show();
             $('#orderTab').hide();
             $('#orderBtn').show();
+            $('.cart-btn-section').show();
         }
         $scope.showDishDesc = function (allergies) {
             $(".dishDetails").modal();
@@ -603,7 +622,7 @@
             $('#cart-btn-mob').removeClass("bg-primary").addClass("bg-warning");
             
         }
-    });
+    }]);
 </script>
 <div ng-controller="ViewDishes" id="ViewDishes">
     <!-- Sidebar -->
@@ -632,7 +651,7 @@
                             <button class="cartIncreasBtn" ng-click="increaseQty($index)">+</button>
                         </div>
                         <div class="col-4" style="padding:0">
-                            <a role="button" ng-click="showRemarkBar($index)" class="btn" style="padding: 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-pencil"></i></a>
+                            <a role="button" ng-click="showRemarkBar($index)" class="btn" style="padding: 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-pencil-alt"></i></a>
                             <span style="font-size: 12px; color: #000;">{{item.totalPrice}}€</span>
                             <a class="btn" ng-click="removeItem($index)" style="padding: 0 0 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-trash-alt"></i></a>
                         </div>
@@ -660,7 +679,7 @@
                 <div class="col-6 text-right mt-2" ng-if="showDiscount">
                     <p style="margin-right: -30px;font-size: 13px;">- {{discount}} €</p>
                 </div>
-                <div class="col-6 text-left mb-2" style="margin-left: -20px;">
+                <div class="col-6 text-left mb-2" style="margin-left: -20px;" ng-init="postalArea = '@Model.AreaName'">
                     <p style="font-size: 13px;">Delivery costs</p>
                 </div>
                 <div class="col-6 text-right">
@@ -705,10 +724,10 @@
                 <div class="modal-header border-0">
                     <div class="row">
                         <div class="col-12">
-                            <h4 class="modal-title">Basket</h4>
+                            <h6 class="modal-title">Basket</h6>
                         </div>
                     </div>
-                    <button type="button" class="close" data-dismiss="modal">
+                    <button type="button" class="close" data-dismiss="modal" onclick="$('.cart-btn-section').toggle()">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
@@ -718,40 +737,33 @@
                             <i class="fas fa-shopping-cart" style="font-size:-webkit-xxx-large; margin: auto; padding: 5% 0 0 40%;"></i>
                             <p class="basket-empty__text" style="text-align: center; margin: 10px;">Wähle leckere Gerichte aus der Karte und bestelle Dein Menü.</p>
                         </div>
-                        <div class="col-xs-12 col-sm-12" ng-repeat="item in cart track by $index">
-                            <div class="row">
-                                <div class="col-xs-1 col-sm-1">
-                                    <span style="font-size: 12px; color: #000; margin-right: 10px;">{{item.quantity}}x</span>
+                        <div class="col-12" ng-repeat="item in cart track by $index">
+                            <div class="row mob-cart-items">
+                                <div class="col-1">
+                                    <span style="padding-left:10px">{{item.quantity}}x</span>
                                 </div>
-                                <div class="col-xs-8 col-sm-8">
-                                    <span style="font-size: 12px; color: #000; margin-right: 30px;">{{item.dishName}}</span>
-                                    <p class="cartToppings" ng-if="item.toppings.length>0"> <span ng-if="item.dishSize">Size: {{item.dishSize.size}} Ø{{item.dishSize.diameter}}cm,</span> <span ng-repeat="topping in item.toppings" ng-init="toppingIndex = $index">{{topping}} <i ng-if="toppingIndex < item.toppings.length - 1">,</i></span> </p>
+                                <div class="col-5">
+                                    <span style="padding-left:10px">{{item.dishName}}</span>
                                 </div>
-                                <div class="col-xs-3 col-sm-3">
-                                    @*<a role="button" ng-click="showRemarkBar($index)" class="btn" style="padding: 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-pencil"></i></a>*@
+                                <div class="col-2" style="font-size:12px">
+                                    <button class="cartIncreasBtn" style="width:24px; height:23px;" ng-click="decreaseQty($index)">-</button>
+                                    <button class="cartIncreasBtn" style="width:24px; height:23px;" ng-click="increaseQty($index)">+</button>
+                                </div>
+                                <div class="col-4">
+                                    <a role="button" ng-click="showRemarkBar($index)" class="btn" style="padding: 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-pencil-alt"></i></a>
                                     <span style="font-size: 12px; color: #000;">{{item.totalPrice}}€</span>
-                                    @*<a class="btn" ng-click="removeItem($index)" style="padding: 0 0 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-trash-alt"></i></a>*@
-                                </div>
-                            </div>
-                            <br />
-                            <div class="row">
-                                <div class="col-xs-8 col-sm-8">
-                                    product info
-                                </div>
-
-                                <div class="col-xs-4 col-sm-4" style="padding:0">
-                                    <button class="cartIncreasBtn" ng-click="decreaseQty($index)">-</button>
-                                    <button class="cartIncreasBtn" ng-click="increaseQty($index)">+</button>
+                                    <a class="btn" ng-click="removeItem($index)" style="padding: 0 0 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-trash-alt"></i></a>
                                 </div>
                             </div>
 
-                            @*<p class="cartToppings" ng-if="item.remarks!=''" style="margin-bottom:5% !important">{{item.remarks}}</p>
+                            <p class="cartToppings"><span ng-if="item.dishSize.dishSizeId > 0">Size: {{item.dishSize.size}} Ø{{item.dishSize.diameter}}cm. </span> <span ng-if="item.toppings.length>0" ng-repeat="topping in item.toppings" ng-init="toppingIndex = $index">{{topping}} <i ng-if="toppingIndex < item.toppings.length - 1">,</i></span> </p>
+                            <p class="cartToppings" ng-if="item.remarks!=''" style="margin-bottom:5% !important">{{item.remarks}}</p>
                             <div class="commentBox hide commentinput-{{$index}}" style="margin-bottom:10% !important">
                                 <label>Remarks</label>
                                 <textarea class="form-control" placeholder="Enter Remarks" ng-model="item.remarks"></textarea>
                                 <a role="button" class="text-primary pointer" style="margin-left:10px">Clear</a>
                                 <a role="button" class="text-primary pointer" ng-click="saveRemarks($index)">Save</a>
-                            </div>*@
+                            </div>
                         </div>
                     </div>
                     <div class="row pt-4 pb-0" style="border-bottom: 1px solid #eee;">
@@ -1007,7 +1019,7 @@
                     }
                 </div>
                 <div class="input-group mb-3" id="search-box">
-                    <input type="text" class="form-control" placeholder="Search for meals, etc.." style="border-radius: 0 !important;">
+                    <input type="text" id="search-dish" class="form-control" placeholder="Search for meals, etc.." style="border-radius: 0 !important;">
                     <div class="input-group-append">
                         <button type="button" onclick="hideSearchBar()" class="input-group-text bg-white" id="cross-btn" style="border-radius: 0 !important; top:0"><i class="fas fa-times"></i></button>
                     </div>
@@ -1027,7 +1039,7 @@
                             <h5> {{dishCategory.categoryName}} </h5>
                         </div>
                     </div>
-                    <div class="row mx-md-2 mx-0 px-0" ng-repeat="dish in dishCategory.dishes" ng-init="dishIndex = $index">
+                    <div class="row mx-md-2 mx-0 px-0 dishes" ng-repeat="dish in dishCategory.dishes" ng-init="dishIndex = $index">
                         <div class="col-12 ml-5 py-1 pl-0 pr-0 mx-auto">
                             <div class="panel-group" id="accordion_{{dish.dishId}}" role="tablist" aria-multiselectable="true">
                                 <div class="panel panel-default">
@@ -1040,7 +1052,7 @@
                                                 </h5>
                                             </div>
                                             <div class="col-3 text-right w-25">
-                                                <i class="fas fa-plus fa-lg border p-3" style="font-weight: 500; color: #1474F5"></i>
+                                                <i class="fas fa-plus border p-3" style="color: #1474F5"></i>
                                             </div>
                                         </div>
                                         <p ng-if="dish.subName" style="font-size:14px;">{{dish.subName}}</p>
@@ -1264,7 +1276,7 @@
                     </div>
                     <div class="col-12 mb-2">
                         <label>
-                            <input type="radio" name="paymentMethod" value="Cash" class="payment-selection" ng-model="order.paymentMethod" onclick="$('#paypalbtn').hide(); $('#cashbtn').show()" checked>
+                            <input type="radio" name="paymentMethod" value="Cash" class="payment-selection" ng-model="order.paymentMethod" onclick="$('#paypalbtn').hide(); $('#cashbtn').show();" checked>
                             <img src="~/client-assets/res/img/payment_0.png" alt="" class="img-fluid border mr-3 p-2 payment-img">
                         </label>
 
@@ -1340,105 +1352,119 @@
     <script src="~/client-assets/res/js/jquery.waypoints.js"></script>
     <script src="~/client-assets/res/js/myscroller.js"></script>
     @*<script src="~/client-assets/res/js/myswiper.js"></script>*@
-<script>
-    var lastCat = "cat1";
-var mySwiper = new Swiper(".swiper-container", {
-    slidesPerView: 'auto',
-    //slidesPerView: 6,
-    spaceBetween: 20,
-    freeMode: false,
-    loop: false,
-    watchOverflow: !0,
-    navigation: {
-        nextEl: ".swiper-next",
-        prevEl: ".swiper-prev"
-    }
-});
+    <script>
+        var lastCat = "cat1";
+        var mySwiper = new Swiper(".swiper-container", {
+            slidesPerView: 'auto',
+            //slidesPerView: 6,
+            spaceBetween: 20,
+            freeMode: false,
+            loop: false,
+            watchOverflow: !0,
+            navigation: {
+                nextEl: ".swiper-next",
+                prevEl: ".swiper-prev"
+            }
+        });
 
-//mySwiper.slidesPerView = 8;
-mySwiper.update();
+        //mySwiper.slidesPerView = 8;
+        mySwiper.update();
 
-mySwiper.on("reachBeginning", function () {
-    console.log("Swiper Beginning reached");
-});
+        mySwiper.on("reachBeginning", function () {
+            console.log("Swiper Beginning reached");
+        });
 
-mySwiper.on("reachEnd", function () {
-    console.log("Swiper end reached");
-});
+        mySwiper.on("reachEnd", function () {
+            console.log("Swiper end reached");
+        });
 
-function next() {
-    // mySwiper.slideTo(count++);
-    console.log("in next");
+        function next() {
+            // mySwiper.slideTo(count++);
+            console.log("in next");
 
-    mySwiper.slideNext();
-}
- 
-$(".group-item ").waypoint({
-    handler: function (direction) {
-        var index = this.element.getAttribute("index");
-        if (index === '{{$index}}')
-            index = 1;
-        if (direction === "down") {
-            index = parseInt(index) - 1;
-        } else {
-            index = parseInt(index) - 2;
+            mySwiper.slideNext();
         }
 
-        
+        $(".group-item ").waypoint({
+            handler: function (direction) {
+                var index = this.element.getAttribute("index");
+                if (index === '{{$index}}')
+                    index = 1;
+                if (direction === "down") {
+                    index = parseInt(index) - 1;
+                } else {
+                    index = parseInt(index) - 2;
+                }
 
-        mySwiper.slideTo(index);
-        console.log("Last Cat2 : " + index);
-    }
-});
-
-// ? Show/Less grid checkboxes
-function show() {
-    var moreChecks = document.getElementById("more-checks");
-    var btn = document.getElementById("more-btn");
-    var btn2 = document.getElementById("less-btn")
-
-    moreChecks.style.display = "block";
-    btn.style.display = "none"
-    btn2.style.display = "block"
-}
-function less() {
-    var moreChecks = document.getElementById("more-checks");
-    var btn = document.getElementById("more-btn");
-    var btn2 = document.getElementById("less-btn")
-
-    moreChecks.style.display = "none";
-    btn.style.display = "block"
-    btn2.style.display = "none"
-}
-
-// ! Showing/Hiding Search Bar
-function showSearchBar() {
-    var searchBtn = document.getElementById("search-btn");
-    var dishList = document.getElementById("dish-list");
-    var searchBox = document.getElementById("search-box");
-
-    searchBtn.style.display = "none";
-    dishList.style.display = "none";
-    searchBox.style.display = "flex";
-}
-
-function hideSearchBar() {
-    var searchBtn = document.getElementById("search-btn");
-    var dishList = document.getElementById("dish-list");
-    var searchBox = document.getElementById("search-box");
-
-    searchBtn.style.display = "flex";
-    dishList.style.display = "flex";
-    searchBox.style.display = "none";
-}
-</script>
-    <script>
-        $(document).ready(function(){
-            $('.dishlink').css({ "width": "auto" });
+                mySwiper.slideTo(index);
+                console.log("Last Cat2 : " + index);
+            }
         });
-        //window.onscroll = function() {
-        //    $('.dishlink').css({ "width": "auto" });
-        //    scrollFunction();
-        //};
+
+        // ? Show/Less grid checkboxes
+        function show() {
+            var moreChecks = document.getElementById("more-checks");
+            var btn = document.getElementById("more-btn");
+            var btn2 = document.getElementById("less-btn")
+
+            moreChecks.style.display = "block";
+            btn.style.display = "none"
+            btn2.style.display = "block"
+        }
+        function less() {
+            var moreChecks = document.getElementById("more-checks");
+            var btn = document.getElementById("more-btn");
+            var btn2 = document.getElementById("less-btn")
+
+            moreChecks.style.display = "none";
+            btn.style.display = "block"
+            btn2.style.display = "none"
+        }
+
+        // ! Showing/Hiding Search Bar
+        function showSearchBar() {
+            var searchBtn = document.getElementById("search-btn");
+            var dishList = document.getElementById("dish-list");
+            var searchBox = document.getElementById("search-box");
+            $('.swiper-next').hide();
+            $('#mainNav').css('height', '75px');
+
+            searchBtn.style.display = "none";
+            dishList.style.display = "none";
+            searchBox.style.display = "flex";
+        }
+
+        function hideSearchBar() {
+            var searchBtn = document.getElementById("search-btn");
+            var dishList = document.getElementById("dish-list");
+            var searchBox = document.getElementById("search-box");
+            $('.swiper-next').show();
+            $('#mainNav').css('height', '60px');
+
+            var input = document.getElementById('search-dish');
+            input.value = "";
+            spliceSearch(input);
+
+            searchBtn.style.display = "flex";
+            dishList.style.display = "flex";
+            searchBox.style.display = "none";
+        }
+
+        function spliceSearch(el) {
+            var value = $(el).val().toLowerCase();
+            $(".dishes").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        }
+        $(document).ready(function () {
+            $('.dishlink').css({ "width": "auto" });
+            $("#search-dish").on("keyup", function () {
+                spliceSearch(this);
+            });
+        });
+        window.onscroll = function () {
+            $('.dishlink').css({ "width": "auto" });
+            scrollFunction();
+        };
     </script>
 }
