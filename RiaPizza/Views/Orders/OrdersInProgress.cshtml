@@ -188,7 +188,16 @@
 </div>
 
 @section scripts{
+
     <script>
+        function getOrderTableSortOrder() {
+            return { SortOrder: [[0, "desc"]] };
+        }
+
+        window.RiaPizzaConfig = getOrderTableSortOrder();
+    </script>
+    <script>
+
         function setValue(id, status) {
             $("#orderId").val(id);
             $("#statusList option[value=" + status + "]").attr('selected', 'selected');
@@ -232,10 +241,11 @@
                     }
                 }
             });
-            
+
             $('.orderDetails-modal').modal();
         }
     </script>
     <script src="~/assets/js/table.min.js"></script>
     <script src="~/assets/js/pages/tables/jquery-datatable.js"></script>
+
 }
