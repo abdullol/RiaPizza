@@ -57,7 +57,8 @@
         var App = angular.module('RiaPizza', ['paypal-button']);
 
         paypal.Button.driver('angular', window.angular);
-        App.controller("Auth", function ($scope, $http) {
+
+        App.controller("Auth",['$scope',  '$rootScope', function ($scope, $rootScope) {
             function JsonCallParam(Controller, Action, Parameters) {
                 $.ajax({
                     type: "POST",
@@ -102,7 +103,6 @@
             $scope.isLoggedIn = false;
             $scope.user = {};
             $scope.userOrders = [];
-
             $scope.register = function () {
                 JsonCallParam("Auth", "RegisterUser", { "registerDto": JSON.stringify($scope.registerUser) });
                 if (list == "Success") {
@@ -132,10 +132,7 @@
                 if (list != false) {
                     $scope.isLoggedIn = true;
                     $scope.user = list;
-                    var viewDishesScope = angular.element(document.getElementById("ViewDishes")).scope();
-                    if (viewDishesScope !== undefined && viewDishesScope.$id) {
-                        viewDishesScope.loadUserDataInCheckOut();
-                    }
+                    $rootScope.$emit("LoadUserData", true);
                 }
                 else {
                     $scope.isLoggedIn = false;
@@ -157,12 +154,14 @@
                 else {
                     var orders = localStorage.getItem('orders');
                     if (orders) {
-                        $scope.userOrders = JSON.parse(localStorage.orders);
+                        var ordersList = JSON.parse(localStorage.orders);
+                        JsonCallParam("Orders", "GetUserOrdersFromCodes", { "orderCodes": JSON.stringify(ordersList) });
+                        $scope.userOrders = list;
                     } else $scope.userOrders = [];
 
                 }
             }
-        });
+        }]);
     </script>
     @RenderSection("css", required: false)
     <title>Ria Pizza</title>
@@ -178,13 +177,13 @@
         <div class="nav-wrapper d-md-block d-none ml-auto mr-4 mt-2">
             <div class="sl-nav bg-white p-1 rounded-circle">
                 <ul>
-                    <li>
+                    <li style="width:17px;">
                         <i class="sl-flag flag-usa" aria-hidden="true"></i>
                         <div class="triangle"></div>
                         <ul class="translation-links">
                             <li>
                                 <i class="sl-flag flag-usa">
-                                    @*<div id="germany"></div>*@
+                                    <div id="germany"></div>
                                 </i>
                                 <a href="#" data-lang="English" class="english">
                                     <span class="active">English</span>
@@ -192,7 +191,7 @@
                             </li>
                             <li>
                                 <i class="sl-flag flag-de">
-                                    @*<div id="germany"></div>*@
+                                    <div id="germany"></div>
                                 </i>
                                 <a href="#" data-lang="German" class="german">
                                     <span>Deutsch</span>
@@ -221,7 +220,7 @@
         <div id="myModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered mx-auto my-modal">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header" style="background-color:black;">
                         <div class="container">
                             <div class="row mt-4">
                                 <div class="col-3">
@@ -232,7 +231,7 @@
                                         <span ng-if="isLoggedIn">{{user.firstName}} {{user.lastName}}</span>
                                         <span ng-if="!isLoggedIn">My Account</span>
                                     </h3>
-                                    <a href="~/MyAccount/PersonalData" class="text-white pointer">View personal data</a>
+                                    <a ng-if="isLoggedIn" href="~/MyAccount/PersonalData" class="text-white pointer">View personal data</a>
                                 </div>
                             </div>
                         </div>
@@ -467,7 +466,7 @@
                                     <span ng-if="!order.isPaymentConfirmed" class="badge badge-danger">Pending</span>
                                 </div>
                                 <div class="col-2">
-                                    {{order.orderStatus}}
+                                    <span class="badge badge-success">{{order.orderStatus}}</span>
                                 </div>
                                 <div class="col-6 text-md-left">
                                     <div class="row" ng-repeat="item in order.orderItems">

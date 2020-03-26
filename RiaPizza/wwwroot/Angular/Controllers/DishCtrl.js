@@ -41,9 +41,14 @@
     $scope.viewDishExtraType = [];
     $scope.viewDishExtras = [];
     $scope.dishCategories = [];
+    $scope.multipleSizes = false;
+    $scope.dishSizes = [];
+    $scope.sizeToppingPrices = [];
+    $scope.haveToppings = false;
+
 
     //Add Dish Objects
-    $scope.addDish = { dishName: '', subName: '', description: '', dishCategoryId: 0, basePrice: 0, allergies: '' };
+    $scope.addDish = { dishName: '', subName: '', description: '', dishCategoryId: '0', basePrice: 0, allergies: '', dishSizes: [] };
     $scope.addDishExtraTypes = [];
     $scope.getDishCategories = function () {
         JsonCall("DishCategories", "GetAllCategories");
@@ -56,12 +61,17 @@
     //Start Dish Only Function
     $scope.saveDish = function () {
         if ($scope.addDish.dishName === "" || Number($scope.addDish.dishCategoryId) === 0 || $scope.addDish.basePrice === 0) { return; }
-        for (var i = 0; i < $scope.addDishExtraTypes.length; i++) {
-            if ($scope.addDishExtraTypes[i].typeName === "") { return; }
-            for (var j = 0; j < $scope.addDishExtraTypes[i].dishExtras.length; j++)
-            { if ($scope.addDishExtraTypes[i].dishExtras[j].extraName === "") { return; } }
+        if ($scope.haveToppings) {
+            for (var i = 0; i < $scope.addDishExtraTypes.length; i++) {
+                if ($scope.addDishExtraTypes[i].typeName === "") { return; }
+                for (var j = 0; j < $scope.addDishExtraTypes[i].dishExtras.length; j++) { if ($scope.addDishExtraTypes[i].dishExtras[j].extraName === "") { return; } }
+            }
         }
 
+
+        if ($scope.multipleSizes) {
+            $scope.addDish.dishSizes = $scope.dishSizes;
+        }
         var pram = { "dish": JSON.stringify($scope.addDish), "dishExtraTypes": JSON.stringify($scope.addDishExtraTypes) };
         JsonCallParam("Dishes", "CreateDish", pram);
         if (list === "Success") {
@@ -70,6 +80,8 @@
 
             $scope.addDish = { dishName: '', subName: '', description: '', dishCategoryId: 0, basePrice: 0 };
             $scope.addDishExtraTypes = [];
+            $scope.dishSizes = [];
+            $scope.multipleSizes = false;
         }
     }
     $scope.saveDishExtraType = function () {
@@ -91,19 +103,35 @@
     $scope.pushDishExtraType = function () {
         var length = $scope.addDishExtraTypes.length;
         if (length === 0) {
-            $scope.addDishExtraTypes.push({ typeName: '', chooseMultiple: true, dishExtras: [{ extraName: '', extraPrice: 0, allergies: '' }] });
+            let list = [];
+            for (var i = 0; i < $scope.sizeToppingPrices.length; i++) {
+                list.push({ dishExtraId: 0, dishSizeId: 0, price: 0, sizeName: $scope.sizeToppingPrices[i].sizeName });
+            }
+            $scope.addDishExtraTypes.push({ typeName: '', chooseMultiple: true, dishExtras: [{ extraName: '', extraPrice: 0, sizeToppingPrices: list }] });
         }
         else if ($scope.addDishExtraTypes[length - 1].typeName !== '') {
-            $scope.addDishExtraTypes.push({ typeName: '', chooseMultiple: true, dishExtras: [{ extraName: '', extraPrice: 0, allergies: '' }] });
+            let list = [];
+            for (var i = 0; i < $scope.sizeToppingPrices.length; i++) {
+                list.push({ dishExtraId: 0, dishSizeId: 0, price: 0, sizeName: $scope.sizeToppingPrices[i].sizeName });
+            }
+            $scope.addDishExtraTypes.push({ typeName: '', chooseMultiple: true, dishExtras: [{ extraName: '', extraPrice: 0, sizeToppingPrices: list }] });
         }
     }
     $scope.pushDishExtra = function (i) {
         var length = $scope.addDishExtraTypes[i].dishExtras.length;
         if (length === 0) {
-            $scope.addDishExtraTypes[i].dishExtras.push({ extraName: '', extraPrice: 0, allergies: '' });
+            let list = [];
+            for (var j = 0; j < $scope.sizeToppingPrices.length; j++) {
+                list.push({ dishExtraId: 0, dishSizeId: 0, price: 0, sizeName: $scope.sizeToppingPrices[j].sizeName });
+            }
+            $scope.addDishExtraTypes[i].dishExtras.push({ extraName: '', extraPrice: 0, sizeToppingPrices: list });
         }
         else if ($scope.addDishExtraTypes[i].dishExtras[length - 1].extraName !== "") {
-            $scope.addDishExtraTypes[i].dishExtras.push({ extraName: '', extraPrice: 0, allergies: '' });
+            let list = [];
+            for (var j = 0; j < $scope.sizeToppingPrices.length; j++) {
+                list.push({ dishExtraId: 0, dishSizeId: 0, price: 0, sizeName: $scope.sizeToppingPrices[j].sizeName });
+            }
+            $scope.addDishExtraTypes[i].dishExtras.push({ extraName: '', extraPrice: 0, sizeToppingPrices: list });
         }
     }
     $scope.removeExtraType = function (i) {
@@ -112,8 +140,26 @@
     $scope.removeExtra = function (extratype, i) {
         $scope.addDishExtraTypes[extratype].dishExtras.splice(i, 1);
     }
+    $scope.addSize = function () {
+        var count = $scope.dishSizes.length;
+        if (count !== 0) {
+            if ($scope.dishSizes[count - 1].size == "") return;
+            else {
+                $scope.dishSizes.push({ size: "", basePrice: 0.0, diameter: "" });
+                $scope.sizeToppingPrices.push({ dishExtraId: 0, dishSizeId: 0, price: 0, sizeName: "" });
+            }
+        }
+        else {
+            $scope.dishSizes.push({ size: "", basePrice: 0.0, diameter: "" });
+            $scope.sizeToppingPrices.push({ dishExtraId: 0, dishSizeId: 0, price: 0, sizeName: "" });
+        }
+    }
+    $scope.removeSize = function (index) {
+        $scope.dishSizes.splice(index, 1);
+        $scope.sizeToppingPrices.splice(index, 1);
+    }
     //End Dish Only Function
-    
+
     //Start UI Functions
     $scope.openDishEditModal = function (dish) {
         $scope.editDish = { dishId: dish.dishId, dishName: dish.dishName, subName: dish.subName, allergies: dish.allergies, description: dish.description, dishCategoryId: dish.dishCategoryId, basePrice: dish.basePrice };
@@ -136,5 +182,9 @@
             $scope.getAllCategories();
             swal("Removed", "Dish Category Deleted!", "success");
         }
+    }
+    $scope.proceed = function () {
+        $scope.addDishExtraTypes = [];
+        $scope.pushDishExtraType();
     }
 });

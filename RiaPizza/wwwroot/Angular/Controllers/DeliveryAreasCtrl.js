@@ -58,7 +58,7 @@
                 $scope.addAreaObj = { areaName: '', postalCode: '', city: '', status: true, isDeliveryAvailable: true, deliveryCharges: 0, minOrderCharges: 0 };
                 $scope.getAllAreas();
             } else if (list === "PostalCodeExists") {
-                swal("Error", "Postal Code already exists", "error");
+                swal("Error", "Area already exists", "error");
             }
         }
     };
@@ -73,7 +73,7 @@
                 $scope.editAreaObj = { areaName: '', postalCode: '', city: '', status: false, isDeliveryAvailable: false, deliveryCharges: 0, minOrderCharges: 0 };
                 swal("Edited", "Delivery Area Edited!", "success");
             } else if (list == "PostalCodeExists") {
-                swal("Error", "Please Try again later!", "error");
+                swal("Error", "Area already exists!", "error");
             }
         }
     };

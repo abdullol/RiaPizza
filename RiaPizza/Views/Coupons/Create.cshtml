@@ -1,0 +1,100 @@
+﻿@model RiaPizza.Models.Coupon
+@{
+    ViewData["Title"] = "create";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+@section css{
+    <link href="../../assets/css/form.min.css" rel="stylesheet">
+}
+
+<div class="container-fluid">
+    <div class="block-header">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="breadcrumb breadcrumb-style ">
+                    <li class="breadcrumb-item bcrumb-1">
+                        <a href="~/Home/Index">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item bcrumb-2">
+                        <a href="#" onClick="return false;">Create</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="body">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="body">
+                    <h4 class="">Create Coupons</h4>
+
+                    <form method="post" asp-action="Create" asp-controller="Coupons">
+                        <br />
+                        <div class="row clearfix">
+                            <div class="col-md-12">
+
+                                <input asp-for="Name" type="text" placeholder="Name" class="form-control" required>
+
+                            </div>
+                           
+
+                            <p class="text-danger">@ViewBag.Error</p>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-md-6">
+
+                                @* <input asp-for="Day" type="date" placeholder="Day" class="form-control" required>*@
+                                <input asp-for="Code" type="text" placeholder="Code" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+
+                                <input asp-for="DiscountPercent" type="text" placeholder="DiscountPercent" class="form-control" required>
+
+                            </div>
+
+                           
+
+
+                            <p class="text-danger">@ViewBag.Error</p>
+                        </div>
+
+                        <div class="row clearfix">
+                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text" asp-for="ValidityFrom" class="datepicker form-control" placeholder="Please choose date from">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text" asp-for="ValidityTo" class="datepicker form-control" placeholder="Please choose date To">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        @*   <input type="text" name="DF" class="datepicker form-control" placeholder="Please choose date from">*@
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <button class="btn-hover color-8" type="submit" style="float:right">Create</button>
+                            </div>
+                            <p class="text-danger">@ViewBag.Error</p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+
+    <script src="~/assets/js/form.min.js"></script>
+    <script src="~/assets/js/pages/forms/basic-form-elements.js"></script>
+}

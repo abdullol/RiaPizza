@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-
+using MimeKit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
-using MimeKit;
 using Newtonsoft.Json;
 using RiaPizza.Data;
 using RiaPizza.Data.ApplicationUser;
@@ -126,6 +125,9 @@ namespace RiaPizza.Controllers
         [Authorize(Roles = "Manager,Admin")]
         public async Task<IActionResult> Reports(string DF, string DT, string status)
         {
+            ViewBag.DishList = await _dishService.AllDishes();
+            ViewBag.DishCatList = await _dishCatService.AllDishCategories();
+            ViewBag.Users =await _userManager.Users.ToListAsync();
             var orderSearch = await _service.SearchByDate(DF, DT);
             if(status != null && status != "")
             {
@@ -142,7 +144,7 @@ namespace RiaPizza.Controllers
         {
             ViewBag.DishList = await _dishService.AllDishes();
             ViewBag.DishCatList = await _dishCatService.AllDishCategories();
-            ViewBag.Users= _userManager.Users.Where(m => m.UserRoles.All(r => r.UserId != userId));
+            ViewBag.Users=await _userManager.Users.ToListAsync();
 
             if (status != null)
             {
@@ -179,6 +181,19 @@ namespace RiaPizza.Controllers
         }
 
         [HttpPost]
+        [ActionName("ReportFilter")]
+        [Authorize(Roles = "Manager,Admin")]
+        public async Task<IActionResult> Reports(string DF, string DT, string status, string number, string address, int DishId, int DishCatId, int userId, string payment)
+        {
+            ViewBag.DishList = await _dishService.AllDishes();
+            ViewBag.DishCatList = await _dishCatService.AllDishCategories();
+            ViewBag.Users = await _userManager.Users.ToListAsync();
+            var orderSearch = await _service.Filter(DF, DT, status, number, address, DishId, DishCatId, userId, payment);
+
+            return View("Reports", orderSearch);
+        }
+
+        [HttpPost]
         public async Task<JsonResult> Create(IFormCollection form)
         {
             try
@@ -203,32 +218,33 @@ namespace RiaPizza.Controllers
                 order.OrderItems.ToList().ForEach(s => s.Order = null);
                 await _hubContext.Clients.All.SendAsync("notifyOrder", order);
 
-                if (orderId != 0)
-                { 
-                var user = await _userManager.GetUserAsync(User);
-                var email = new MimeMessage();
-                email.From.Add(new MailboxAddress("RiaPizza", "xyz@gmail.com"));
-                email.To.Add(new MailboxAddress("User", user.Email));
-                email.Subject = "Test Message";
-                email.Body = new TextPart("Plain")
-                {
-                    Text = "you have place order, your order is confiremed"
-                };
+                return Json(order);
+                //if (orderId != 0)
+                //{ 
+                //    var user = await _userManager.GetUserAsync(User);
+                //    var email = new MimeMessage();
+                //    email.From.Add(new MailboxAddress("RiaPizza", "xyz@gmail.com"));
+                //    email.To.Add(new MailboxAddress("User", user.Email));
+                //    email.Subject = "Test Message";
+                //    email.Body = new TextPart("Plain")
+                //    {
+                //        Text = "you have place order, your order is confiremed"
+                //    };
 
-                using (var client = new MailKit.Net.Smtp.SmtpClient())
-                {
-                    client.Connect("smtp.gmail.com", 587, false);
-                    //SMTP server authentication if needed
-                    client.Authenticate("xyz@gmail.com", "");
+                //    using (var client = new MailKit.Net.Smtp.SmtpClient())
+                //    {
+                //        client.Connect("smtp.gmail.com", 587, false);
+                //        //SMTP server authentication if needed
+                //        client.Authenticate("xyz@gmail.com", "");
 
-                    client.Send(email);
+                //        client.Send(email);
 
-                    client.Disconnect(true);
-                };
-                    return Json(order);
-            }
-                else
-                    return Json("Failed");
+                //        client.Disconnect(true);
+                //    };
+                //        return Json(order);
+                //}
+                //    else
+                //        return Json("Failed");
 
             }
             catch (Exception ex)
@@ -267,13 +283,20 @@ namespace RiaPizza.Controllers
             return Json(orders);
         }
 
-        public async Task<IActionResult> ThankYou(string postalCode, int id)
+        public async Task<JsonResult> GetUserOrdersFromCodes(IFormCollection form)
+        {
+            var list = JsonConvert.DeserializeObject<List<string>>(form["orderCodes"]).ToList();
+            var orders = await _service.GetUserOrdersFromCodes(list);
+            return Json(orders);
+        }
+
+        public async Task<IActionResult> ThankYou(string address, int id)
         {
             var isCompleted = await _service.IsCompleted(id);
             if (!isCompleted)
             {
                 var orderItems = await _service.GetOrderItems(id);
-                ViewBag.PostalCode = postalCode;
+                ViewBag.Address = address;
                 ViewBag.OrderCode = await _service.GetOrderCode(id);
                 return View(orderItems);
             }

@@ -26,5 +26,11 @@ namespace RiaPizza.Services.AccountService
             var addresses = await _context.AppUserAddresses.Where(s => s.UserId == id).ToListAsync();
             return addresses;
         }
+
+        public async Task<List<AppUserAddress>> GetAddressesWithPostalCode(int id, string code)
+        {
+            var addresses = await _context.AppUserAddresses.Where(s => s.UserId == id && s.PostalCode == code).ToListAsync();
+            return addresses;
+        }
     }
 }

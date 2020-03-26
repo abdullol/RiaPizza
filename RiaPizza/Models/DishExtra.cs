@@ -14,7 +14,7 @@ namespace RiaPizza.Models
         public int DishExtraTypeId { get; set; }
         public string Allergies { get; set; }
         public virtual DishExtraType DishExtraType { get; set; }
-        public int ExtraPrice { get; set; }
+        public float ExtraPrice { get; set; }
         public bool IsAvailable { get; set; }
         public IEnumerable<SizeToppingPrice> SizeToppingPrices { get; set; }
     }

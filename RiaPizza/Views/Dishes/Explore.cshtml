@@ -15,62 +15,65 @@
             width: 0;
             height: 0;
         }
-            /* IMAGE STYLES */
-            .payment-selection + .payment-img {
-                cursor: pointer;
-            }
+        /* IMAGE STYLES */
+        .payment-selection + .payment-img {
+            cursor: pointer;
+        }
 
-            /* CHECKED STYLES */
-            .payment-selection:checked + .payment-img {
-                background: linear-gradient(#142209, #142209);
-            }
-
-        .pointer {
+        /* CHECKED STYLES */
+        .payment-selection:checked + .payment-img {
+            background: linear-gradient(#142209, #142209);
+        }
+        .pointer{
             cursor: pointer !important;
         }
-
-        .order-btn {
-            height: 45px;
+        .order-btn{
+            height:45px;
         }
-
         @@media only screen and (max-width: 992px) {
-            #sidebar {
-                display: none
+            #sidebar{
+                display:none
             }
-
-            #mainNav {
-                margin-right: 10px !important;
-                width: 100%;
+            #mainNav{
+                margin-right:10px !important;
+                width:100%;
             }
-
             #cart-btn-mob {
                 display: block !important;
             }
-
-            .order-btn {
-                height: 35px;
+            .order-btn{
+                height:35px;
             }
-
-            .groups {
-                margin-right: 0px !important;
+            .groups{
+                margin-right:0px !important;
             }
-
-            .dishDetails {
-                width: 100% !important;
+            .dishDetails{
+                width:100% !important;
             }
-
-            #myBtn {
-                bottom: 90px !important;
+            #myBtn{
+                bottom:90px !important;
             }
+            #swiper-next{
+                display:none;
+            }
+            #search-btn{
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+            .qtvalue{
+                margin-top:-3px;
+            }
+            
         }
-
+        #swiper-next{
+            padding-left:8px;
+        }
         .product-info-btn {
-            display: block !important;
+            display:block !important;
             padding: 2px 15px 10px 0 !important;
             font-size: 15px;
             color: #1574F5 !important;
         }
-
         .groups {
             margin-right: 360px;
         }
@@ -86,45 +89,64 @@
             width: auto !important;
             margin-right: 0 !important;
         }
-
-        #cart-btn-mob .p1[data-count]:after {
-            position: absolute;
-            right: 50%;
-            top: 8%;
-            content: attr(data-count);
-            font-size: 40%;
-            padding: .2em;
-            border-radius: 50%;
-            line-height: 1em;
-            color: white;
-            background: rgba(255,0,0,.85);
-            text-align: center;
-            min-width: 1em;
+        #cart-btn-mob .p1[data-count]:after{
+          position:absolute;
+          right:50%;
+          top:8%;
+          content: attr(data-count);
+          font-size:40%;
+          padding:.2em;
+          border-radius:50%;
+          line-height:1em;
+          color: white;
+          background:rgba(255,0,0,.85);
+          text-align:center;
+          min-width: 1em;
         }
-
-        .cart-btn-section {
+        .cart-btn-section{
             position: fixed;
             bottom: 0;
             z-index: 1999;
             width: -webkit-fill-available;
             border-top: 1px solid black;
         }
-
         #cart-btn-mob {
             border: 10px solid white;
             width: -webkit-fill-available;
             height: 80px;
         }
-
         #cart-icon-mob {
             font-size: 20px;
             margin: -7px 0 0 -25px;
         }
+        #mainNav {
+            height:60px;
+        }
+        .swiper-container{
+            top:0.5em;
+        }
+        .mob-cart-items div{
+            padding:0;
+        }
+        .mob-cart-items{
+            font-size:11px
+        }
+        .cartIncreasBtn-mob{
+            width:24px;
+            height:23px;
+        }
+        .swiper-wrapper{
+            margin-left:10px;
+            margin-right:10px;
+        }
+        /*#order-button-wrapper paypal-button{
+            display:none;
+        }*/
     </style>
 }
 <!-- <script src="~/Angular/Controllers/ViewDishesPage.js"></script> -->
 <script>
-    App.controller("ViewDishes", function ($scope, $http) {
+    App.controller("ViewDishes", ['$scope', '$rootScope','$http' , function ($scope, $rootScope, $http) {
 
         function JsonCallParam(Controller, Action, Parameters) {
             $.ajax({
@@ -172,16 +194,19 @@
         $scope.ordertotalPrice = { subtotal: 0, totalPrice: 0, tax: 0, deliveryCharges: 0 };
         $scope.deliveryTimings = [];
         $scope.dishSizeIdSelectedDish = "0";
+        $scope.coupon = { code: '' };
+        $scope.showDiscount = false;
         //End Choose Dishes Attributes
 
         //Start Ordering Attributes
-        $scope.order = { recievingTime: '', orderCode: '', remarks: '', totalBill: 0, paymentMethod: 'Cash', isPaymentConfirmed: false, orderStatus: '', userId: 0, orderBy: {}, orderDeliveryAddress: {}, orderItems: {} };
+        $scope.order = { recievingTime: '', orderCode: '', remarks: '', totalBill: 0, paymentMethod: 'Cash', isPaymentConfirmed: false, orderStatus: '', subTotal: 0, discount: 0, userId: 0, orderBy: {}, orderDeliveryAddress: {}, orderItems: {} };
         $scope.orderBy = { name: '', email: '', contact: '', company: '' };
         $scope.orderDeliveryAddress = { city: '', floor: '', address: '', postalCode: '' };
         $scope.orderItems = [];
         $scope.userAddresses = [];
         $scope.userAddressId = 0;
         $scope.postalCode = "";
+        $scope.postalArea = "";
         $scope.paypal = {
             env: 'sandbox',
             client: {
@@ -210,6 +235,12 @@
         $scope.shopschedule = { timeFrom: '', timeTo: '', isOpen: false };
         //End Ordering Attributes
 
+        $rootScope.$on("LoadUserData", function(e, args) {
+            if (args) {
+                $scope.loadUserDataInCheckOut();
+            }
+        });
+
         //Start Ordering Methods
         $scope.loadUserDataInCheckOut = function () {
             JsonCall("Auth", "GetLoggedInUser");
@@ -217,84 +248,78 @@
                 var user = list;
                 $scope.orderDeliveryAddress.address = user.address;
                 $scope.orderDeliveryAddress.city = user.city;
-                $scope.orderDeliveryAddress.postalCode = user.postalCode;
 
                 $scope.orderBy.name = user.firstName + ' ' + user.lastName;
                 $scope.orderBy.email = user.email;
                 $scope.orderBy.contact = user.phoneNumber;
                 $scope.orderBy.company = user.company;
 
+                var postalCode = $scope.orderDeliveryAddress.postalCode;
                 $scope.order.userId = user.id;
-                JsonCallParam("MyAccount", "GetUserAddresses", { id: user.id });
-                $scope.userAddresses = list;
-                //$scope.order.remarks = user.previousOrderRemarks;
+                $http.post('/MyAccount/GetUserAddresses?id=' + user.id + '&code=' + postalCode).then(function (response) {
+                    $scope.userAddresses = response.data;
+                });
+                $scope.order.remarks = user.previousOrderRemarks;
             }
         }
         $scope.createOrder = function () {
-            if ($scope.shopschedule.isOpen) {
-                $scope.order.totalBill = $scope.ordertotalPrice.totalPrice;
-                pushCartItemInOrderItems();
-                $scope.order.orderBy = $scope.orderBy;
-                $scope.order.orderDeliveryAddress = $scope.orderDeliveryAddress;
-                $scope.order.orderItems = $scope.orderItems;
-                if ($scope.order.userId !== 0) {
-                    if (Number($scope.userAddressId) === 0)
-                        var pram = { "order": JSON.stringify($scope.order), "addAddress": JSON.stringify(true) };
-                    else
-                        var pram = { "order": JSON.stringify($scope.order), "addAddress": JSON.stringify(false) };
-                }
+            if (!$scope.shopschedule.isOpen) {
+                $('.shopClosed').modal();
+                return;
+            }
+
+            $scope.order.discount = $scope.discount;
+            $scope.order.subTotal = $scope.ordertotalPrice.subtotal;
+            $scope.order.totalBill = $scope.ordertotalPrice.totalPrice;
+            pushCartItemInOrderItems();
+            $scope.order.orderBy = $scope.orderBy;
+            $scope.order.orderDeliveryAddress = $scope.orderDeliveryAddress;
+            $scope.order.orderItems = $scope.orderItems;
+
+            if ($scope.order.userId !== 0) {
+                if (Number($scope.userAddressId) === 0)
+                    var pram = { "order": JSON.stringify($scope.order), "addAddress": JSON.stringify(true) };
                 else
                     var pram = { "order": JSON.stringify($scope.order), "addAddress": JSON.stringify(false) };
-
-
-                JsonCallParam("Orders", "Create", pram);
-                if (list != "Failed") {
-                    if ($scope.order.userId == 0) {
-                        $scope.order.orderCode = list.orderCode;
-                        $scope.order.orderStatus = list.orderStatus;
-                        var orderList = JSON.parse(localStorage.getItem('orders'));
-                        if (orderList == null) {
-                            orderList = [];
-                        }
-                        orderList.push($scope.order);
-                        localStorage.setItem('orders', JSON.stringify(orderList));
-
-                    }
-                    localStorage.removeItem('cart');
-                    window.location.href = "/Orders/ThankYou/?postalCode=" + $scope.postalCode + "&id=" + list.orderId;
-                }
-                else {
-                    alert("Please Try Later!");
-                }
             }
-            else {
-                $('.shopClosed').modal();
+            else
+                var pram = { "order": JSON.stringify($scope.order), "addAddress": JSON.stringify(false) };
+
+
+            JsonCallParam("Orders", "Create", pram);
+            if (list == "Failed") {
+                alert("Please Try Later!");
+                return;
             }
+            if ($scope.order.userId == 0) {
+                var orderCode = list.orderCode;
+                var orderList = JSON.parse(localStorage.getItem('orders'));
+                if (orderList == null) {
+                    orderList = [];
+                }
+                orderList.push(orderCode);
+                localStorage.setItem('orders', JSON.stringify(orderList));
+
+            }
+            localStorage.removeItem('cart');
+            window.location.href = "/Orders/ThankYou/?address=" + $scope.postalArea + "&id=" + list.orderId;
         }
         $scope.fillUserAddress = function () {
             if (Number($scope.userAddressId) !== 0) {
                 var add = $scope.userAddresses.find(x => x.appUserAddressId === Number($scope.userAddressId))
-                $scope.orderDeliveryAddress = { city: add.city, floor: add.floor, address: add.address, postalCode: add.postalCode };
-                $('#checkoutForm input[name="address"]').prop("disabled", true);
-                $('#checkoutForm input[name="postalCode"]').prop("disabled", true);
-                $('#checkoutForm input[name="city"]').prop("disabled", true);
-                $('#checkoutForm input[name="floor"]').prop("disabled", true);
+                $scope.orderDeliveryAddress.city = add.city;
+                $scope.orderDeliveryAddress.floor = add.floor;
+                $scope.orderDeliveryAddress.address = add.address;
+
                 $('#checkoutForm input[name="address"]').val(add.address);
-                $('#checkoutForm input[name="postalCode"]').val(add.postalCode);
                 $('#checkoutForm input[name="city"]').val(add.city);
                 $('#checkoutForm input[name="floor"]').val(add.floor);
-            }
-            else {
-                $('#checkoutForm input[name="address"]').prop("disabled", false);
-                $('#checkoutForm input[name="postalCode"]').prop("disabled", false);
-                $('#checkoutForm input[name="city"]').prop("disabled", false);
-                $('#checkoutForm input[name="floor"]').prop("disabled", false);
             }
         }
         function pushCartItemInOrderItems() {
             for (var i = 0; i < $scope.cart.length; i++) {
-                if ($scope.cart[i].dishSize)
-                    var dishToppings = "Size: " + $scope.cart[i].dishSize.size + "Ø " + $scope.cart[i].dishSize.diameter + "cm, ";
+                if ($scope.cart[i].dishSize) 
+                    var dishToppings = "Size: "+ $scope.cart[i].dishSize.size + "Ø "+$scope.cart[i].dishSize.diameter+"cm, ";
                 else
                     var dishToppings = "";
                 for (var j = 0; j < $scope.cart[i].toppings.length; j++) {
@@ -346,7 +371,7 @@
                     if (dish.dishSizes.length > 0)
                         $scope.cartItem.dishSize = dish.dishSizes.find(s => s.dishSizeId === $scope.dishSizeIdSelectedDish);
                     else
-                        $scope.cartItem.dishSize = { dishSizeId: 0 };
+                        $scope.cartItem.dishSize = { dishSizeId: 0};
 
                     $scope.cart.push($scope.cartItem);
                 }
@@ -396,7 +421,7 @@
             if (list != null) {
                 $scope.dishCategories = list;
             }
-
+            
         };
         $scope.getDishCategories();
         $scope.LoadDishExtras = function (Id, categoryIndex, dishIndex, price) {
@@ -404,7 +429,7 @@
             $scope.cartItem = { quantity: 1, dishPrice: price, priceWithExtras: price, totalPrice: price };
             if (list.length != 0) {
                 $scope.dishCategories[categoryIndex].dishes[dishIndex].dishExtraTypes = list;
-
+                
                 $scope.toppings = [];
                 $scope.dishSizeIdSelectedDish = "0";
                 $('.collapse').collapse('hide');
@@ -534,7 +559,22 @@
             JsonCall("DeliveryTiming", "GetDeliveryTimes");
             $scope.deliveryTimings = list;
         }
-
+        $scope.validateCoupon = function () {
+            JsonCallParam("Coupons", "ValidateCoupon", { code: $scope.coupon.code });
+            if (list == false) {
+                $('#couponValidation').html('').removeClass("text-success").addClass("text-danger").append('Coupon is not valid');
+                $scope.showDiscount = false;
+                totalPriceGenerator();
+                $scope.discount = 0;
+                return;
+            }
+            $scope.coupon = list;
+            $scope.discount = $scope.ordertotalPrice.subtotal * $scope.coupon.discountPercent;
+            $scope.ordertotalPrice.totalPrice = ($scope.ordertotalPrice.subtotal + $scope.ordertotalPrice.deliveryCharges)  - $scope.discount;
+            //$scope.ordertotalPrice.totalPrice = $scope.ordertotalPrice.totalPrice - $scope.discount;
+            $scope.showDiscount = true;
+            $('#couponValidation').html('').removeClass("text-danger").addClass("text-success").append('Coupon found! Discount applied!');
+        }
         $scope.proceedOrder = function () {
             if (!$scope.shopschedule.isOpen) {
                 $('.shopClosed').modal();
@@ -554,11 +594,12 @@
             $('#chooseDishes').show();
             $('#orderTab').hide();
             $('#orderBtn').show();
+            $('.cart-btn-section').show();
         }
         $scope.showDishDesc = function (allergies) {
             $(".dishDetails").modal();
-            if (allergies !== '' && allergies !== null)
-                $(".dishAllergies").html("<h6 style='font-weight:bold'>Substances or products causing allergies or intolerances</h6> <ul> <li>" + allergies + "</li></ul>");
+            if (allergies !=='' && allergies !== null)
+                $(".dishAllergies").html("<h6 style='font-weight:bold'>Substances or products causing allergies or intolerances</h6> <ul> <li>"+allergies+"</li></ul>");
             else
                 $(".dishAllergies").html("<h6 style='font-weight:bold'>No Allergies Found</h6>");
         }
@@ -571,7 +612,7 @@
             else {
                 $('.shopClosed').modal();
             }
-
+            
         }
         function cartButtonEffect() {
             var time = 700;
@@ -579,9 +620,9 @@
                 $('#cart-btn-mob').removeClass("bg-warning").addClass("bg-primary");
             }, time);
             $('#cart-btn-mob').removeClass("bg-primary").addClass("bg-warning");
-
+            
         }
-    });
+    }]);
 </script>
 <div ng-controller="ViewDishes" id="ViewDishes">
     <!-- Sidebar -->
@@ -610,7 +651,7 @@
                             <button class="cartIncreasBtn" ng-click="increaseQty($index)">+</button>
                         </div>
                         <div class="col-4" style="padding:0">
-                            <a role="button" ng-click="showRemarkBar($index)" class="btn" style="padding: 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-pencil"></i></a>
+                            <a role="button" ng-click="showRemarkBar($index)" class="btn" style="padding: 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-pencil-alt"></i></a>
                             <span style="font-size: 12px; color: #000;">{{item.totalPrice}}€</span>
                             <a class="btn" ng-click="removeItem($index)" style="padding: 0 0 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-trash-alt"></i></a>
                         </div>
@@ -632,7 +673,13 @@
                 <div class="col-6 text-right mt-2">
                     <p style="margin-right: -30px;font-size: 13px;" ng-init="postalCode = @Model.PostalCode">{{ordertotalPrice.subtotal}} €</p>
                 </div>
-                <div class="col-6 text-left mb-2" style="margin-left: -20px;">
+                <div class="col-6 text-left mt-2 mb-0" style="margin-left: -20px;" ng-if="showDiscount">
+                    <p style="font-size: 13px;">Discount</p>
+                </div>
+                <div class="col-6 text-right mt-2" ng-if="showDiscount">
+                    <p style="margin-right: -30px;font-size: 13px;">- {{discount}} €</p>
+                </div>
+                <div class="col-6 text-left mb-2" style="margin-left: -20px;" ng-init="postalArea = '@Model.AreaName'">
                     <p style="font-size: 13px;">Delivery costs</p>
                 </div>
                 <div class="col-6 text-right">
@@ -670,17 +717,17 @@
         </div>
     </div>
     <div id="cart-modal" data-backdrop-limit="1" tabindex="-1" role="dialog"
-         aria-labelledby="myModalLabel" aria-hidden="true" class="modal">
+             aria-labelledby="myModalLabel" aria-hidden="true" class="modal">
         <div class="modal-dialog modal-dialog-centered mx-auto my-modal">
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header border-0">
                     <div class="row">
                         <div class="col-12">
-                            <h4 class="modal-title">Basket</h4>
+                            <h6 class="modal-title">Basket</h6>
                         </div>
                     </div>
-                    <button type="button" class="close" data-dismiss="modal">
+                    <button type="button" class="close" data-dismiss="modal" onclick="$('.cart-btn-section').toggle()">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
@@ -691,25 +738,25 @@
                             <p class="basket-empty__text" style="text-align: center; margin: 10px;">Wähle leckere Gerichte aus der Karte und bestelle Dein Menü.</p>
                         </div>
                         <div class="col-12" ng-repeat="item in cart track by $index">
-                            <div class="row">
+                            <div class="row mob-cart-items">
                                 <div class="col-1">
-                                    <span style="font-size: 12px; color: #000; margin-right: 10px;">{{item.quantity}}x</span>
+                                    <span style="padding-left:10px">{{item.quantity}}x</span>
+                                </div>
+                                <div class="col-5">
+                                    <span style="padding-left:10px">{{item.dishName}}</span>
+                                </div>
+                                <div class="col-2" style="font-size:12px">
+                                    <button class="cartIncreasBtn" style="width:24px; height:23px;" ng-click="decreaseQty($index)">-</button>
+                                    <button class="cartIncreasBtn" style="width:24px; height:23px;" ng-click="increaseQty($index)">+</button>
                                 </div>
                                 <div class="col-4">
-                                    <span style="font-size: 12px; color: #000; margin-right: 30px;">{{item.dishName}}</span>
-                                </div>
-                                <div class="col-3" style="padding:0">
-                                    <button class="cartIncreasBtn" ng-click="decreaseQty($index)">-</button>
-                                    <button class="cartIncreasBtn" ng-click="increaseQty($index)">+</button>
-                                </div>
-                                <div class="col-4" style="padding:0">
-                                    <a role="button" ng-click="showRemarkBar($index)" class="btn" style="padding: 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-pencil"></i></a>
+                                    <a role="button" ng-click="showRemarkBar($index)" class="btn" style="padding: 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-pencil-alt"></i></a>
                                     <span style="font-size: 12px; color: #000;">{{item.totalPrice}}€</span>
                                     <a class="btn" ng-click="removeItem($index)" style="padding: 0 0 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-trash-alt"></i></a>
                                 </div>
                             </div>
 
-                            <p class="cartToppings" ng-if="item.toppings.length>0"> <span ng-if="item.dishSize">Size: {{item.dishSize.size}} Ø{{item.dishSize.diameter}}cm,</span> <span ng-repeat="topping in item.toppings" ng-init="toppingIndex = $index">{{topping}} <i ng-if="toppingIndex < item.toppings.length - 1">,</i></span> </p>
+                            <p class="cartToppings"><span ng-if="item.dishSize.dishSizeId > 0">Size: {{item.dishSize.size}} Ø{{item.dishSize.diameter}}cm. </span> <span ng-if="item.toppings.length>0" ng-repeat="topping in item.toppings" ng-init="toppingIndex = $index">{{topping}} <i ng-if="toppingIndex < item.toppings.length - 1">,</i></span> </p>
                             <p class="cartToppings" ng-if="item.remarks!=''" style="margin-bottom:5% !important">{{item.remarks}}</p>
                             <div class="commentBox hide commentinput-{{$index}}" style="margin-bottom:10% !important">
                                 <label>Remarks</label>
@@ -932,6 +979,13 @@
         <!-- Restaurant Description -->
         <section class="item my-0">
             <div class="container hotel-container">
+                <div class="restaurant-logo">
+                    <div class="row logo-container mx-auto">
+                        <div class="col-12 text-center bd-dark logo-inner">
+                            <img src="~/client-assets/res/img/pizza.png" alt="" class="img-fluid" width="100" />
+                        </div>
+                    </div>
+                </div>
                 <div class="row align-items-center mb-3">
                     <ul class="list-unstyled text-right ml-auto">
                         <li class="d-inline-block">
@@ -942,25 +996,35 @@
                         </li>
                     </ul>
                 </div>
+                <div class="row">
+                    <div class="col-md-10 font-weight-bold">
+                        <p class="ria-para">
+                            This restaurant provides stamps. To receive them via email please make
+                            sure you are subscribed to
+                            "discounts, new restaurants and special offers" at the checkout
+                        </p>
+                    </div>
+                </div>
             </div>
         </section>
         <!-- Restaurant Description ends -->
+
         <div class="js-menu-category-bar-sticky sticky-top mr" id="mainNav">
             <div class="swiper-container container">
                 <button type="button" onclick="showSearchBar()" class="left fas fa-search fa-1x border-0 bg-transparent" id="search-btn" style="background:#f8f5f2 !important; top:0"></button>
                 <div class="swiper-wrapper container" id="dish-list">
                     @for (int i = 0; i < dishCategories.Count(); i++)
                     {
-                        <a href="#cat-@i" data-category="@i" class="swiper-slide nav-link js-scroll-trigger dishlink" style="width:auto; font-weight:bold">@dishCategories[i].CategoryName</a>
+                        <a href="#cat-@i" data-category="@i" class="swiper-slide nav-link js-scroll-trigger dishlink" style="width:auto; font-weight:bold; font-size:16px !important">@dishCategories[i].CategoryName</a>
                     }
                 </div>
                 <div class="input-group mb-3" id="search-box">
-                    <input type="text" class="form-control" placeholder="Search for meals, etc.." style="border-radius: 0 !important;">
+                    <input type="text" id="search-dish" class="form-control" placeholder="Search for meals, etc.." style="border-radius: 0 !important;">
                     <div class="input-group-append">
                         <button type="button" onclick="hideSearchBar()" class="input-group-text bg-white" id="cross-btn" style="border-radius: 0 !important; top:0"><i class="fas fa-times"></i></button>
                     </div>
                 </div>
-                <a href="#" class="swiper-next right fas fa-angle-right fa-2x mr-3 hide" id="swiper-next"></a>
+                <a href="#" class="swiper-next right fas fa-angle-right fa-2x hide" id="swiper-next" style="background:#f8f5f2 !important; top:0"></a>
                 <!-- Add Pagination -->
                 <div class="swiper-pagination">
                 </div>
@@ -968,14 +1032,14 @@
         </div>
         <!-- Dish list -->
         <div class="groups">
-            <section ng-repeat="dishCategory in dishCategories | orderBy : 'orderBy' " ng-init="categoryIndex=$index" id="cat-{{categoryIndex}}" class="group-item">
+            <section ng-repeat="dishCategory in dishCategories | orderBy : 'orderBy' " ng-init="categoryIndex=$index" id="cat-{{categoryIndex}}" class="group-item" index="{{$index}}">
                 <div class="container">
                     <div class="row mx-md-2 mx-0 mt-3 dish-head">
                         <div class="col-12 ml-5 py-3 mb-4 mx-auto dish-col" style="background:url(/Uploads/{{dishCategory.image}});">
                             <h5> {{dishCategory.categoryName}} </h5>
                         </div>
                     </div>
-                    <div class="row mx-md-2 mx-0 px-0" ng-repeat="dish in dishCategory.dishes" ng-init="dishIndex = $index">
+                    <div class="row mx-md-2 mx-0 px-0 dishes" ng-repeat="dish in dishCategory.dishes" ng-init="dishIndex = $index">
                         <div class="col-12 ml-5 py-1 pl-0 pr-0 mx-auto">
                             <div class="panel-group" id="accordion_{{dish.dishId}}" role="tablist" aria-multiselectable="true">
                                 <div class="panel panel-default">
@@ -988,9 +1052,10 @@
                                                 </h5>
                                             </div>
                                             <div class="col-3 text-right w-25">
-                                                <i class="fas fa-plus fa-lg border p-3" style="font-weight: 500; color: #1474F5"></i>
+                                                <i class="fas fa-plus border p-3" style="color: #1474F5"></i>
                                             </div>
                                         </div>
+                                        <p ng-if="dish.subName" style="font-size:14px;">{{dish.subName}}</p>
                                         <p>{{dish.description}}</p>
                                         <h4>{{dish.basePrice}} €</h4>
                                     </div>
@@ -1115,7 +1180,7 @@
                     <div class="col-md-3">
                         <div class="form-group mb-0 pl-2 mt-3">
                             <label class="label">Postcode</label>
-                            <input type="text" class="form-control address-option" ng-model="orderDeliveryAddress.postalCode" name="postalCode" required>
+                            <input type="text" class="form-control address-option" ng-init="orderDeliveryAddress.postalCode = @Model.PostalCode" disabled ng-model="orderDeliveryAddress.postalCode" name="postalCode" required>
                             <p class="text-danger pt-4" ng-show="checkoutForm.postalCode.$touched && checkoutForm.postalCode.$error.required">* PostalCode is required.</p>
                         </div>
                     </div>
@@ -1211,7 +1276,7 @@
                     </div>
                     <div class="col-12 mb-2">
                         <label>
-                            <input type="radio" name="paymentMethod" value="Cash" class="payment-selection" ng-model="order.paymentMethod" onclick="$('#paypalbtn').hide(); $('#cashbtn').show()" checked>
+                            <input type="radio" name="paymentMethod" value="Cash" class="payment-selection" ng-model="order.paymentMethod" onclick="$('#paypalbtn').hide(); $('#cashbtn').show();" checked>
                             <img src="~/client-assets/res/img/payment_0.png" alt="" class="img-fluid border mr-3 p-2 payment-img">
                         </label>
 
@@ -1243,16 +1308,17 @@
                     <div class="col-md-6">
                         <ul class="acc">
                             <li>
-                                <button class="acc_ctrl" onclick="$('#voucherPanel').slideToggle()"><span style="letter-spacing: 0 !important; text-decoration: underline; font-size: 13px; color: rgb(102, 102, 102);">Do you have a voucher or coupon?</span> </button>
+                                <button class="acc_ctrl" ><span style="letter-spacing: 0 !important; text-decoration: underline; font-size: 13px; color: rgb(102, 102, 102);">Do you have a voucher or coupon?</span> </button>
                                 <div class="small-panel" id="voucherPanel">
                                     <div class="acc_panel">
                                         <div class="input-group mb-3">
-                                            <input type="text" class="form-control" placeholder="Voucher code">
+                                            <input type="text" class="form-control" ng-model="coupon.code" placeholder="Voucher code">
                                             <div class="input-group-append">
-                                                <button class="btn-primary" id="basic-addon2">check</button>
+                                                <button onclick="event.preventDefault()" ng-click="validateCoupon()" class="btn-primary" id="basic-addon2">check</button>
                                             </div>
                                         </div>
                                     </div>
+                                    <p id="couponValidation"></p>
                                 </div>
                             </li>
                         </ul>
@@ -1285,10 +1351,120 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
     <script src="~/client-assets/res/js/jquery.waypoints.js"></script>
     <script src="~/client-assets/res/js/myscroller.js"></script>
-    <script src="~/client-assets/res/js/myswiper.js"></script>
+    @*<script src="~/client-assets/res/js/myswiper.js"></script>*@
     <script>
+        var lastCat = "cat1";
+        var mySwiper = new Swiper(".swiper-container", {
+            slidesPerView: 'auto',
+            //slidesPerView: 6,
+            spaceBetween: 20,
+            freeMode: false,
+            loop: false,
+            watchOverflow: !0,
+            navigation: {
+                nextEl: ".swiper-next",
+                prevEl: ".swiper-prev"
+            }
+        });
+
+        //mySwiper.slidesPerView = 8;
+        mySwiper.update();
+
+        mySwiper.on("reachBeginning", function () {
+            console.log("Swiper Beginning reached");
+        });
+
+        mySwiper.on("reachEnd", function () {
+            console.log("Swiper end reached");
+        });
+
+        function next() {
+            // mySwiper.slideTo(count++);
+            console.log("in next");
+
+            mySwiper.slideNext();
+        }
+
+        $(".group-item ").waypoint({
+            handler: function (direction) {
+                var index = this.element.getAttribute("index");
+                if (index === '{{$index}}')
+                    index = 1;
+                if (direction === "down") {
+                    index = parseInt(index) - 1;
+                } else {
+                    index = parseInt(index) - 2;
+                }
+
+                mySwiper.slideTo(index);
+                console.log("Last Cat2 : " + index);
+            }
+        });
+
+        // ? Show/Less grid checkboxes
+        function show() {
+            var moreChecks = document.getElementById("more-checks");
+            var btn = document.getElementById("more-btn");
+            var btn2 = document.getElementById("less-btn")
+
+            moreChecks.style.display = "block";
+            btn.style.display = "none"
+            btn2.style.display = "block"
+        }
+        function less() {
+            var moreChecks = document.getElementById("more-checks");
+            var btn = document.getElementById("more-btn");
+            var btn2 = document.getElementById("less-btn")
+
+            moreChecks.style.display = "none";
+            btn.style.display = "block"
+            btn2.style.display = "none"
+        }
+
+        // ! Showing/Hiding Search Bar
+        function showSearchBar() {
+            var searchBtn = document.getElementById("search-btn");
+            var dishList = document.getElementById("dish-list");
+            var searchBox = document.getElementById("search-box");
+            $('.swiper-next').hide();
+            $('#mainNav').css('height', '75px');
+
+            searchBtn.style.display = "none";
+            dishList.style.display = "none";
+            searchBox.style.display = "flex";
+        }
+
+        function hideSearchBar() {
+            var searchBtn = document.getElementById("search-btn");
+            var dishList = document.getElementById("dish-list");
+            var searchBox = document.getElementById("search-box");
+            $('.swiper-next').show();
+            $('#mainNav').css('height', '60px');
+
+            var input = document.getElementById('search-dish');
+            input.value = "";
+            spliceSearch(input);
+
+            searchBtn.style.display = "flex";
+            dishList.style.display = "flex";
+            searchBox.style.display = "none";
+        }
+
+        function spliceSearch(el) {
+            var value = $(el).val().toLowerCase();
+            $(".dishes").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        }
         $(document).ready(function () {
             $('.dishlink').css({ "width": "auto" });
+            $("#search-dish").on("keyup", function () {
+                spliceSearch(this);
+            });
         });
+        window.onscroll = function () {
+            $('.dishlink').css({ "width": "auto" });
+            scrollFunction();
+        };
     </script>
 }

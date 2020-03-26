@@ -13,7 +13,7 @@
 }
 <!-- Header -->
 <header id="header" class="mt-n5">
-    <div class="bg-img-overlay">
+    <div class="bg-img-overlay" style="background-color:black">
         <div class="container">
             <div class="row py-4">
                 <div class="col-12 text-center text-white">
@@ -24,11 +24,11 @@
                     <form action="~/Dishes/Explore" method="get">
                         <div class="input-group input-group-lg mx-auto">
                             <i class="fas fa-map-marker-alt fa-1x pin p-3 align-self-center"></i>
-                            <input name="postalCode" type="text" class="form-control" autoComplete="on" list="suggestions">
+                            <input name="areaname" type="text" class="form-control" autoComplete="on" list="suggestions">
                             <datalist id="suggestions">
                                 @foreach (var area in Model)
                                 {
-                                    <option value="@area.PostalCode">@area.AreaName - @area.PostalCode</option>
+                                    <option value="@area.AreaName">@area.AreaName - @area.PostalCode</option>
                                 }
                             </datalist>
                             <div class="input-group-prepend">
