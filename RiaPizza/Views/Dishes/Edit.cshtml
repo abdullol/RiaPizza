@@ -18,8 +18,102 @@
         }
     </style>
 }
-<script src="~/Angular/Controllers/DishCtrl.js"></script>
-<div class="container-fluid" ng-controller="DishesCtrl">
+<script>
+    App.controller("EditDish",['$scope',  '$rootScope', function ($scope, $rootScope) {
+        function JsonCallParam(Controller, Action, Parameters) {
+            $.ajax({
+                type: "POST",
+                traditional: true,
+                async: false,
+                cache: false,
+                url: '/' + Controller + '/' + Action,
+                context: document.body,
+                data: Parameters,
+                success: function (json) {
+                    list = null;
+                    list = json;
+                }
+                ,
+                error: function (xhr) {
+                    list = null;
+                }
+            });
+        }
+        function JsonCall(Controller, Action) {
+            $.ajax({
+                type: "POST",
+                traditional: true,
+                async: false,
+                cache: false,
+                url: '/' + Controller + '/' + Action,
+                context: document.body,
+                success: function (json) {
+                    list = null; list = json;
+                },
+                error: function (xhr) {
+                    list = null;
+                    //debugger;
+                }
+            });
+        }
+
+        $scope.editDishExta = {};
+        $scope.addDishExtra = {};
+        $scope.dishId = 0;
+
+        $scope.AddDishExtra = function () {
+            JsonCallParam("Dishes", "AddorUpdateDishExtra", { 'extra': JSON.stringify($scope.addDishExtra), 'returnId': $scope.dishId });
+            if (list == "Success")
+                location.reload();
+            else
+                swal("Failed", "Please Try Later!", "error"); $('#addExtra').modal('hide'); 
+        }
+        $scope.getDishExtra = function (Id) {
+            JsonCallParam("Dishes", "GetDishExtra", { id: Id });
+            $scope.editDishExta = list;
+
+            JsonCallParam("Dishes", "GetDishSizes", { id: $scope.dishId });
+            var sizeToppings = list;
+
+            var pricesList = [];
+            for (var i = 0; i < sizeToppings.length; i++) {
+                var toppingPrice = { sizeName: sizeToppings[i].size, dishSizeId: sizeToppings[i].dishSizeId, price: 0 };
+                let priceObj = $scope.editDishExta.sizeToppingPrices.find(s => s.dishSizeId == sizeToppings[i].dishSizeId);
+                if (priceObj != null)
+                    toppingPrice.price = priceObj.price;
+                pricesList.push(toppingPrice);
+            }
+            $scope.editDishExta.sizeToppingPrices = [];
+            $scope.editDishExta.sizeToppingPrices = pricesList;
+        }
+        $scope.EditDishExtra = function () {
+            JsonCallParam("Dishes", "AddorUpdateDishExtra", { 'extra': JSON.stringify($scope.editDishExta), 'returnId': $scope.dishId });
+            if (list == "Success")
+                location.reload();
+            else
+                swal("Failed", "Please Try Later!", "error"); $('#editExtra').modal('hide');
+        }
+        $scope.initializeDishExtra = function (extraTypeId) {
+            $scope.addDishExtra = { dishExtraTypeId: extraTypeId, extraName: '', allergies: '', extraPrice: 0, sizeToppingPrices: [] };
+
+            JsonCallParam("Dishes", "GetDishSizes", { id: $scope.dishId });
+            var sizeToppings = list;
+            for (var i = 0; i < sizeToppings.length; i++) {
+                var toppingPrice = { sizeName: sizeToppings[i].size, dishSizeId: sizeToppings[i].dishSizeId, price: 0 };
+                $scope.addDishExtra.sizeToppingPrices.push(toppingPrice);
+            }
+        }
+        $scope.setExtraTypeEditModalValues = function(id, name, allowMultiple) {
+            $("#DishExtraTypeId").val(id);
+            $("#TypeName").val(name);
+            if (allowMultiple == 'True')
+                $("#ChooseMultiple").val("true");
+            else
+                $("#ChooseMultiple").val("false");
+        }
+    }]);
+</script>
+<div class="container-fluid" ng-controller="EditDish">
     <div class="block-header">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -100,38 +194,40 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form method="post" action="~/Dishes/EditDishExtra" id="editDishExtraForm">
-                                    <input type="hidden" name="returnId" value="@Model.DishId" />
-                                    <input type="hidden" name="DishExtraId" id="DishExtraId" value="" />
-                                    <input type="hidden" name="DishExtraTypeId" id="DishExtraTypeId-ExtraEdit" />
+                                <form>
+                                    <input type="hidden" name="returnId" ng-init="dishId = @Model.DishId" />
+
                                     <label>Name <span class="text-danger">*</span></label>
                                     <div class="form-group">
                                         <div class="form-line">
-                                            <input type="text" class="form-control" id="ExtraName"
+                                            <input type="text" class="form-control" ng-model="editDishExta.extraName"
                                                    placeholder="Enter Extra Name" name="ExtraName">
                                         </div>
                                     </div>
-                                    @if (Model.DishSizes.Count() == 0)
-                                    {
-                                        <label>Price <span class="text-danger">*</span></label>
-                                        <div class="form-group">
-                                            <div class="form-line">
-                                                <input type="number" class="form-control" id="ExtraPrice"
-                                                       placeholder="Enter Price" min="0" name="ExtraPrice">
-                                            </div>
-                                        </div>
-                                    }
                                     <label>Allergies</label>
                                     <div class="form-group">
                                         <div class="form-line">
-                                            <input type="text" class="form-control" id="ExtraAllergies"
+                                            <input type="text" class="form-control" ng-model="editDishExta.allergies"
                                                    placeholder="Enter Allergies" name="Allergies">
+                                        </div>
+                                    </div>
+                                    <label>Price <span class="text-danger">*</span></label>
+                                    <div class="form-group" ng-if="editDishExta.sizeToppingPrices.length === 0">
+                                        <div class="form-line">
+                                            <input type="text" class="form-control" ng-model="editDishExta.extraPrice"
+                                                   placeholder="Enter Price" name="ExtraPrice">
+                                        </div>
+                                    </div>
+                                    <div class="form-group" ng-if="editDishExta.sizeToppingPrices.length > 0">
+                                        <div class="form-line">
+                                            <input type="number" class="form-control" ng-repeat="priceobj in editDishExta.sizeToppingPrices"
+                                                   placeholder="{{priceobj.sizeName}}" name="Price" ng-model="priceobj.price">
                                         </div>
                                     </div>
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-info waves-effect" onclick="$('#editDishExtraForm').submit()">Save</button>
+                                <button type="button" class="btn btn-info waves-effect" ng-click="EditDishExtra()">Save</button>
                                 <button type="button" class="btn btn-danger waves-effect"
                                         data-dismiss="modal">
                                     Cancel
@@ -140,7 +236,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal fade" id="addDishExtra" role="dialog"
+                <div class="modal fade" id="addDishExtraType" role="dialog"
                      aria-labelledby="formModal" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
@@ -189,61 +285,45 @@
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="formModal">Edit Extra</h5>
+                                <h5 class="modal-title" id="formModal">Add Extra</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form method="post" action="~/Dishes/AddDishExtra" id="addDishExtraForm">
-                                    <input type="hidden" name="returnId" value="@Model.DishId" />
-                                    <input type="hidden" name="DishExtraTypeId" id="AddDishExtraTypeId" value="" />
+                                <form method="post">
+                                    <input type="hidden" name="returnId" ng-init="dishId = @Model.DishId" />
                                     <label>Name <span class="text-danger">*</span></label>
                                     <div class="form-group">
                                         <div class="form-line">
-                                            <input type="text" class="form-control"
+                                            <input type="text" class="form-control" ng-model="addDishExtra.extraName"
                                                    placeholder="Enter Extra Name" name="ExtraName">
                                         </div>
                                     </div>
                                     <label>Allergies</label>
                                     <div class="form-group">
                                         <div class="form-line">
-                                            <input type="text" class="form-control"
+                                            <input type="text" class="form-control" ng-model="addDishExtra.allergies"
                                                    placeholder="Enter Allergies" name="Allergies">
                                         </div>
                                     </div>
-                                    @if (Model.DishSizes.Count() == 0)
-                                    {
-                                        <label>Price <span class="text-danger">*</span></label>
-                                        <div class="form-group">
-                                            <div class="form-line">
-                                                <input type="text" class="form-control"
-                                                       placeholder="Enter Price" name="ExtraPrice">
-                                            </div>
+                                    <label>Price <span class="text-danger">*</span></label>
+                                    <div class="form-group" ng-if="addDishExtra.sizeToppingPrices.length === 0">
+                                        <div class="form-line">
+                                            <input type="text" class="form-control" ng-model="addDishExtra.extraPrice"
+                                                   placeholder="Enter Price" name="ExtraPrice">
                                         </div>
-                                    }
-                                    else
-                                    {
-                                        <label>Price <span class="text-danger">*</span></label>
-                                        <div class="form-group">
-                                            <div class="form-line">
-                                                @foreach (var price in Model.DishSizes)
-                                                {
-                                                    <input type="hidden" class="form-control"
-                                                           placeholder="Enter Price" name="DishSizeId[]" value="@price.DishSizeId">
-                                                    <input type="hidden" class="form-control"
-                                                           placeholder="Enter Price" name="SizeName[]" value="@price.Size">
-
-                                                    <input type="number" class="form-control"
-                                                           placeholder="@price.Size" name="Price[]">
-                                                }
-                                            </div>
+                                    </div>
+                                    <div class="form-group" ng-if="addDishExtra.sizeToppingPrices.length > 0">
+                                        <div class="form-line">
+                                            <input type="number" class="form-control" ng-repeat="priceobj in addDishExtra.sizeToppingPrices"
+                                                   placeholder="{{priceobj.sizeName}}" name="Price" ng-model="priceobj.price">
                                         </div>
-                                    }
+                                    </div>
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-info waves-effect" onclick="$('#addDishExtraForm').submit()">Save</button>
+                                <button type="button" class="btn btn-info waves-effect" ng-click="AddDishExtra()">Save</button>
                                 <button type="button" class="btn btn-danger waves-effect"
                                         data-dismiss="modal">
                                     Cancel
@@ -311,7 +391,7 @@
                                     <th width="30%">Size</th>
                                     <th width="30%">Price</th>
                                     <th width="30%">Diameter</th>
-                                    <th width="10%"><button class="btn btn-primary" onclick="$('#add-dish-size').toggle()"><i class="fa fa-plus"></i></button></th>
+                                    <th width="10%" class="text-center"><button class="btn btn-primary" onclick="$('#add-dish-size').toggle()"><i class="fa fa-plus"></i></button></th>
                                 </tr>
                             </table>
                             @foreach (var size in Model.DishSizes)
@@ -321,20 +401,20 @@
                                     <input type="hidden" name="DishId" value="@Model.DishId" />
                                     <table>
                                         <tr>
-                                            <td width="30%">
+                                            <td class="no-padding" width="30%">
                                                 <div class="form-group">
                                                     <input type="text" class="form-control" placeholder="Size" name="Size" value="@size.Size" />
                                                 </div>
                                             </td>
-                                            <td width="30%">
+                                            <td class="no-padding" width="30%">
                                                 <div class="form-group">
                                                     <input type="text" class="form-control" placeholder="Price" name="BasePrice" value="@size.BasePrice" />
                                                 </div>
                                             </td>
-                                            <td width="30%">
+                                            <td class="no-padding" width="30%">
                                                 <div class="form-group"><input type="text" class="form-control" placeholder="Diameter" name="Diameter" value="@size.Diameter" /></div>
                                             </td>
-                                            <td width="10%">
+                                            <td class="no-padding text-center" width="10%">
                                                 <button class="btn btn-primary"><i class="fas fa-save"></i></button>
                                                 <a href="~/Dishes/DeleteSize/@size.DishSizeId" class="btn btn-danger"><i class="fas fa-trash"></i></a>
                                             </td>
@@ -367,9 +447,7 @@
 
                     <h2 class="card-inside-title">
                         Dish Topping Details
-                        <button data-toggle="modal" data-target="#addDishExtra" class="btn btn-primary" style="float:right">
-                            <i class="fa fa-plus"></i>
-                        </button>
+                        <button data-toggle="modal" data-target="#addDishExtraType" class="btn btn-primary" style="float:right"> Add Extra Type </button>
                     </h2>
 
                     <br />
@@ -378,15 +456,21 @@
                         {
                             <thead>
                                 <tr>
-                                    <th width="25%">@extraType.TypeName</th>
+                                    <th width="25%">
+                                        @extraType.TypeName
+                                        @if (extraType.ChooseMultiple)
+                                        { <span class="badge badge-info text-white">Mutiple</span> }
+                                        else
+                                        { <span class="badge badge-warning text-white">Single</span> }
+                                    </th>
                                     <th width="25%">Price</th>
                                     <th width="35%">Alergies</th>
-                                    <th width="15%">
-                                        <a class="btn btn-danger right" href="~/Dishes/DeleteDishExtraType?returnId=@Model.DishId&DishExtraTypeId=@extraType.DishExtraTypeId"><i class="fa fa-trash"></i></a>
-                                        <button onclick="setExtraTypeEditModalValues(@extraType.DishExtraTypeId,'@extraType.TypeName','@extraType.ChooseMultiple')" data-toggle="modal" data-target="#editExtraType" class="btn btn-warning right">
+                                    <th width="15%" class="text-center">
+                                        <a class="btn btn-danger" href="~/Dishes/DeleteDishExtraType?returnId=@Model.DishId&DishExtraTypeId=@extraType.DishExtraTypeId"><i class="fa fa-trash"></i></a>
+                                        <button ng-click="setExtraTypeEditModalValues(@extraType.DishExtraTypeId,'@extraType.TypeName','@extraType.ChooseMultiple')" data-toggle="modal" data-target="#editExtraType" class="btn btn-warning">
                                             <i class="fa fa-pencil-alt"></i>
                                         </button>
-                                        <button onclick="$('#AddDishExtraTypeId').val(@extraType.DishExtraTypeId);" data-toggle="modal" data-target="#addExtra" class="btn btn-success right">
+                                        <button ng-click="initializeDishExtra(@extraType.DishExtraTypeId)" data-toggle="modal" data-target="#addExtra" class="btn btn-success">
                                             <i class="fa fa-plus"></i>
                                         </button>
 
@@ -413,9 +497,9 @@
                                         </td>
 
                                         <td>@extra.Allergies</td>
-                                        <td>
-                                            <a class="btn btn-danger right" href="~/Dishes/DeleteDishExtra?returnId=@Model.DishId&DishExtraId=@extra.DishExtraId"><i class="fa fa-trash"></i></a>
-                                            <button onclick="setExtraEditModalValues(@extra.DishExtraId,'@extra.ExtraName',@extra.ExtraPrice,'@extra.Allergies', @extra.DishExtraTypeId)" data-toggle="modal" data-target="#editExtra" class="btn btn-info right"><i class="fa fa-pencil-alt"></i></button>
+                                        <td class="text-center">
+                                            <a class="btn btn-danger" href="~/Dishes/DeleteDishExtra?returnId=@Model.DishId&DishExtraId=@extra.DishExtraId"><i class="fa fa-trash"></i></a>
+                                            <button ng-click="getDishExtra(@extra.DishExtraId)" data-toggle="modal" data-target="#editExtra" class="btn btn-info"><i class="fa fa-pencil-alt"></i></button>
                                         </td>
                                     </tr>
                                 }
@@ -434,21 +518,4 @@
 
     <script src="~/assets/js/form.min.js"></script>
     <script src="~/assets/js/pages/forms/form-wizard.js"></script>
-    <script>
-        function setExtraTypeEditModalValues(id, name, allowMultiple) {
-            $("#DishExtraTypeId").val(id);
-            $("#TypeName").val(name);
-            if (allowMultiple == 'True')
-                $("#ChooseMultiple").val("true");
-            else
-                $("#ChooseMultiple").val("false");
-        }
-        function setExtraEditModalValues(id, name, price, allergies, extratype) {
-            $("#DishExtraId").val(id);
-            $("#ExtraName").val(name);
-            $("#ExtraPrice").val(price);
-            $('#ExtraAllergies').val(allergies);
-            $('#DishExtraTypeId-ExtraEdit').val(extratype);
-        }
-    </script>
 }

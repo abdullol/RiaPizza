@@ -9,7 +9,9 @@ namespace RiaPizza.Services.DishService
     public interface IDishService
     {
         Task<Dish> GetDish(int id);
+        Task<DishExtra> GetDishExtra(int id);
         Task<List<Dish>> GetDishes(int id);
+        Task<List<DishSize>> GetDisheSizes(int id);
         Task<List<Dish>> SearchWithCategory(int id);
         Task AddDish(Dish addDish);
         Task EditDish(Dish editDish);

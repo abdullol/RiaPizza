@@ -98,17 +98,28 @@ namespace RiaPizza.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditDishExtra(DishExtra extra, int returnId)
+        public async Task<JsonResult> AddorUpdateDishExtra(IFormCollection form)
         {
             try
             {
-                await _service.EditDishExtra(extra);
-                return RedirectToAction("Edit", "Dishes", new { @id = returnId });
+                var extra = JsonConvert.DeserializeObject<DishExtra>(form["extra"]);
+                if(extra.DishExtraId == 0)
+                    await _service.AddDishExtra(extra);
+                else
+                    await _service.EditDishExtra(extra);
+
+                return Json("Success");
             }
             catch (Exception ex)
             {
-                return RedirectToAction("Edit", "Dishes", new { @id = returnId });
+                return Json("Failed");
             }
+        }
+
+        public async Task<JsonResult> GetDishExtra(int id)
+        {
+            var extra = await _service.GetDishExtra(id);
+            return Json(extra);
         }
 
         [HttpPost]
@@ -124,20 +135,6 @@ namespace RiaPizza.Controllers
             catch (Exception ex)
             {
                 return Json("Failed");
-            }
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AddDishExtra(DishExtra extra, SizeToppingPrice[] sizePrices, int returnId)
-        {
-            try
-            {
-                await _service.AddDishExtra(extra);
-                return RedirectToAction("Edit", "Dishes", new { @id = returnId });
-            }
-            catch (Exception ex)
-            {
-                return RedirectToAction("Edit", "Dishes", new { @id = returnId });
             }
         }
 
@@ -167,6 +164,12 @@ namespace RiaPizza.Controllers
         {
             await _service.EnableDish(id);
             return RedirectToAction("Index");
+        }
+
+        public async Task<JsonResult> GetDishSizes(int id)
+        {
+            var sizes = await _service.GetDisheSizes(id);
+            return Json(sizes);
         }
 
         [HttpPost]
@@ -257,6 +260,7 @@ namespace RiaPizza.Controllers
                 return RedirectToAction("Edit", "Dishes", new { @id = returnId });
             }
         }
+
 
     }
 }
