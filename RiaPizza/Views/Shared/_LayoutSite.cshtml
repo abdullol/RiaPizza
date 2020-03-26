@@ -30,16 +30,32 @@
         .pointer {
             cursor: pointer;
         }
-        .goog-te-banner-frame skiptranslate { display: none; }
-     	body{ top: 0 !important;}
-		.goog-te-banner-frame{display: none !important;}
-        #goog-gt-tt, .goog-te-balloon-frame{display: none !important;} 
-.goog-text-highlight { background: none !important; box-shadow: none !important;}
+
+        .goog-te-banner-frame skiptranslate {
+            display: none;
+        }
+
+        body {
+            top: 0 !important;
+        }
+
+        .goog-te-banner-frame {
+            display: none !important;
+        }
+
+        #goog-gt-tt, .goog-te-balloon-frame {
+            display: none !important;
+        }
+
+        .goog-text-highlight {
+            background: none !important;
+            box-shadow: none !important;
+        }
     </style>
     <script>
 
         var App = angular.module('RiaPizza', ['paypal-button']);
-        
+
         paypal.Button.driver('angular', window.angular);
         App.controller("Auth", function ($scope, $http) {
             function JsonCallParam(Controller, Action, Parameters) {
@@ -250,26 +266,9 @@
                                     <i class="fas fa-shopping-bag mr-3"></i> Orders
                                 </a>
                             </div>
-                        </div>
-                        <div class="row p-4">
                             <div class="col-12 bg-white py-3 px-4 border-bottom">
-                                <a href="#" class="link">
-                                    <i class="far fa-star mr-3"></i> Loyalty shop
-                                </a>
-                            </div>
-                            <div class="col-12 bg-white py-3 px-4 border-bottom">
-                                <a href="#" class="link">
-                                    <i class="fas fa-percentage mr-3"></i> StampCard
-                                </a>
-                            </div>
-                            <div class="col-12 bg-white py-3 px-4 border-bottom">
-                                <a href="#" class="link">
-                                    <i class="fas fa-info-circle mr-3"></i> Need help?
-                                </a>
-                            </div>
-                            <div class="col-12 bg-white py-3 px-4 border-bottom">
-                                <a href="#" class="link">
-                                    <i class="far fa-building mr-3"></i> Takeway Pay
+                                <a href="~/MyAccount/PersonalData" class="link">
+                                    <i class="fas fa-address-card mr-3"></i> Profile
                                 </a>
                             </div>
                         </div>
@@ -502,28 +501,10 @@
             <div class="row justify-content-center align-items-center">
                 <ul style="list-style: none; text-align: center;">
                     <li class="d-md-inline-block d-block mb-4" style="margin-right: 20px; font-size: 13px; font-weight: 400; color: #fff;">
-                        <a href="#" style="color: #fff;">Recommend a restaurant</a>
-                    </li>
-                    <li class="d-md-inline-block d-block mb-4" style="margin-right: 20px; font-size: 13px; font-weight: 400; color: #fff;">
-                        <a href="#" style="color: #fff;">Signup a restaurant</a>
-                    </li>
-                    <li class="d-md-inline-block d-block mb-4" style="margin-right: 20px; font-size: 13px; font-weight: 400; color: #fff;">
-                        <a href="#" style="color: #fff;">Jobs</a>
-                    </li>
-                    <li class="d-md-inline-block d-block mb-4" style="margin-right: 20px; font-size: 13px; font-weight: 400; color: #fff;">
                         <a href="#" style="color: #fff;">Terms of use</a>
                     </li>
                     <li class="d-md-inline-block d-block mb-4" style="margin-right: 20px; font-size: 13px; font-weight: 400; color: #fff;">
                         <a href="#" style="color: #fff;">Privacy statement</a>
-                    </li>
-                    <li class="d-md-inline-block d-block mb-4" style="margin-right: 20px; font-size: 13px; font-weight: 400; color: #fff;">
-                        <a href="#" style="color: #fff;">Colophon</a>
-                    </li>
-                    <li class="d-md-inline-block d-block mb-4" style="margin-right: 20px; font-size: 13px; font-weight: 400; color: #fff;">
-                        <a href="#" style="color: #fff;">Cookie statement</a>
-                    </li>
-                    <li class="d-md-inline-block d-block" style="margin-right: 20px; font-size: 13px; font-weight: 400; color: #fff;">
-                        <a href="#" style="color: #fff;">Bug Bounty</a>
                     </li>
                 </ul>
             </div>

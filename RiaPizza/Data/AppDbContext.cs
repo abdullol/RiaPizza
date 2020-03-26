@@ -12,7 +12,7 @@ namespace RiaPizza.Data
 {
     public class AppDbContext : IdentityDbContext<AppUser, AppRole, int, IdentityUserClaim<int>,
     AppUserRole, IdentityUserLogin<int>,
-    IdentityRoleClaim<int>, IdentityUserToken<int>> 
+    IdentityRoleClaim<int>, IdentityUserToken<int>>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -30,8 +30,11 @@ namespace RiaPizza.Data
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<OrderDeliveryAddress> OrderDeliveryAddresses { get; set; }
         public DbSet<ShopSchedule> ShopSchedule { get; set; }
-        public DbSet<DishSize> DishSize { get; set; }
         public DbSet<DeliveryTiming> DeliveryTimings { get; set; }
+        public DbSet<Coupon> Coupons { get; set; }
+        public DbSet<DishSize> DishSize { get; set; }
+        public DbSet<SizeToppingPrice> SizeToppingPrices { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

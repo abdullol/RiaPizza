@@ -188,7 +188,7 @@ namespace RiaPizza.Controllers
             var area = await _areaService.GetDeliveryArea(postalCode);
             if(area == null)
             {
-                ViewBag.Error = "No Area Found!";
+                ViewBag.Error = "Unfortunately your postcode is not in ours Delivery area......";
                 return RedirectToAction("Index", "Home", new { error = "Error" });
             }
             ViewBag.Categories = await _categoryService.AllDishCategories();
@@ -213,10 +213,10 @@ namespace RiaPizza.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> ToggleDish(int id)
-        {
-            await _service.ChangeDishStatus(id);
-            return RedirectToAction("Index", "Dishes");
-        }
+        //public async Task<IActionResult> ToggleDish(int id)
+        //{
+        //    await _service.ChangeDishStatus(id);
+        //    return RedirectToAction("Index", "Dishes");
+        //}
     }
 }

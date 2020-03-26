@@ -162,7 +162,7 @@
                                             <a target="_blank" class="btn btn-warning" href="~/Orders/Invoice/@order.OrderId"><i class="fas fa-print"></i></a>
                                             <button data-toggle="modal" data-target="#ChangeStatusModal" class="btn btn-success" onclick="setValue(@order.OrderId,'@order.OrderStatus')"><i class="fas fa-toggle-on"></i></button>
                                             <button type="button" class="btn btn-primary" onclick="showOrderDetails(@order.OrderId)"><i class="fas fa-info-circle"></i></button>
-                                            <button type="button" class="btn btn-danger" onclick="deleteOrder(@order.OrderId)" ><i class="fas fa-trash-alt"></i></button>
+                                            <button type="button" class="btn btn-danger" onclick="deleteOrder(@order.OrderId)"><i class="fas fa-trash-alt"></i></button>
                                         </td>
                                     </tr>
                                 }
@@ -187,6 +187,15 @@
 </div>
 
 @section scripts{
+
+    <script>
+        function getOrderTableSortOrder() {
+            return { SortOrder: [[0, "desc"]] };
+        }
+
+        window.RiaPizzaConfig = getOrderTableSortOrder();
+    </script>
+
     <script src="~/assets/js/table.min.js"></script>
     <script src="~/assets/js/pages/tables/jquery-datatable.js"></script>
     <script>
@@ -260,7 +269,7 @@
                         swal("Error", "Please Try again later!", "error");
                     }
                 });
-                
+
             });
         }
     </script>
