@@ -59,7 +59,7 @@
 
     <script>
 
-        var App = angular.module('RiaPizza', ['paypal-button']);
+        var App = angular.module('RiaPizza', ['paypal-button','ngSanitize','ngRoute']);
 
         paypal.Button.driver('angular', window.angular);
 
