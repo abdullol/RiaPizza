@@ -18,29 +18,50 @@
     <link href="https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="~/client-assets/res/sass/style.css" type="text/css">
 
 
     <!--Angular Scripts-->
-    <script src="~/lib/angular.js/angular.min.js"></script>
+   @* <script src="~/lib/angular.js/angular.min.js"></script>*@
+     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-sanitize.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
     <!--Angular Scripts-->
 
     <style>
         .pointer {
             cursor: pointer;
         }
-        .goog-te-banner-frame skiptranslate { display: none; }
-     	body{ top: 0 !important;}
-		.goog-te-banner-frame{display: none !important;}
-        #goog-gt-tt, .goog-te-balloon-frame{display: none !important;} 
-.goog-text-highlight { background: none !important; box-shadow: none !important;}
+
+        .goog-te-banner-frame skiptranslate {
+            display: none;
+        }
+
+        body {
+            top: 0 !important;
+        }
+
+        .goog-te-banner-frame {
+            display: none !important;
+        }
+
+        #goog-gt-tt, .goog-te-balloon-frame {
+            display: none !important;
+        }
+
+        .goog-text-highlight {
+            background: none !important;
+            box-shadow: none !important;
+        }
     </style>
+
     <script>
 
-        var App = angular.module('RiaPizza', ['paypal-button']);
-        
-        paypal.Button.driver('angular', window.angular);
+        var App = angular.module('RiaPizza', ['ngSanitize','ngRoute']);
+
+        //paypal.Button.driver('angular', window.angular);
         App.controller("Auth", function ($scope, $http) {
             function JsonCallParam(Controller, Action, Parameters) {
                 $.ajax({
