@@ -20,7 +20,7 @@ namespace RiaPizza.Controllers
         {
             if (error != null)
             {
-                ViewBag.Error = "No Area Found!";
+                ViewBag.Error = "Unfortunately your postcode is not in ours Delivery area......";
             }
             var areas = await _areaService.AllDeliveryAreas();
             return View(areas);

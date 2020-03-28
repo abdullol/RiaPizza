@@ -68,9 +68,9 @@ namespace RiaPizza.Controllers
             var userId = _userManager.GetUserId(HttpContext.User);
             return userId;
         }
-        public async Task<JsonResult> GetUserAddresses(int id)
+        public async Task<JsonResult> GetUserAddresses(int id, string code)
         {
-            var addresses = await _service.GetAddresses(id);
+            var addresses = await _service.GetAddressesWithPostalCode(id, code);
             return Json(addresses);
         }
     }

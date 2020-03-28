@@ -65,9 +65,6 @@
                 padding-left: 5px;
                 padding-right: 5px;
             }
-            .qtvalue{
-                margin-top:-3px;
-            }
         }
         #swiper-next{
             padding-left:8px;
@@ -128,12 +125,30 @@
         .swiper-container{
             top:0.5em;
         }
+        .mob-cart-items div{
+            padding:0;
+        }
+        .mob-cart-items{
+            font-size:11px
+        }
+        .cartIncreasBtn-mob{
+            width:24px;
+            height:23px;
+        }
+        .swiper-wrapper{
+            margin-left:10px;
+            margin-right:10px;
+        }
+        /*#order-button-wrapper paypal-button{
+            display:none;
+        }*/
+
+
     </style>
 }
 <!-- <script src="~/Angular/Controllers/ViewDishesPage.js"></script> -->
 <script>
-   // var App = angular.module("myApp", ['ngSanitize']);
-        App.controller("ViewDishes", function ($scope, $http) {
+    App.controller("ViewDishes", ['$scope', '$rootScope','$http' , function ($scope, $rootScope, $http) {
 
         function JsonCallParam(Controller, Action, Parameters) {
             $.ajax({
@@ -172,6 +187,10 @@
             });
         }
 
+        //Styling
+        $('#paypalbtn').hide();
+        //Styling
+
         //Start Choose Dishes Attributes
         $scope.dishCategories = [];
         $scope.toppings = [];
@@ -191,8 +210,9 @@
         $scope.orderDeliveryAddress = { city: '', floor: '', address: '', postalCode: '' };
         $scope.orderItems = [];
         $scope.userAddresses = [];
-        $scope.userAddressId = 0;
+        $scope.userAddressId = "0";
         $scope.postalCode = "";
+        $scope.postalArea = "";
         $scope.paypal = {
             env: 'sandbox',
             client: {
@@ -214,34 +234,59 @@
                 // Optional: display a confirmation page here
                 return actions.payment.execute().then(function (data) {
                     $scope.order.isPaymentConfirmed = true;
-                    $scope.createOrder();
+                    $scope.processOrder();
                 });
             }
         };
         $scope.shopschedule = { timeFrom: '', timeTo: '', isOpen: false };
         //End Ordering Attributes
 
+        $rootScope.$on("LoadUserData", function(e, args) {
+            if (args) {
+                $scope.loadUserDataInCheckOut();
+            }
+        });
+
         //Start Ordering Methods
+        $scope.createOrder = function () {
+            if ($scope.order.paymentMethod === 'Cash') {
+                $scope.processOrder();
+            }
+            else if ($scope.order.paymentMethod === 'Paypal') {
+                $('#cashbtn').hide();
+                $('#showpaypalbtn-guide').slideToggle();
+                $('#paypalbtn').slideToggle();
+
+                $('#checkoutForm input').attr('disabled', 'disabled');
+                $('#checkoutForm select').attr('disabled', 'disabled');
+                $('#checkoutForm button').attr('disabled', 'disabled');
+                $('.address-option').attr('disabled', 'disabled');
+
+            }
+        }
         $scope.loadUserDataInCheckOut = function () {
             JsonCall("Auth", "GetLoggedInUser");
             if (list != false) {
                 var user = list;
                 $scope.orderDeliveryAddress.address = user.address;
                 $scope.orderDeliveryAddress.city = user.city;
-                $scope.orderDeliveryAddress.postalCode = user.postalCode;
 
                 $scope.orderBy.name = user.firstName + ' ' + user.lastName;
                 $scope.orderBy.email = user.email;
                 $scope.orderBy.contact = user.phoneNumber;
                 $scope.orderBy.company = user.company;
 
+                var postalCode = $scope.orderDeliveryAddress.postalCode;
                 $scope.order.userId = user.id;
-                JsonCallParam("MyAccount", "GetUserAddresses", { id: user.id });
-                $scope.userAddresses = list;
-                //$scope.order.remarks = user.previousOrderRemarks;
+                $http.post('/MyAccount/GetUserAddresses?id=' + user.id + '&code=' + postalCode).then(function (response) {
+                    $scope.userAddresses = response.data;
+                });
+                $scope.order.remarks = user.previousOrderRemarks;
+                $('#selectaddress').val(0);
+                $scope.userAddressId = 0;
             }
         }
-        $scope.createOrder = function () {
+        $scope.processOrder = function () {
             if (!$scope.shopschedule.isOpen) {
                 $('.shopClosed').modal();
                 return;
@@ -281,26 +326,19 @@
 
             }
             localStorage.removeItem('cart');
-            window.location.href = "/Orders/ThankYou/?postalCode=" + $scope.postalCode + "&id=" + list.orderId;
+            var area = $('#postalArea').val();
+            window.location.href = "/Orders/ThankYou/?address=" + area + "&id=" + list.orderId;
         }
         $scope.fillUserAddress = function () {
             if (Number($scope.userAddressId) !== 0) {
                 var add = $scope.userAddresses.find(x => x.appUserAddressId === Number($scope.userAddressId))
-                $scope.orderDeliveryAddress = { city: add.city, floor: add.floor, address: add.address, postalCode: add.postalCode };
-                $('#checkoutForm input[name="address"]').prop("disabled", true);
-                $('#checkoutForm input[name="postalCode"]').prop("disabled", true);
-                $('#checkoutForm input[name="city"]').prop("disabled", true);
-                $('#checkoutForm input[name="floor"]').prop("disabled", true);
+                $scope.orderDeliveryAddress.city = add.city;
+                $scope.orderDeliveryAddress.floor = add.floor;
+                $scope.orderDeliveryAddress.address = add.address;
+
                 $('#checkoutForm input[name="address"]').val(add.address);
-                $('#checkoutForm input[name="postalCode"]').val(add.postalCode);
                 $('#checkoutForm input[name="city"]').val(add.city);
                 $('#checkoutForm input[name="floor"]').val(add.floor);
-            }
-            else {
-                $('#checkoutForm input[name="address"]').prop("disabled", false);
-                $('#checkoutForm input[name="postalCode"]').prop("disabled", false);
-                $('#checkoutForm input[name="city"]').prop("disabled", false);
-                $('#checkoutForm input[name="floor"]').prop("disabled", false);
             }
         }
         function pushCartItemInOrderItems() {
@@ -574,13 +612,15 @@
             $('#orderTab').show();
             $('#orderBtn').hide();
 
-            $('#paypalbtn').hide();
+            $('.cart-btn-section').show();
             $scope.loadUserDataInCheckOut();
+            $('#selectaddress').val(0);
         }
         $scope.backToDishes = function () {
             $('#chooseDishes').show();
             $('#orderTab').hide();
             $('#orderBtn').show();
+            $('.cart-btn-section').show();
         }
         $scope.showDishDesc = function (allergies) {
             $(".dishDetails").modal();
@@ -589,17 +629,17 @@
             else
                 $(".dishAllergies").html("<h6 style='font-weight:bold'>No Allergies Found</h6>");
         }
-        $scope.showPaypalBtn = function () {
-            if ($scope.shopschedule.isOpen) {
-                $scope.order.totalBill = $scope.ordertotalPrice.totalPrice;
-                $('#paypalbtn').show();
-                $('#cashbtn').hide();
-            }
-            else {
-                $('.shopClosed').modal();
-            }
+        //$scope.showPaypalBtn = function () {
+        //    if ($scope.shopschedule.isOpen) {
+        //        $scope.order.totalBill = $scope.ordertotalPrice.totalPrice;
+        //        $('#paypalbtn').show();
+        //        $('#cashbtn').hide();
+        //    }
+        //    else {
+        //        $('.shopClosed').modal();
+        //    }
             
-        }
+        //}
         function cartButtonEffect() {
             var time = 700;
             setTimeout(function () {
@@ -608,7 +648,7 @@
             $('#cart-btn-mob').removeClass("bg-primary").addClass("bg-warning");
             
         }
-    });
+    }]);
 </script>
 <div ng-controller="ViewDishes" id="ViewDishes">
     <!-- Sidebar -->
@@ -637,9 +677,9 @@
                             <button class="cartIncreasBtn" ng-click="increaseQty($index)">+</button>
                         </div>
                         <div class="col-4" style="padding:0">
-                            <a role="button" ng-click="showRemarkBar($index)" class="btn" style="padding: 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-pencil"></i></a>
+                            <a role="button" ng-click="showRemarkBar($index)" class="btn" style="padding: 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-pencil-alt"></i></a>
                             <span style="font-size: 12px; color: #000;">{{item.totalPrice}}€</span>
-                            <a class="btn" ng-click="removeItem($index)" style="padding: 0 0 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-trash-alt"></i></a>
+                            <a role="button" ng-click="removeItem($index)" class="btn" style="padding: 0 0 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-trash-alt"></i></a>
                         </div>
                     </div>
                     <p class="cartToppings"><span ng-if="item.dishSize.dishSizeId > 0">Size: {{item.dishSize.size}} Ø{{item.dishSize.diameter}}cm. </span> <span ng-if="item.toppings.length>0" ng-repeat="topping in item.toppings" ng-init="toppingIndex = $index">{{topping}} <i ng-if="toppingIndex < item.toppings.length - 1">,</i></span> </p>
@@ -690,7 +730,7 @@
     </div>
     <!-- Sidebar ends -->
     <div class="cart-btn-section" ng-if="cart.length > 0">
-        <div id="cart-btn-mob" onclick="$('#cart-modal').modal();" class="rounded-0 btn btn-block text-center bg-primary text-white">
+        <div id="cart-btn-mob" onclick="$('#cart-modal').modal(); $('.cart-btn-section').hide()" class="rounded-0 btn btn-block text-center bg-primary text-white">
             <div style="float:left; width:25%">
                 <span class="p1 fa-stack fa-2x has-badge" data-count="{{cart.length}}">
                     <i id="cart-icon-mob" class="p3 fa fa-shopping-cart fa-stack-1x xfa-inverse" data-count="4b"></i>
@@ -710,10 +750,10 @@
                 <div class="modal-header border-0">
                     <div class="row">
                         <div class="col-12">
-                            <h4 class="modal-title">Basket</h4>
+                            <h6 class="modal-title">Basket</h6>
                         </div>
                     </div>
-                    <button type="button" class="close" data-dismiss="modal">
+                    <button type="button" class="close" data-dismiss="modal" onclick="$('.cart-btn-section').show()">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
@@ -723,40 +763,33 @@
                             <i class="fas fa-shopping-cart" style="font-size:-webkit-xxx-large; margin: auto; padding: 5% 0 0 40%;"></i>
                             <p class="basket-empty__text" style="text-align: center; margin: 10px;">Wähle leckere Gerichte aus der Karte und bestelle Dein Menü.</p>
                         </div>
-                        <div class="col-xs-12 col-sm-12" ng-repeat="item in cart track by $index">
-                            <div class="row">
-                                <div class="col-xs-1 col-sm-1">
-                                    <span style="font-size: 12px; color: #000; margin-right: 10px;">{{item.quantity}}x</span>
+                        <div class="col-12" ng-repeat="item in cart track by $index">
+                            <div class="row mob-cart-items">
+                                <div class="col-1">
+                                    <span style="padding-left:10px">{{item.quantity}}x</span>
                                 </div>
-                                <div class="col-xs-8 col-sm-8">
-                                    <span style="font-size: 12px; color: #000; margin-right: 30px;">{{item.dishName}}</span>
-                                    <p class="cartToppings" ng-if="item.toppings.length>0"> <span ng-if="item.dishSize">Size: {{item.dishSize.size}} Ø{{item.dishSize.diameter}}cm,</span> <span ng-repeat="topping in item.toppings" ng-init="toppingIndex = $index">{{topping}} <i ng-if="toppingIndex < item.toppings.length - 1">,</i></span> </p>
+                                <div class="col-5">
+                                    <span style="padding-left:10px">{{item.dishName}}</span>
                                 </div>
-                                <div class="col-xs-3 col-sm-3">
-                                    @*<a role="button" ng-click="showRemarkBar($index)" class="btn" style="padding: 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-pencil"></i></a>*@
+                                <div class="col-2" style="font-size:12px">
+                                    <button class="cartIncreasBtn" style="width:24px; height:23px;" ng-click="decreaseQty($index)">-</button>
+                                    <button class="cartIncreasBtn" style="width:24px; height:23px;" ng-click="increaseQty($index)">+</button>
+                                </div>
+                                <div class="col-4">
+                                    <a role="button" ng-click="showRemarkBar($index)" class="btn" style="padding: 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-pencil-alt"></i></a>
                                     <span style="font-size: 12px; color: #000;">{{item.totalPrice}}€</span>
-                                    @*<a class="btn" ng-click="removeItem($index)" style="padding: 0 0 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-trash-alt"></i></a>*@
-                                </div>
-                            </div>
-                            <br />
-                            <div class="row">
-                                <div class="col-xs-8 col-sm-8">
-                                    product info
-                                </div>
-
-                                <div class="col-xs-4 col-sm-4" style="padding:0">
-                                    <button class="cartIncreasBtn" ng-click="decreaseQty($index)">-</button>
-                                    <button class="cartIncreasBtn" ng-click="increaseQty($index)">+</button>
+                                    <a class="btn" ng-click="removeItem($index)" style="padding: 0 0 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-trash-alt"></i></a>
                                 </div>
                             </div>
 
-                            @*<p class="cartToppings" ng-if="item.remarks!=''" style="margin-bottom:5% !important">{{item.remarks}}</p>
+                            <p class="cartToppings"><span ng-if="item.dishSize.dishSizeId > 0">Size: {{item.dishSize.size}} Ø{{item.dishSize.diameter}}cm. </span> <span ng-if="item.toppings.length>0" ng-repeat="topping in item.toppings" ng-init="toppingIndex = $index">{{topping}} <i ng-if="toppingIndex < item.toppings.length - 1">,</i></span> </p>
+                            <p class="cartToppings" ng-if="item.remarks!=''" style="margin-bottom:5% !important">{{item.remarks}}</p>
                             <div class="commentBox hide commentinput-{{$index}}" style="margin-bottom:10% !important">
                                 <label>Remarks</label>
                                 <textarea class="form-control" placeholder="Enter Remarks" ng-model="item.remarks"></textarea>
                                 <a role="button" class="text-primary pointer" style="margin-left:10px">Clear</a>
                                 <a role="button" class="text-primary pointer" ng-click="saveRemarks($index)">Save</a>
-                            </div>*@
+                            </div>
                         </div>
                     </div>
                     <div class="row pt-4 pb-0" style="border-bottom: 1px solid #eee;">
@@ -784,7 +817,7 @@
                             <p ng-if="ordertotalPrice.totalPrice < @Model.MinOrderCharges" class="text-muted my-3" style=" font-size: 13px; color: #7d7d7d;">Unfortunately We only delivers from a minimum order value of € @Model.MinOrderCharges (excl. Delivery costs)</p>
                             <p ng-if="ordertotalPrice.totalPrice > @Model.MinOrderCharges" class="text-muted my-3" style=" font-size: 13px; color: #7d7d7d;">You have reached the minimum order amount of @Model.MinOrderCharges € to checkout</p>
                             <a id="orderBtn" ng-disabled="cart.length === 0" ng-click="proceedOrder()" ng-if="ordertotalPrice.totalPrice > @Model.MinOrderCharges" role="button" class="btn btn-block py-3 mx-auto text-center bg-primary"
-                               style="color: #fff; width:95%" data-dismiss="modal" onclick="$('#cart-modal').modal('hide')">Order</a>
+                               style="color: #fff; width:95%" data-dismiss="modal" onclick="$('#cart-modal').modal('hide');">Order</a>
                         </div>
                     </div>
                 </div>
@@ -972,13 +1005,7 @@
         <!-- Restaurant Description -->
         <section class="item my-0">
             <div class="container hotel-container">
-                <div class="restaurant-logo">
-                    <div class="row logo-container mx-auto">
-                        <div class="col-12 text-center bd-dark logo-inner">
-                            <img src="~/client-assets/res/img/pizza.png" alt="" class="img-fluid" width="100" />
-                        </div>
-                    </div>
-                </div>
+
                 <div class="row align-items-center mb-3">
                     <ul class="list-unstyled text-right ml-auto">
                         <li class="d-inline-block">
@@ -988,15 +1015,6 @@
                             </button>
                         </li>
                     </ul>
-                </div>
-                <div class="row">
-                    <div class="col-md-10 font-weight-bold">
-                        <p class="ria-para">
-                            This restaurant provides stamps. To receive them via email please make
-                            sure you are subscribed to
-                            "discounts, new restaurants and special offers" at the checkout
-                        </p>
-                    </div>
                 </div>
             </div>
         </section>
@@ -1012,7 +1030,7 @@
                     }
                 </div>
                 <div class="input-group mb-3" id="search-box">
-                    <input type="text" class="form-control" placeholder="Search for meals, etc.." style="border-radius: 0 !important;">
+                    <input type="text" id="search-dish" class="form-control" placeholder="Search for meals, etc.." style="border-radius: 0 !important;">
                     <div class="input-group-append">
                         <button type="button" onclick="hideSearchBar()" class="input-group-text bg-white" id="cross-btn" style="border-radius: 0 !important; top:0"><i class="fas fa-times"></i></button>
                     </div>
@@ -1032,7 +1050,7 @@
                             <h5> {{dishCategory.categoryName}} </h5>
                         </div>
                     </div>
-                    <div class="row mx-md-2 mx-0 px-0" ng-repeat="dish in dishCategory.dishes" ng-init="dishIndex = $index">
+                    <div class="row mx-md-2 mx-0 px-0 dishes" ng-repeat="dish in dishCategory.dishes" ng-init="dishIndex = $index">
                         <div class="col-12 ml-5 py-1 pl-0 pr-0 mx-auto">
                             <div class="panel-group" id="accordion_{{dish.dishId}}" role="tablist" aria-multiselectable="true">
                                 <div class="panel panel-default">
@@ -1045,7 +1063,7 @@
                                                 </h5>
                                             </div>
                                             <div class="col-3 text-right w-25">
-                                                <i class="fas fa-plus fa-lg border p-3" style="font-weight: 500; color: #1474F5"></i>
+                                                <i class="fas fa-plus border p-3" style="color: #1474F5"></i>
                                             </div>
                                         </div>
                                         <p ng-if="dish.subName" style="font-size:14px;color:black;font-weight:400">{{dish.subName}}</p>
@@ -1119,7 +1137,7 @@
                                                     <div class="text-right" style="width:40%; float:left">
                                                         <form method='POST' action='#' class="d-inline-block">
                                                             <input type='button' value='-' class='qtminus btn' ng-click="addQty(dish.dishId,'less')" />
-                                                            <input id="qty-{{dish.dishId}}" type='text' name='quantity' value='0' class='qtvalue btn' disabled />
+                                                            <input id="qty-{{dish.dishId}}" type='text' name='quantity' class='qtvalue btn' disabled />
                                                             <input type='button' value='+' class='qtplus btn' ng-click="addQty(dish.dishId,'add')" />
                                                         </form>
                                                     </div>
@@ -1155,7 +1173,7 @@
                 <div class="col-md-6">
                     <div class="form-group mb-0 pl-2 mt-4">
                         <label class="label">From which address are you ordering?</label>
-                        <select class="form-control address-option" name="selectaddress" ng-init="userAddressId = 0" ng-model="userAddressId" ng-change="fillUserAddress()">
+                        <select class="form-control address-option" id="selectaddress" name="selectaddress" ng-init="userAddressId = 0" ng-model="userAddressId" ng-change="fillUserAddress()">
                             <option value="0" selected="selected">Fill in new address</option>
                             <option ng-repeat="add in userAddresses" value="{{add.appUserAddressId}}">{{add.address}}</option>
                         </select>
@@ -1163,6 +1181,7 @@
                 </div>
             </div>
             <form id="checkoutForm" name="checkoutForm" ng-submit="createOrder()" novalidate>
+                <input type="hidden" id="postalArea" value="@Model.AreaName" />
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group mb-0 pl-2 mt-3">
@@ -1270,12 +1289,12 @@
                     </div>
                     <div class="col-12 mb-2">
                         <label>
-                            <input type="radio" name="paymentMethod" value="Cash" class="payment-selection" ng-model="order.paymentMethod" onclick="$('#paypalbtn').hide(); $('#cashbtn').show()" checked>
+                            <input type="radio" name="paymentMethod" value="Cash" class="payment-selection" ng-model="order.paymentMethod" checked>
                             <img src="~/client-assets/res/img/payment_0.png" alt="" class="img-fluid border mr-3 p-2 payment-img">
                         </label>
 
                         <label>
-                            <input type="radio" name="paymentMethod" value="Paypal" class="payment-selection" ng-model="order.paymentMethod" ng-click="showPaypalBtn()">
+                            <input type="radio" name="paymentMethod" value="Paypal" class="payment-selection" ng-model="order.paymentMethod">
                             <img src="~/client-assets/res/img/payment_6.png" alt="" class="img-fluid border p-2 payment-img">
                         </label>
 
@@ -1302,7 +1321,7 @@
                     <div class="col-md-6">
                         <ul class="acc">
                             <li>
-                                <button class="acc_ctrl" ><span style="letter-spacing: 0 !important; text-decoration: underline; font-size: 13px; color: rgb(102, 102, 102);">Do you have a voucher or coupon?</span> </button>
+                                <button class="acc_ctrl"><span style="letter-spacing: 0 !important; text-decoration: underline; font-size: 13px; color: rgb(102, 102, 102);">Do you have a voucher or coupon?</span> </button>
                                 <div class="small-panel" id="voucherPanel">
                                     <div class="acc_panel">
                                         <div class="input-group mb-3">
@@ -1325,7 +1344,8 @@
                             <span class="remarks-check">Save these remarks for your next order.</span>
                         </div>
                     </div>-->
-                    <div class="col-md-6 mb-4">
+                    <div class="col-md-6 mb-4 text-center">
+                        <p id="showpaypalbtn-guide" class="hide text-info" style="font-size:18px">Please Click on Paypal to process payment online!</p>
                         <paypal-button id="paypalbtn" env="paypal.env" client="paypal.client" payment="paypal.payment" commit="paypal.commit" on-authorize="paypal.onAuthorize"></paypal-button>
                         <input id="cashbtn" type="submit" ng-disabled="checkoutForm.$invalid" class="btn btn-primary btn-block py-2 rounded-0 font-weight-bold" value="Order and pay" />
                     </div>
@@ -1346,105 +1366,119 @@
     <script src="~/client-assets/res/js/jquery.waypoints.js"></script>
     <script src="~/client-assets/res/js/myscroller.js"></script>
     @*<script src="~/client-assets/res/js/myswiper.js"></script>*@
-<script>
-    var lastCat = "cat1";
-var mySwiper = new Swiper(".swiper-container", {
-    slidesPerView: 'auto',
-    //slidesPerView: 6,
-    spaceBetween: 20,
-    freeMode: false,
-    loop: false,
-    watchOverflow: !0,
-    navigation: {
-        nextEl: ".swiper-next",
-        prevEl: ".swiper-prev"
-    }
-});
+    <script>
+        var lastCat = "cat1";
+        var mySwiper = new Swiper(".swiper-container", {
+            slidesPerView: 'auto',
+            //slidesPerView: 6,
+            spaceBetween: 20,
+            freeMode: false,
+            loop: false,
+            watchOverflow: !0,
+            navigation: {
+                nextEl: ".swiper-next",
+                prevEl: ".swiper-prev"
+            }
+        });
 
-//mySwiper.slidesPerView = 8;
-mySwiper.update();
+        //mySwiper.slidesPerView = 8;
+        mySwiper.update();
 
-mySwiper.on("reachBeginning", function () {
-    console.log("Swiper Beginning reached");
-});
+        mySwiper.on("reachBeginning", function () {
+            console.log("Swiper Beginning reached");
+        });
 
-mySwiper.on("reachEnd", function () {
-    console.log("Swiper end reached");
-});
+        mySwiper.on("reachEnd", function () {
+            console.log("Swiper end reached");
+        });
 
-function next() {
-    // mySwiper.slideTo(count++);
-    console.log("in next");
+        function next() {
+            // mySwiper.slideTo(count++);
+            console.log("in next");
 
-    mySwiper.slideNext();
-}
- 
-$(".group-item ").waypoint({
-    handler: function (direction) {
-        var index = this.element.getAttribute("index");
-        if (index === '{{$index}}')
-            index = 1;
-        if (direction === "down") {
-            index = parseInt(index) - 1;
-        } else {
-            index = parseInt(index) - 2;
+            mySwiper.slideNext();
         }
 
-        
+        $(".group-item ").waypoint({
+            handler: function (direction) {
+                var index = this.element.getAttribute("index");
+                if (index === '{{$index}}')
+                    index = 1;
+                if (direction === "down") {
+                    index = parseInt(index) - 1;
+                } else {
+                    index = parseInt(index) - 2;
+                }
 
-        mySwiper.slideTo(index);
-        console.log("Last Cat2 : " + index);
-    }
-});
-
-// ? Show/Less grid checkboxes
-function show() {
-    var moreChecks = document.getElementById("more-checks");
-    var btn = document.getElementById("more-btn");
-    var btn2 = document.getElementById("less-btn")
-
-    moreChecks.style.display = "block";
-    btn.style.display = "none"
-    btn2.style.display = "block"
-}
-function less() {
-    var moreChecks = document.getElementById("more-checks");
-    var btn = document.getElementById("more-btn");
-    var btn2 = document.getElementById("less-btn")
-
-    moreChecks.style.display = "none";
-    btn.style.display = "block"
-    btn2.style.display = "none"
-}
-
-// ! Showing/Hiding Search Bar
-function showSearchBar() {
-    var searchBtn = document.getElementById("search-btn");
-    var dishList = document.getElementById("dish-list");
-    var searchBox = document.getElementById("search-box");
-
-    searchBtn.style.display = "none";
-    dishList.style.display = "none";
-    searchBox.style.display = "flex";
-}
-
-function hideSearchBar() {
-    var searchBtn = document.getElementById("search-btn");
-    var dishList = document.getElementById("dish-list");
-    var searchBox = document.getElementById("search-box");
-
-    searchBtn.style.display = "flex";
-    dishList.style.display = "flex";
-    searchBox.style.display = "none";
-}
-</script>
-    <script>
-        $(document).ready(function(){
-            $('.dishlink').css({ "width": "auto" });
+                mySwiper.slideTo(index);
+                console.log("Last Cat2 : " + index);
+            }
         });
-        //window.onscroll = function() {
-        //    $('.dishlink').css({ "width": "auto" });
-        //    scrollFunction();
-        //};
+
+        // ? Show/Less grid checkboxes
+        function show() {
+            var moreChecks = document.getElementById("more-checks");
+            var btn = document.getElementById("more-btn");
+            var btn2 = document.getElementById("less-btn")
+
+            moreChecks.style.display = "block";
+            btn.style.display = "none"
+            btn2.style.display = "block"
+        }
+        function less() {
+            var moreChecks = document.getElementById("more-checks");
+            var btn = document.getElementById("more-btn");
+            var btn2 = document.getElementById("less-btn")
+
+            moreChecks.style.display = "none";
+            btn.style.display = "block"
+            btn2.style.display = "none"
+        }
+
+        // ! Showing/Hiding Search Bar
+        function showSearchBar() {
+            var searchBtn = document.getElementById("search-btn");
+            var dishList = document.getElementById("dish-list");
+            var searchBox = document.getElementById("search-box");
+            $('.swiper-next').hide();
+            $('#mainNav').css('height', '75px');
+
+            searchBtn.style.display = "none";
+            dishList.style.display = "none";
+            searchBox.style.display = "flex";
+        }
+
+        function hideSearchBar() {
+            var searchBtn = document.getElementById("search-btn");
+            var dishList = document.getElementById("dish-list");
+            var searchBox = document.getElementById("search-box");
+            $('.swiper-next').show();
+            $('#mainNav').css('height', '60px');
+
+            var input = document.getElementById('search-dish');
+            input.value = "";
+            spliceSearch(input);
+
+            searchBtn.style.display = "flex";
+            dishList.style.display = "flex";
+            searchBox.style.display = "none";
+        }
+
+        function spliceSearch(el) {
+            var value = $(el).val().toLowerCase();
+            $(".dishes").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        }
+        $(document).ready(function () {
+            $('.dishlink').css({ "width": "auto" });
+            $("#search-dish").on("keyup", function () {
+                spliceSearch(this);
+            });
+        });
+        window.onscroll = function () {
+            $('.dishlink').css({ "width": "auto" });
+            scrollFunction();
+        };
     </script>
 }

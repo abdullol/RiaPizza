@@ -10,5 +10,6 @@ namespace RiaPizza.Services.AccountService
     {
         Task AddUserAddress(AppUserAddress address);
         Task<List<AppUserAddress>> GetAddresses(int id);
+        Task<List<AppUserAddress>> GetAddressesWithPostalCode(int id,string code);
     }
 }

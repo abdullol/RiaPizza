@@ -59,10 +59,11 @@
 
     <script>
 
-        var App = angular.module('RiaPizza', ['ngSanitize','ngRoute']);
+        var App = angular.module('RiaPizza', ['paypal-button']);
 
-        //paypal.Button.driver('angular', window.angular);
-        App.controller("Auth", function ($scope, $http) {
+        paypal.Button.driver('angular', window.angular);
+
+        App.controller("Auth",['$scope',  '$rootScope', function ($scope, $rootScope) {
             function JsonCallParam(Controller, Action, Parameters) {
                 $.ajax({
                     type: "POST",
@@ -107,7 +108,6 @@
             $scope.isLoggedIn = false;
             $scope.user = {};
             $scope.userOrders = [];
-
             $scope.register = function () {
                 JsonCallParam("Auth", "RegisterUser", { "registerDto": JSON.stringify($scope.registerUser) });
                 if (list == "Success") {
@@ -137,10 +137,7 @@
                 if (list != false) {
                     $scope.isLoggedIn = true;
                     $scope.user = list;
-                    var viewDishesScope = angular.element(document.getElementById("ViewDishes")).scope();
-                    if (viewDishesScope !== undefined && viewDishesScope.$id) {
-                        viewDishesScope.loadUserDataInCheckOut();
-                    }
+                    $rootScope.$emit("LoadUserData", true);
                 }
                 else {
                     $scope.isLoggedIn = false;
@@ -169,7 +166,7 @@
 
                 }
             }
-        });
+        }]);
     </script>
     @RenderSection("css", required: false)
     <title>Ria Pizza</title>
@@ -273,26 +270,9 @@
                                     <i class="fas fa-shopping-bag mr-3"></i> Orders
                                 </a>
                             </div>
-                        </div>
-                        <div class="row p-4">
                             <div class="col-12 bg-white py-3 px-4 border-bottom">
-                                <a href="#" class="link">
-                                    <i class="far fa-star mr-3"></i> Loyalty shop
-                                </a>
-                            </div>
-                            <div class="col-12 bg-white py-3 px-4 border-bottom">
-                                <a href="#" class="link">
-                                    <i class="fas fa-percentage mr-3"></i> StampCard
-                                </a>
-                            </div>
-                            <div class="col-12 bg-white py-3 px-4 border-bottom">
-                                <a href="#" class="link">
-                                    <i class="fas fa-info-circle mr-3"></i> Need help?
-                                </a>
-                            </div>
-                            <div class="col-12 bg-white py-3 px-4 border-bottom">
-                                <a href="#" class="link">
-                                    <i class="far fa-building mr-3"></i> Takeway Pay
+                                <a href="~/MyAccount/PersonalData" class="link">
+                                    <i class="fas fa-address-card mr-3"></i> Profile
                                 </a>
                             </div>
                         </div>
@@ -525,28 +505,10 @@
             <div class="row justify-content-center align-items-center">
                 <ul style="list-style: none; text-align: center;">
                     <li class="d-md-inline-block d-block mb-4" style="margin-right: 20px; font-size: 13px; font-weight: 400; color: #fff;">
-                        <a href="#" style="color: #fff;">Recommend a restaurant</a>
-                    </li>
-                    <li class="d-md-inline-block d-block mb-4" style="margin-right: 20px; font-size: 13px; font-weight: 400; color: #fff;">
-                        <a href="#" style="color: #fff;">Signup a restaurant</a>
-                    </li>
-                    <li class="d-md-inline-block d-block mb-4" style="margin-right: 20px; font-size: 13px; font-weight: 400; color: #fff;">
-                        <a href="#" style="color: #fff;">Jobs</a>
-                    </li>
-                    <li class="d-md-inline-block d-block mb-4" style="margin-right: 20px; font-size: 13px; font-weight: 400; color: #fff;">
                         <a href="#" style="color: #fff;">Terms of use</a>
                     </li>
                     <li class="d-md-inline-block d-block mb-4" style="margin-right: 20px; font-size: 13px; font-weight: 400; color: #fff;">
                         <a href="#" style="color: #fff;">Privacy statement</a>
-                    </li>
-                    <li class="d-md-inline-block d-block mb-4" style="margin-right: 20px; font-size: 13px; font-weight: 400; color: #fff;">
-                        <a href="#" style="color: #fff;">Colophon</a>
-                    </li>
-                    <li class="d-md-inline-block d-block mb-4" style="margin-right: 20px; font-size: 13px; font-weight: 400; color: #fff;">
-                        <a href="#" style="color: #fff;">Cookie statement</a>
-                    </li>
-                    <li class="d-md-inline-block d-block" style="margin-right: 20px; font-size: 13px; font-weight: 400; color: #fff;">
-                        <a href="#" style="color: #fff;">Bug Bounty</a>
                     </li>
                 </ul>
             </div>

@@ -12,9 +12,7 @@
 
 <!-- Mirrored from www.radixtouch.in/templates/admin/lorax/source/light/pages/ecommerce/invoice.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 09 Jan 2020 16:29:46 GMT -->
 <head>
-    @*<meta charset="UTF-8">
-        <meta content="width=device-width, initial-scale=1" name="viewport" />*@
-    <!--  <title></title> -->
+
     <!-- Favicon-->
     <link rel="icon" href="~/assets/images/favicon.ico" type="image/x-icon">
     <!-- Plugins Core Css -->
@@ -60,11 +58,10 @@
     </style>
 
 </head>
-<body class="light">
-
+<body class="canvas_div_pdf light">
     <div class="container-fluid">
 
-        <div class="row clearfix" style="margin-left: ;">
+        <div class="row clearfix">
             <div class="invoiceBody">
                 <div class="card" id="invoiceBody">
                     <div class="body">
@@ -96,40 +93,16 @@
                                             <div class="pull-right text-right">
                                                 <img src="../../assets/images/logo/logo.png"
                                                      alt="" height="60px" width="230">
-                                                <!--  <address>
-                                                     <p class="addr-font-h3 font-bold">BILL TO :</p>
-                                                     <p class="font-bold addr-font-h4">Jayesh Patel</p>
-                                                     <p class="text-muted m-l-30">
-                                                         207, Prem Sagar Appt.,
-                                                         <br> Near Income Tax Office,
-                                                         <br> Ashram Road,
-                                                         <br> Ahmedabad - 380057
-                                                     </p>
-                                                     <p class="m-t-30">
-                                                         <b>Invoice Date :</b>
-                                                         <i class="fa fa-calendar"></i> 14th July 2017
-                                                     </p>
-                                                     <p>
-                                                         <b>Status :</b>
-                                                         <span class="label label-success">Success</span>
-                                                     </p>
-                                                 </address> -->
                                             </div>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="">
                                                 <table>
-
                                                     <tr>
                                                         <th class="">BESTELLNR</th>
                                                         <th class="">KUNDENDATEN</th>
                                                         <th class="">BESTELLUBERSICHT</th>
-                                                        <!-- <th class="text-center">Quantity</th>
-                                                        <th class="text-center">Unit Cost</th>
-                                                        <th class="text-right">Total</th> -->
                                                     </tr>
-
-
                                                     <tbody>
                                                         <tr class="roww" style="">
                                                             <td class="one">QSESRQ</td>
@@ -143,7 +116,7 @@
                                                             </td>
                                                             <td>
 
-                                                                <div style="float: left;">Gesamtbefrag:</div>
+                                                                <div style=" float: left;">Gesamtbefrag:</div>
                                                                 <div style="margin-left: 95%; width: 12%;">$3350</div>
                                                                 <div style="">Betrag bereits</div>
                                                                 <div>Kunde zahit passend</div>
@@ -208,12 +181,6 @@
             </div>
         </div>
     </div>
-
-    <div id="content">
-        <h3>Sample h3 tag</h3>
-        <p>Sample pararaph</p>
-    </div>
-    <button id="cmd">Generate PDF</button>
 </body>
 
 <!-- Mirrored from www.radixtouch.in/templates/admin/lorax/source/light/pages/ecommerce/invoice.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 09 Jan 2020 16:29:46 GMT -->
@@ -221,13 +188,43 @@
 <script src="~/assets/js/app.min.js"></script>
 <script src="~/assets/js/admin.js"></script>
 <script src="https://www.google.com/cloudprint/client/cpgadget.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.3/jspdf.min.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
 
 <script>
     $(document).ready(function () {
-        //window.print();
-        var gadget = new cloudprint.Gadget();
-        gadget.setPrintDocument("url", "Test Page", "https://www.google.com/landing/cloudprint/testpage.pdf");
-        gadget.openPrintDialog();
+        var HTML_Width = $(".canvas_div_pdf").width();
+        var HTML_Height = $(".canvas_div_pdf").height();
+        var top_left_margin = 15;
+        var PDF_Width = HTML_Width + (top_left_margin * 2);
+        var PDF_Height = (PDF_Width * 1.5) + (top_left_margin * 2);
+        var canvas_image_width = HTML_Width;
+        var canvas_image_height = HTML_Height;
+        var totalPDFPages = Math.ceil(HTML_Height / PDF_Height) - 1;
+        html2canvas($(".canvas_div_pdf")[0], { allowTaint: true }).then(function (canvas) {
+            canvas.getContext('2d');
+            console.log(canvas.height + "  " + canvas.width);
+            var imgData = canvas.toDataURL("image/jpeg", 1.0);
+            var pdf = new jsPDF('p', 'pt', [PDF_Width, PDF_Height]);
+            pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin, canvas_image_width, canvas_image_height);
+            for (var i = 1; i <= totalPDFPages; i++) {
+                pdf.addPage(PDF_Width, PDF_Height);
+                pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height * i) + (top_left_margin * 4), canvas_image_width, canvas_image_height);
+            }
+
+            var invoicename = "abdullah";
+            invoicename += ".pdf";
+            pdf.save(invoicename);
+
+            var id = 1;
+            id++;
+            //you should upload file to server inorder to get the appropriate URL
+
+            var gadget = new cloudprint.Gadget();
+            gadget.setPrintDocument("url", "Test Page", "https://riapizatest.azurewebsites.net/Uploads/?abdullah(" + id + ")");
+            gadget.openPrintDialog();
+
+
+        });
     });
 </script>
-

@@ -18,9 +18,7 @@
                     <li class="breadcrumb-item">
                         <h4 class="page-title" style="border-right:0">
                             Dashboard
-
                         </h4>
-
                     </li>
                 </ul>
             </div>
@@ -328,6 +326,13 @@
 
             $('.orderDetails-modal').modal();
         }
+        function getOrderTableSortOrder()
+        {
+            return { SortOrder: [[0, "desc"]] };
+        }
+
+        window.RiaPizzaConfig  = getOrderTableSortOrder();
+
     </script>
     <script src="~/assets/js/table.min.js"></script>
     <script src="~/assets/js/pages/tables/jquery-datatable.js"></script>

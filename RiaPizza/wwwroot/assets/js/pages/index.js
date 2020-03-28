@@ -13,6 +13,7 @@ $(function () {
 
 	initChartReport1();
 	initChartReport2();
+
 });
 
 function initCardChart() {
@@ -424,3 +425,6 @@ function initSalesChart() {
 		console.log(error);
 	}
 }
+
+
+

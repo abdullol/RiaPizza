@@ -1,7 +1,12 @@
 'use strict';
 $(function () {
+
+	if (!RiaPizzaConfig)
+		window.RiaPizzaConfig = { SortOrder : [] };
+
 	$('.js-basic-example').DataTable({
-		responsive: true
+		responsive: true,
+		"order": RiaPizzaConfig.SortOrder
 	});
 
 	$('.save-stage').DataTable({
