@@ -624,10 +624,13 @@
         }
         $scope.showDishDesc = function (allergies) {
             $(".dishDetails").modal();
-            if (allergies !=='' && allergies !== null)
-                $(".dishAllergies").html("<h6 style='font-weight:bold'>Substances or products causing allergies or intolerances</h6>"+allergies+"");
-            else
-                $(".dishAllergies").html("<h6 style='font-weight:bold'>No Allergies Found</h6>");
+            if (allergies !=='' && allergies !== null){
+ $(".dishAllergies").html(allergies);
+            }               
+            else{
+  $(".dishAllergies").html("<h6 style='font-weight:bold'>No Allergies Found</h6>");
+            }
+              
         }
         //$scope.showPaypalBtn = function () {
         //    if ($scope.shopschedule.isOpen) {
