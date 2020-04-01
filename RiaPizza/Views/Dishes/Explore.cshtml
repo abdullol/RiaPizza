@@ -814,8 +814,17 @@
                                     <a class="btn" ng-click="removeItem($index)" style="padding: 0 0 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-trash-alt"></i></a>
                                 </div>
                             </div>
-
-                            <p class="cartToppings"><span ng-if="item.dishSize.dishSizeId > 0">Size: {{item.dishSize.size}} {{item.dishSize.diameter}} </span> <span ng-if="item.toppings.length>0" ng-repeat="topping in item.toppings" ng-init="toppingIndex = $index">{{topping}} <i ng-if="toppingIndex < item.toppings.length - 1">,</i></span> </p>
+                            <p class="cartToppings">
+                                <span ng-if="item.dishSize.dishSizeId > 0">Size: {{item.dishSize.size}} {{item.dishSize.diameter}} </span>
+                                <span ng-repeat="toppingItems in item.toppings" ng-if="toppingItems.toppings.length>0">
+                                    {{toppingItems.handler}}: [
+                                    <span ng-repeat="topping in toppingItems.toppings" ng-init="toppingIndex = $index">
+                                        {{topping}}
+                                        <i ng-if="toppingIndex < toppingItems.toppings.length - 1">,</i>
+                                    </span>
+                                    ]
+                                </span>
+                            </p>
                             <p class="cartToppings" ng-if="item.remarks!=''" style="margin-bottom:5% !important">{{item.remarks}}</p>
                             <div class="commentBox hide commentinput-{{$index}}" style="margin-bottom:10% !important">
                                 <label>Remarks</label>
