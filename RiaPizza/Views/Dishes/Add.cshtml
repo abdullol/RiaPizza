@@ -2,18 +2,32 @@
     ViewData["Title"] = "Add";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
-@section css{ 
+@section css{
+    <link href="~/assets/js/Trumbowyg-master/dist/ui/trumbowyg.css" rel="stylesheet" />
     <style>
-        .null-marbottom{
-            margin-bottom:0 !important;
+        .null-marbottom {
+            margin-bottom: 0 !important;
         }
-        .right{
-            float:right;
+
+        .right {
+            float: right;
         }
+
+        /*.ck.ck-content ul,
+        .ck.ck-content ul li {
+            list-style-type: inherit;
+        }
+
+        .ck.ck-content ul {
+             Default user agent stylesheet, you can change it to your needs. */
+        /*padding-left: 40px;*/
+        /*}*/
+
     </style>
 }
 @*<script src="~/Angular/Controllers/DishCtrl.js"></script>*@
 <script>
+
     App.controller("DishesCtrl", function ($scope, $http) {
 
         function JsonCallParam(Controller, Action, Parameters) {
@@ -64,8 +78,9 @@
 
 
         //Add Dish Objects
-        $scope.addDish = { dishName: '', subName: '', description: '', dishCategoryId: '0', basePrice: 0, allergies: '', dishSizes:[] };
+        $scope.addDish = { dishName: '', subName: '', description: '', dishCategoryId: '0', basePrice: 0, allergies: '', dishSizes: [] };
         $scope.addDishExtraTypes = [];
+
         $scope.getDishCategories = function () {
             JsonCall("DishCategories", "GetAllCategories");
             if (list !== null) {
@@ -73,6 +88,7 @@
                 $scope.addDish.dishCategoryId = 0;
             }
         }
+
 
         //Start Dish Only Function
         $scope.saveDish = function () {
@@ -83,11 +99,18 @@
                     for (var j = 0; j < $scope.addDishExtraTypes[i].dishExtras.length; j++) { if ($scope.addDishExtraTypes[i].dishExtras[j].extraName === "") { return; } }
                 }
             }
-            
+
 
             if ($scope.multipleSizes) {
                 $scope.addDish.dishSizes = $scope.dishSizes;
             }
+
+            var comment = CKEDITOR.instances.editor1.getData();
+            var commentt = CKEDITOR.instances.editor2.getData();
+            // $scope.addDish.allergies = document.getElementById("editor1").value;
+
+            $scope.addDish.allergies = CKEDITOR.instances.editor1.getData();
+            $scope.addDish.description = CKEDITOR.instances.editor2.getData();
             var pram = { "dish": JSON.stringify($scope.addDish), "dishExtraTypes": JSON.stringify($scope.addDishExtraTypes) };
             JsonCallParam("Dishes", "CreateDish", pram);
             if (list === "Success") {
@@ -121,14 +144,14 @@
             if (length === 0) {
                 let list = [];
                 for (var i = 0; i < $scope.sizeToppingPrices.length; i++) {
-                    list.push({ dishExtraId: 0, dishSizeId: 0, price: 0,sizeName:$scope.sizeToppingPrices[i].sizeName });
+                    list.push({ dishExtraId: 0, dishSizeId: 0, price: 0, sizeName: $scope.sizeToppingPrices[i].sizeName });
                 }
                 $scope.addDishExtraTypes.push({ typeName: '', chooseMultiple: true, dishExtras: [{ extraName: '', extraPrice: 0, sizeToppingPrices: list }] });
             }
             else if ($scope.addDishExtraTypes[length - 1].typeName !== '') {
                 let list = [];
                 for (var i = 0; i < $scope.sizeToppingPrices.length; i++) {
-                    list.push({ dishExtraId: 0, dishSizeId: 0, price: 0,sizeName:$scope.sizeToppingPrices[i].sizeName });
+                    list.push({ dishExtraId: 0, dishSizeId: 0, price: 0, sizeName: $scope.sizeToppingPrices[i].sizeName });
                 }
                 $scope.addDishExtraTypes.push({ typeName: '', chooseMultiple: true, dishExtras: [{ extraName: '', extraPrice: 0, sizeToppingPrices: list }] });
             }
@@ -138,14 +161,14 @@
             if (length === 0) {
                 let list = [];
                 for (var j = 0; j < $scope.sizeToppingPrices.length; j++) {
-                    list.push({ dishExtraId: 0, dishSizeId: 0, price: 0,sizeName:$scope.sizeToppingPrices[j].sizeName });
+                    list.push({ dishExtraId: 0, dishSizeId: 0, price: 0, sizeName: $scope.sizeToppingPrices[j].sizeName });
                 }
                 $scope.addDishExtraTypes[i].dishExtras.push({ extraName: '', extraPrice: 0, sizeToppingPrices: list });
             }
             else if ($scope.addDishExtraTypes[i].dishExtras[length - 1].extraName !== "") {
                 let list = [];
                 for (var j = 0; j < $scope.sizeToppingPrices.length; j++) {
-                    list.push({ dishExtraId: 0, dishSizeId: 0, price: 0,sizeName:$scope.sizeToppingPrices[j].sizeName });
+                    list.push({ dishExtraId: 0, dishSizeId: 0, price: 0, sizeName: $scope.sizeToppingPrices[j].sizeName });
                 }
                 $scope.addDishExtraTypes[i].dishExtras.push({ extraName: '', extraPrice: 0, sizeToppingPrices: list });
             }
@@ -155,19 +178,19 @@
         }
         $scope.removeExtra = function (extratype, i) {
             $scope.addDishExtraTypes[extratype].dishExtras.splice(i, 1);
-            }
+        }
         $scope.addSize = function () {
             var count = $scope.dishSizes.length;
             if (count !== 0) {
                 if ($scope.dishSizes[count - 1].size == "") return;
                 else {
                     $scope.dishSizes.push({ size: "", basePrice: 0.0, diameter: "" });
-                    $scope.sizeToppingPrices.push({ dishExtraId: 0, dishSizeId: 0, price: 0,sizeName:"" });
+                    $scope.sizeToppingPrices.push({ dishExtraId: 0, dishSizeId: 0, price: 0, sizeName: "" });
                 }
             }
             else {
                 $scope.dishSizes.push({ size: "", basePrice: 0.0, diameter: "" });
-                $scope.sizeToppingPrices.push({ dishExtraId: 0, dishSizeId: 0, price: 0,sizeName:"" });
+                $scope.sizeToppingPrices.push({ dishExtraId: 0, dishSizeId: 0, price: 0, sizeName: "" });
             }
         }
         $scope.removeSize = function (index) {
@@ -175,7 +198,7 @@
             $scope.sizeToppingPrices.splice(index, 1);
         }
         //End Dish Only Function
-    
+
         //Start UI Functions
         $scope.openDishEditModal = function (dish) {
             $scope.editDish = { dishId: dish.dishId, dishName: dish.dishName, subName: dish.subName, allergies: dish.allergies, description: dish.description, dishCategoryId: dish.dishCategoryId, basePrice: dish.basePrice };
@@ -268,14 +291,19 @@
                         </div>
                         <div class="col-lg-12 col-md-12 null-marbottom">
                             <div class="form-group">
+
                                 <label>Allergies <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" placeholder="enter the allergies" ng-model="addDish.allergies" min="0" required>
+                                @*<input type="text" class="form-control" placeholder="enter the allergies" ng-model="addDish.allergies" min="0" required>*@
+                                <textarea id="editor1" name="editor1" required>
+                                </textarea>
+
                             </div>
                         </div>
                         <div class="col-md-12 col-md-12">
                             <div class="form-group">
                                 <label>Description</label>
-                                <textarea placeholder="Enter Description of Dish" class="form-control" ng-model="addDish.description"></textarea>
+                                <textarea id="editor2" name="editor2" required>
+                                </textarea>
                             </div>
                         </div>
                         <div class="col-md-12 col-md-12">
@@ -393,10 +421,10 @@
                                                 </div>
                                             </div>
                                             <div class="col-lg-3">
-                                                <div class="form-group">
-                                                    <input type="text" class="form-control" placeholder="Allergies" ng-model="extra.allergies" />
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control" placeholder="Allergies" ng-model="extra.allergies" />
+                                                    </div>
                                                 </div>
-                                            </div>
                                             <div class="col-lg-3" ng-if="!multipleSizes">
                                                 <input type="number" class="form-control" placeholder="$$" ng-model="extra.extraPrice" required>
                                             </div>
@@ -404,6 +432,11 @@
                                                 <button class="btn btn-danger right" ng-click="removeExtra(extraTypeIndex, extraIndex)"><i class="fas fa-trash-alt"></i></button>
                                             </div>
                                         </div>
+                                        @*<div class="row">
+                                            <div class="col-lg-12">
+                                                <textarea name="editor3"></textarea>
+                                            </div>
+                                        </div>*@
                                     </div>
                                     <div class="col-lg-12" ng-if="multipleSizes" style="margin-top:-20px">
                                         <div class="row">
@@ -432,6 +465,17 @@
 
 @section scripts{
 
+
     <script src="~/assets/js/form.min.js"></script>
     <script src="~/assets/js/pages/forms/form-wizard.js"></script>
+
+    <script src="https://cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace('editor1');
+        CKEDITOR.replace('editor2');
+        CKEDITOR.config.height = 150;
+       
+    </script>
+
+
 }
