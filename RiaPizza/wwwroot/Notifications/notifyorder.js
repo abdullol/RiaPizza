@@ -44,5 +44,20 @@ connection.on("notifyOrder", function (order) {
             '<span data-notify="message">{2}</span>'
     });
 
-    $('.ordersList').prepend('<tr> <td>' + order.orderCode + '</td> <td>' + order.orderBy.name + '</td> <td>' + orderStatus + '</td> <td>' + order.recievingTime + '</td> <td>' + order.totalBill + '</td> <td>' + order.paymentMethod + isPaymentConfirmed + ' </td> <td><a target="_blank" class="btn btn-warning" href="~/Orders/Invoice/' + order.orderId + '"><i class="fas fa-print"></i></a><button data-toggle="modal" data-target="#ChangeStatusModal" class="btn btn-success" onclick="setValue(' + order.orderId + ',`' + order.orderStatus + '`)"><i class="fas fa-toggle-on"></i></button><button type="button" class="btn btn-primary" onclick="showOrderDetails(' + order.orderId + ')"><i class="fas fa-info-circle"></button></td> </tr>');
+    $('.ordersList').prepend(
+        '<tr> ' +
+            '<td> ' + order.orderCode + '</td> ' +
+            '<td>' + order.orderBy.name + '</td>' +
+            '<td>' + orderStatus + '</td>' +
+            '<td>' + order.recievingTime + '</td>' +
+            '<td>' + order.subTotal + '</td>' +
+            '<td>' + order.discount + '</td>' +
+            '<td>' + order.totalBill + '</td>' +
+            '<td>' + order.paymentMethod + isPaymentConfirmed + ' </td>' +
+            '<td>' +
+                '<a target = "_blank" class= "btn btn-warning" href = "~/Orders/Invoice/' + order.orderId + '" > <i class="fas fa-print"></i></a>' +
+                '<button data-toggle="modal" data-target="#ChangeStatusModal" class="btn btn-success" onclick="setValue(' + order.orderId + ',`' + order.orderStatus + '`)"><i class="fas fa-toggle-on"></i></button>' +
+                '<button type="button" class="btn btn-primary" onclick="showOrderDetails(' + order.orderId + ')"><i class="fas fa-info-circle"></button>' +
+            '</td>' +
+        '</tr> ');
 });

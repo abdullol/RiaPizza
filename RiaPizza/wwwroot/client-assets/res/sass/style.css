@@ -1672,7 +1672,7 @@ body {
 @media only screen and (max-width: 600px) and (min-width: 371px) {
   .item {
     margin-right: 0 !important;
-    margin-top: 30px !important;
+    margin-top: 0px !important;
   }
   .item .hotel-container {
     max-width: 100% !important;

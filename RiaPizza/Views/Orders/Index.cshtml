@@ -94,9 +94,10 @@
                                     <div class="col-12">
                                         <div class="row">
                                             <div class="col-md-3"><h6>Item Name</h6></div>
-                                            <div class="col-md-3"><h6>Extras</h6></div>
-                                            <div class="col-md-3"><h6>Quantity</h6></div>
-                                            <div class="col-md-3"><h6>Total Price</h6></div>
+                                            <div class="col-md-4"><h6>Extras</h6></div>
+                                            <div class="col-md-3"><h6>Remarks</h6></div>
+                                            <div class="col-md-1"><h6>Qty</h6></div>
+                                            <div class="col-md-1"><h6>Price</h6></div>
                                         </div>
                                         <div class="row" id="OrderItemsDetails"></div>
                                     </div>
@@ -118,6 +119,12 @@
                                     <th>OrderBy</th>
                                     <th>OrderStatus</th>
                                     <th>RecievingTime</th>
+                                    <th>PlacingTime</th>
+                                    <th>PostalCode</th>
+                                    <th>Address</th>
+                                    <th>Mobile #</th>
+                                    <th>SubTotal</th>
+                                    <th>Discount</th>
                                     <th>TotalBill</th>
                                     <th>PaymentMethod</th>
                                     <th>Action</th>
@@ -129,6 +136,10 @@
                                     <tr>
                                         <td>
                                             @Html.DisplayFor(modelItem => order.OrderCode)
+                                            @if (order.OrderStatus != "Confirmed")
+                                            {
+                                                {<span class="label bg-green shadow-style">New</span>}
+                                            }
                                         </td>
                                         <td>@order.OrderBy.Name</td>
                                         <td class="status">
@@ -149,20 +160,37 @@
                                             @Html.DisplayFor(modelItem => order.RecievingTime)
                                         </td>
                                         <td>
+                                            @Html.DisplayFor(modelItem => order.OrderDateTime)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.OrderDeliveryAddress.PostalCode)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.OrderDeliveryAddress.Address)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.OrderBy.Contact)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.SubTotal)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.Discount)
+                                        </td>
+                                        <td>
                                             @Html.DisplayFor(modelItem => order.TotalBill)
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => order.PaymentMethod)
                                             @if (order.IsPaymentConfirmed == true)
-                                            {<span class="label bg-green shadow-style">Active</span>}
+                                            {<span class="label bg-green shadow-style">Confirmed</span>}
                                             @if (order.IsPaymentConfirmed == false)
-                                            {<span class="label bg-red shadow-style">Inactive</span>}
+                                            {<span class="label bg-red shadow-style">Pending</span>}
                                         </td>
                                         <td>
                                             <a target="_blank" class="btn btn-warning" href="~/Orders/Invoice/@order.OrderId"><i class="fas fa-print"></i></a>
                                             <button data-toggle="modal" data-target="#ChangeStatusModal" class="btn btn-success" onclick="setValue(@order.OrderId,'@order.OrderStatus')"><i class="fas fa-toggle-on"></i></button>
                                             <button type="button" class="btn btn-primary" onclick="showOrderDetails(@order.OrderId)"><i class="fas fa-info-circle"></i></button>
-                                            <button type="button" class="btn btn-danger" onclick="deleteOrder(@order.OrderId)"><i class="fas fa-trash-alt"></i></button>
                                         </td>
                                     </tr>
                                 }
@@ -173,6 +201,12 @@
                                     <th>OrderBy</th>
                                     <th>OrderStatus</th>
                                     <th>RecievingTime</th>
+                                    <th>PlacingTime</th>
+                                    <th>PostalCode</th>
+                                    <th>Address</th>
+                                    <th>Mobile #</th>
+                                    <th>SubTotal</th>
+                                    <th>Discount</th>
                                     <th>TotalBill</th>
                                     <th>PaymentMethod</th>
                                     <th>Action</th>
@@ -239,7 +273,14 @@
                     $('#OrderByDetails').append("<div class='col-md-6'><b>Order By :</b>" + orderby.name + "</div> <div class='col-md-6'><b>Email :</b>" + orderby.email + "</div> <div class='col-md-6'><b>Contact :</b>" + orderby.contact + "</div> <div class='col-md-6'><b>Company :</b>" + orderby.company + "</div>");
                     $('#OrderAddressDetails').append("<div class='col-md-6'><b>City :</b> " + address.city + "</div> <div class='col-md-6'><b>Address :</b> " + address.address + "</div> <div class='col-md-6'><b>Floor :</b> " + address.floor + "</div> <div class='col-md-6'><b>Postal Code :</b> " + address.postalCode + "</div>");
                     for (var i = 0; i < orderitems.length; i++) {
-                        $('#OrderItemsDetails').append("<div class='col-md-3'>" + orderitems[i].dish.dishName + "</div> <div class='col-md-3'>" + orderitems[i].extras + "</div> <div class='col-md-3'>" + orderitems[i].quantity + "</div> <div class='col-md-3'>" + orderitems[i].totalPrice + "</div>");
+                        var remarks = ""
+                        orderitems[i].remarks != null ? remarks = orderitems[i].remarks : remarks = "";
+                        $('#OrderItemsDetails').append(
+                            "<div class='col-md-3'> " + orderitems[i].dish.dishName + "</div >" +
+                            "<div class='col-md-4'>" + orderitems[i].extras + "</div>" +
+                            "<div class='col-md-3'>" + remarks + "</div>" +
+                            "<div class='col-md-1'>" + orderitems[i].quantity + "</div>" +
+                            "<div class='col-md-1'>" + orderitems[i].totalPrice + "</div>");
                     }
                 }
             });

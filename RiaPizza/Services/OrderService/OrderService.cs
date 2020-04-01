@@ -150,7 +150,7 @@ namespace RiaPizza.Services.OrderService
         }
         public async Task<List<Order>> InCompletedOrders()
         {
-            var uncompletedOrders = await _context.Orders.Where(x => x.IsCompleted == false).Include(s => s.OrderBy).ToListAsync();
+            var uncompletedOrders = await _context.Orders.Where(x => x.IsCompleted == false).Include(s => s.OrderBy).Include(s => s.OrderDeliveryAddress).ToListAsync();
             return uncompletedOrders;
         }
         public async Task ChangeStatus(int id, string status)
