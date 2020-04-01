@@ -119,6 +119,12 @@
                                     <th>OrderBy</th>
                                     <th>OrderStatus</th>
                                     <th>RecievingTime</th>
+                                    <th>PlacingTime</th>
+                                    <th>PostalCode</th>
+                                    <th>Address</th>
+                                    <th>Mobile #</th>
+                                    <th>SubTotal</th>
+                                    <th>Discount</th>
                                     <th>TotalBill</th>
                                     <th>PaymentMethod</th>
                                     <th>Action</th>
@@ -130,6 +136,10 @@
                                     <tr>
                                         <td>
                                             @Html.DisplayFor(modelItem => order.OrderCode)
+                                            @if (order.OrderStatus != "Confirmed")
+                                            {
+                                                {<span class="label bg-green shadow-style">New</span>}
+                                            }
                                         </td>
                                         <td>@order.OrderBy.Name</td>
                                         <td class="status">
@@ -150,20 +160,37 @@
                                             @Html.DisplayFor(modelItem => order.RecievingTime)
                                         </td>
                                         <td>
+                                            @Html.DisplayFor(modelItem => order.OrderDateTime)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.OrderDeliveryAddress.PostalCode)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.OrderDeliveryAddress.Address)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.OrderBy.Contact)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.SubTotal)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.Discount)
+                                        </td>
+                                        <td>
                                             @Html.DisplayFor(modelItem => order.TotalBill)
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => order.PaymentMethod)
                                             @if (order.IsPaymentConfirmed == true)
-                                            {<span class="label bg-green shadow-style">Active</span>}
+                                            {<span class="label bg-green shadow-style">Confirmed</span>}
                                             @if (order.IsPaymentConfirmed == false)
-                                            {<span class="label bg-red shadow-style">Inactive</span>}
+                                            {<span class="label bg-red shadow-style">Pending</span>}
                                         </td>
                                         <td>
                                             <a target="_blank" class="btn btn-warning" href="~/Orders/Invoice/@order.OrderId"><i class="fas fa-print"></i></a>
                                             <button data-toggle="modal" data-target="#ChangeStatusModal" class="btn btn-success" onclick="setValue(@order.OrderId,'@order.OrderStatus')"><i class="fas fa-toggle-on"></i></button>
                                             <button type="button" class="btn btn-primary" onclick="showOrderDetails(@order.OrderId)"><i class="fas fa-info-circle"></i></button>
-                                            <button type="button" class="btn btn-danger" onclick="deleteOrder(@order.OrderId)"><i class="fas fa-trash-alt"></i></button>
                                         </td>
                                     </tr>
                                 }
@@ -174,6 +201,12 @@
                                     <th>OrderBy</th>
                                     <th>OrderStatus</th>
                                     <th>RecievingTime</th>
+                                    <th>PlacingTime</th>
+                                    <th>PostalCode</th>
+                                    <th>Address</th>
+                                    <th>Mobile #</th>
+                                    <th>SubTotal</th>
+                                    <th>Discount</th>
                                     <th>TotalBill</th>
                                     <th>PaymentMethod</th>
                                     <th>Action</th>

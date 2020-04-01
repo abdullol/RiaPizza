@@ -7,7 +7,12 @@
 @section css{
     <link rel="stylesheet" type="text/css" href="~/client-assets/swiper.css">
     <link rel="stylesheet" type="text/css" href="~/client-assets/res/custom.css" />
+    
     <style>
+        /* border of chekbox */
+        .custom-control-label::before {
+            border:1px solid #c1c1c1;
+        }
         /* HIDE RADIO */
         .payment-selection {
             position: absolute;
@@ -16,14 +21,14 @@
             height: 0;
         }
         /* IMAGE STYLES */
-        .payment-selection + .payment-img {
-            cursor: pointer;
-        }
+            .payment-selection + .payment-img {
+                cursor: pointer;
+            }
 
         /* CHECKED STYLES */
-        .payment-selection:checked + .payment-img {
-            background: linear-gradient(#142209, #142209);
-        }
+            .payment-selection:checked + .payment-img {
+                background: linear-gradient(#142209, #142209);
+            }
         .pointer{
             cursor: pointer !important;
         }
@@ -73,7 +78,6 @@
         .groups {
             margin-right: 360px;
         }
-
         #cart-btn-mob {
             display: none;
             position: fixed;
@@ -85,19 +89,19 @@
             width: auto !important;
             margin-right: 0 !important;
         }
-        #cart-btn-mob .p1[data-count]:after{
-          position:absolute;
-          right:50%;
-          top:8%;
-          content: attr(data-count);
-          font-size:40%;
-          padding:.2em;
-          border-radius:50%;
-          line-height:1em;
-          color: white;
-          background:rgba(255,0,0,.85);
-          text-align:center;
-          min-width: 1em;
+        #cart-btn-mob .p1[data-count]:after {
+            position: absolute;
+            right: 50%;
+            top: 8%;
+            content: attr(data-count);
+            font-size: 40%;
+            padding: .2em;
+            border-radius: 50%;
+            line-height: 1em;
+            color: white;
+            background: rgba(255,0,0,.85);
+            text-align: center;
+            min-width: 1em;
         }
         .cart-btn-section{
             position: fixed;
@@ -641,10 +645,13 @@
         }
         $scope.showDishDesc = function (allergies) {
             $(".dishDetails").modal();
-            if (allergies !=='' && allergies !== null)
-                $(".dishAllergies").html("<h6 style='font-weight:bold'>Substances or products causing allergies or intolerances</h6> <ul> <li>"+allergies+"</li></ul>");
-            else
-                $(".dishAllergies").html("<h6 style='font-weight:bold'>No Allergies Found</h6>");
+            if (allergies !=='' && allergies !== null){
+ $(".dishAllergies").html(allergies);
+            }               
+            else{
+  $(".dishAllergies").html("<h6 style='font-weight:bold'>No Allergies Found</h6>");
+            }
+              
         }
         function cartButtonEffect() {
             var time = 700;
@@ -677,7 +684,7 @@
             <div class="row pt-4 pb-2" style="border-bottom: 1px solid #eee; width: 360px;">
                 <div ng-if="cart.length === 0">
                     <i class="fas fa-shopping-cart" style="font-size:-webkit-xxx-large; margin: auto; padding: 5% 0 0 40%;"></i>
-                    <p class="basket-empty__text" style="text-align: center; margin: 10px;">Wähle leckere Gerichte aus der Karte und bestelle Dein Menü.</p>
+                    <p class="basket-empty__text" style="text-align: center; margin: 10px;">Choose delicious dishes from the menu and order your menu.</p>
                 </div>
                 <div class="col-12" ng-repeat="item in cart track by $index">
                     <div class="row">
@@ -1083,7 +1090,7 @@
                                     <div class="panel-heading border pointer" role="tab" id="heading_{{dish.dishId}}" ng-click="LoadDishExtras(dish.dishId,categoryIndex,dishIndex, dish.basePrice)">
                                         <div class="row">
                                             <div class="col-9">
-                                                <h5 class="panel-title row" style="padding-right:8px">
+                                                <h5 class="panel-title row" style="padding-right:8px;font-weight:600;font-size:18px;">
                                                     {{dish.dishName}} &nbsp;
                                                     <i class="fas fa-info-circle product-info-btn" onclick="event.preventDefault()" ng-click="showDishDesc(dish.allergies)"> </i>
                                                 </h5>
@@ -1092,9 +1099,10 @@
                                                 <i class="fas fa-plus border p-3" style="color: #1474F5"></i>
                                             </div>
                                         </div>
-                                        <p ng-if="dish.subName" style="font-size:14px;">{{dish.subName}}</p>
-                                        <p>{{dish.description}}</p>
-                                        <h4>{{dish.basePrice}} €</h4>
+                                        <p ng-if="dish.subName" style="font-size:14px;color:black;font-weight:400">{{dish.subName}}</p>
+                                        <p ng-bind-html="dish.description"></p>
+                                        @*<p style="font-style:italic;color:black;font-size:12px;font-weight:400;"></p>*@
+                                        <h4 style="color:#ff8000;font-weight:600;font-size:18px;">{{dish.basePrice}} €</h4>
                                     </div>
                                     <div id="collapse_{{dish.dishId}}" class="panel-collapse collapse in" role="tabpanel"
                                          aria-labelledby="heading_{{dish.dishId}}">

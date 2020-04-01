@@ -23,9 +23,7 @@ namespace RiaPizza.Models
         public DateTime OrderDateTime { get; set; }
         public string OrderStatus { get; set; }
         public bool IsCompleted { get; set; }
-
         public int? UserId { get; set; }
-
         public virtual OrderBy OrderBy { get; set; }
         public virtual OrderDeliveryAddress OrderDeliveryAddress { get; set; }
         public IEnumerable<OrderItem> OrderItems { get; set; }

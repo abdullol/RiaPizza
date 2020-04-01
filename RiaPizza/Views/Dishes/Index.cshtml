@@ -118,9 +118,9 @@
                                                             <div class="row clearfix">
                                                                 <div class="col-lg-12">
                                                                     <h5>Description: </h5>
-                                                                    <p>@dish.Description</p>
-                                                                    <h5>Allergies: </h5>
-                                                                    <p>@dish.Allergies</p>
+                                                                    @Html.Raw(dish.Description)
+                                                                    <h5>Allergies: </h5> 
+                                                                 @Html.Raw(dish.Allergies)
                                                                 </div>
                                                                 @if (dish.DishExtraTypes != null)
                                                                 {
