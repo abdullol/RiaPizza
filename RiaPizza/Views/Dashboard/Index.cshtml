@@ -187,6 +187,9 @@
                                     <th>OrderBy</th>
                                     <th>OrderStatus</th>
                                     <th>RecievingTime</th>
+                                    <th>PlacingTime</th>
+                                    <th>PostalCode</th>
+                                    <th>Address</th>
                                     <th>SubTotal</th>
                                     <th>Discount</th>
                                     <th>TotalBill</th>
@@ -200,6 +203,10 @@
                                     <tr>
                                         <td>
                                             @Html.DisplayFor(modelItem => order.OrderCode)
+                                            @if (order.OrderStatus != "Confirmed")
+                                            {
+                                                {<span class="label bg-green shadow-style">New</span>}
+                                            }
                                         </td>
                                         <td>@order.OrderBy.Name</td>
                                         <td class="status">
@@ -218,6 +225,15 @@
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => order.RecievingTime)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.OrderDateTime)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.OrderDeliveryAddress.PostalCode)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.OrderDeliveryAddress.Address)
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => order.SubTotal)
@@ -249,6 +265,9 @@
                                     <th>OrderBy</th>
                                     <th>OrderStatus</th>
                                     <th>RecievingTime</th>
+                                    <th>PlacingTime</th>
+                                    <th>PostalCode</th>
+                                    <th>Address</th>
                                     <th>SubTotal</th>
                                     <th>Discount</th>
                                     <th>TotalBill</th>
@@ -268,7 +287,7 @@
 @section scripts{
     <script src="~/js/signalr/dist/browser/signalr.js"></script>
     <script src="~/Notifications/notifyorder.js"></script>
-    
+
     <script src="https://www.google.com/cloudprint/client/cpgadget.js">
     </script>
     <script>
@@ -326,12 +345,11 @@
 
             $('.orderDetails-modal').modal();
         }
-        function getOrderTableSortOrder()
-        {
+        function getOrderTableSortOrder() {
             return { SortOrder: [[0, "desc"]] };
         }
 
-        window.RiaPizzaConfig  = getOrderTableSortOrder();
+        window.RiaPizzaConfig = getOrderTableSortOrder();
 
     </script>
     <script src="~/assets/js/table.min.js"></script>

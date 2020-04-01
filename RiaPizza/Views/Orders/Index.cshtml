@@ -129,6 +129,10 @@
                                     <tr>
                                         <td>
                                             @Html.DisplayFor(modelItem => order.OrderCode)
+                                            @if (order.OrderStatus != "Confirmed")
+                                            {
+                                                {<span class="label bg-green shadow-style">New</span>}
+                                            }
                                         </td>
                                         <td>@order.OrderBy.Name</td>
                                         <td class="status">
