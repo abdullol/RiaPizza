@@ -339,15 +339,26 @@
         }
         function pushCartItemInOrderItems() {
             for (var i = 0; i < $scope.cart.length; i++) {
-                if ($scope.cart[i].dishSize) 
-                    var dishToppings = "Size: "+ $scope.cart[i].dishSize.size + "Ø "+$scope.cart[i].dishSize.diameter+"cm, ";
+                if ($scope.cart[i].dishSize.dishSizeId) 
+                    var dishToppings = "Size: "+ $scope.cart[i].dishSize.size + $scope.cart[i].dishSize.diameter ;
                 else
                     var dishToppings = "";
+
                 for (var j = 0; j < $scope.cart[i].toppings.length; j++) {
-                    if (j < $scope.cart[i].toppings.length - 1)
-                        dishToppings += $scope.cart[i].toppings[j] + ', ';
-                    else
-                        dishToppings += $scope.cart[i].toppings[j];
+
+                    if ($scope.cart[i].toppings[j].toppings.length !== 0) {
+                        dishToppings += $scope.cart[i].toppings[j].handler + ": [";
+                        for (var k = 0; k < $scope.cart[i].toppings[j].toppings.length; k++) {
+
+                            if (k < $scope.cart[i].toppings[j].toppings.length - 1)
+                                dishToppings += $scope.cart[i].toppings[j].toppings[k] + ', ';
+                            else
+                                dishToppings += $scope.cart[i].toppings[j].toppings[k];
+
+                        }
+                        dishToppings += "] ";
+                    }
+
                 }
                 $scope.orderItems.push({ dishId: $scope.cart[i].dishId, extras: dishToppings, quantity: $scope.cart[i].quantity, dishBasePrice: $scope.cart[i].dishPrice, dishPriceWithAddOnes: $scope.cart[i].priceWithExtras, totalPrice: $scope.cart[i].totalPrice, remarks: $scope.cart[i].remarks });
             }
@@ -380,7 +391,10 @@
         };
         $scope.addToCart = function (dish) {
             if ($scope.shopschedule.isOpen) {
-                var alreadyExistDishIndex = $scope.cart.findIndex(x => x.dishId === dish.dishId && x.toppings.sort().join(',') === $scope.toppings.sort().join(',') && x.dishSize.dishSizeId == $scope.dishSizeIdSelectedDish);
+                var alreadyExistDishIndex = $scope.cart.findIndex(x =>
+                    x.dishId === dish.dishId &&
+                    x.toppings.map(s => s.toppings.sort().join(',')).join() === $scope.toppings.map(s => s.toppings.sort().join(',')).join() &&
+                    x.dishSize.dishSizeId == $scope.dishSizeIdSelectedDish);
                 if (alreadyExistDishIndex > -1) {
                     $scope.cart[alreadyExistDishIndex].quantity = $scope.cart[alreadyExistDishIndex].quantity + $scope.cartItem.quantity;
                     $scope.cart[alreadyExistDishIndex].totalPrice = $scope.cart[alreadyExistDishIndex].totalPrice + $scope.cartItem.totalPrice;
@@ -446,12 +460,15 @@
         };
         $scope.getDishCategories();
         $scope.LoadDishExtras = function (Id, categoryIndex, dishIndex, price) {
+            $scope.toppings = [];
             JsonCallParam("Dishes", "GetDishesExtraTypes", { id: Id });
             $scope.cartItem = { quantity: 1, dishPrice: price, priceWithExtras: price, totalPrice: price };
             if (list.length != 0) {
                 $scope.dishCategories[categoryIndex].dishes[dishIndex].dishExtraTypes = list;
-                
-                $scope.toppings = [];
+
+                for (var i = 0; i < list.length; i++) {
+                    $scope.toppings.push({ handler: list[i].typeName, toppings: [] });
+                }
                 $scope.dishSizeIdSelectedDish = "0";
                 $('.collapse').collapse('hide');
                 $("#qty-" + Id).val(1);
@@ -483,25 +500,26 @@
             $('#more-btn-' + dishExtraTypeId).show();
             $('#less-btn-' + dishExtraTypeId).hide();
         };
-        $scope.toggleToppings = function (extraName, price, sizeToppingPrices) {
-            var idx = $scope.toppings.indexOf(extraName);
+        $scope.toggleToppings = function (extraName, extraType, price, sizeToppingPrices) {
+            var typeIndex = $scope.toppings.findIndex(item => item.handler === extraType);
+            var idx = $scope.toppings[typeIndex].toppings.indexOf(extraName);
 
             if (sizeToppingPrices.length > 0) {
                 price = sizeToppingPrices.find(s => s.dishSizeId === $scope.dishSizeIdSelectedDish).price;
             }
 
             if (idx > -1) {
-                $scope.toppings.splice(idx, 1);
+                $scope.toppings[typeIndex].toppings.splice(idx, 1);
                 $scope.cartItem.priceWithExtras = $scope.cartItem.priceWithExtras - price;
             }
             else {
                 $scope.cartItem.priceWithExtras = $scope.cartItem.priceWithExtras + price;
-                $scope.toppings.push(extraName);
+                $scope.toppings[typeIndex].toppings.push(extraName);
             }
 
             updatePrice();
         };
-        $scope.selectToppingDropdown = function (id, extras) {
+        $scope.selectToppingDropdown = function (id, extras, extraType) {
             var obj = document.getElementById('inputGroupSelect-' + id).value;
             var extra = JSON.parse(obj);
             let extraName = extra.extraName;
@@ -509,10 +527,12 @@
             if (extra.sizeToppingPrices.length > 0) {
                 price = extra.sizeToppingPrices.find(s => s.dishSizeId === $scope.dishSizeIdSelectedDish).price;
             }
+            var typeIndex = $scope.toppings.findIndex(item => item.handler === extraType);
+
             for (var i = 0; i < extras.length; i++) {
-                var idx = $scope.toppings.indexOf(extras[i].extraName);
+                var idx = $scope.toppings[typeIndex].toppings.indexOf(extras[i].extraName);
                 if (idx > -1) {
-                    $scope.toppings.splice(idx, 1);
+                    $scope.toppings[typeIndex].toppings.splice(idx, 1);
                     if (extra.sizeToppingPrices.length > 0) {
                         let priceToMinus = extras[i].sizeToppingPrices.find(s => s.dishSizeId === $scope.dishSizeIdSelectedDish).price;
                         $scope.cartItem.priceWithExtras = $scope.cartItem.priceWithExtras - priceToMinus;
@@ -522,7 +542,7 @@
                 }
             }
 
-            $scope.toppings.push(extraName);
+            $scope.toppings[typeIndex].toppings.push(extraName);
             $scope.cartItem.priceWithExtras = $scope.cartItem.priceWithExtras + price;
 
             updatePrice();
@@ -547,9 +567,10 @@
             }
             $('.topping-select').attr('checked', false);
             $('.topping-dropdown').attr('value', 'Select Value');
-            $scope.toppings = [];
+            $scope.toppings.forEach(item => { item.toppings = [] });
             updatePrice();
             $('#dishSize-' + id).html(size);
+
         };
         function updatePrice() {
             $scope.cartItem.totalPrice = $scope.cartItem.priceWithExtras * $scope.cartItem.quantity;
@@ -625,17 +646,6 @@
             else
                 $(".dishAllergies").html("<h6 style='font-weight:bold'>No Allergies Found</h6>");
         }
-        //$scope.showPaypalBtn = function () {
-        //    if ($scope.shopschedule.isOpen) {
-        //        $scope.order.totalBill = $scope.ordertotalPrice.totalPrice;
-        //        $('#paypalbtn').show();
-        //        $('#cashbtn').hide();
-        //    }
-        //    else {
-        //        $('.shopClosed').modal();
-        //    }
-            
-        //}
         function cartButtonEffect() {
             var time = 700;
             setTimeout(function () {
@@ -643,6 +653,15 @@
             }, time);
             $('#cart-btn-mob').removeClass("bg-primary").addClass("bg-warning");
             
+        }
+
+        $scope.showToppingPrice = function (price) {
+            return price > 0 ? "(+"+price+"€)" : ""; 
+        }
+
+        $scope.filterToppingSizePrice = function (id, arr) {
+            var price = arr.find(s => s.dishSizeId == id).price;
+            return price > 0 ? "(+"+price+"€)" : ""; 
         }
     }]);
 </script>
@@ -678,7 +697,18 @@
                             <a role="button" ng-click="removeItem($index)" class="btn" style="padding: 0 0 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-trash-alt"></i></a>
                         </div>
                     </div>
-                    <p class="cartToppings"><span ng-if="item.dishSize.dishSizeId > 0">Size: {{item.dishSize.size}} Ø{{item.dishSize.diameter}}cm. </span> <span ng-if="item.toppings.length>0" ng-repeat="topping in item.toppings" ng-init="toppingIndex = $index">{{topping}} <i ng-if="toppingIndex < item.toppings.length - 1">,</i></span> </p>
+                    <p class="cartToppings">
+                        <span ng-if="item.dishSize.dishSizeId > 0">Size: {{item.dishSize.size}} {{item.dishSize.diameter}} </span>
+                        <span ng-repeat="toppingItems in item.toppings" ng-if="toppingItems.toppings.length>0">
+                            {{toppingItems.handler}}: [
+                            <span ng-repeat="topping in toppingItems.toppings" ng-init="toppingIndex = $index">
+                                {{topping}}
+                                <i ng-if="toppingIndex < toppingItems.toppings.length - 1">,</i>
+                            </span>
+                            ]
+                        </span>
+                        
+                    </p>
                     <p class="cartToppings" ng-if="item.remarks!=''" style="margin-bottom:5% !important">{{item.remarks}}</p>
                     <div class="commentBox hide commentinput-{{$index}}" style="margin-bottom:10% !important">
                         <label>Remarks</label>
@@ -778,7 +808,7 @@
                                 </div>
                             </div>
 
-                            <p class="cartToppings"><span ng-if="item.dishSize.dishSizeId > 0">Size: {{item.dishSize.size}} Ø{{item.dishSize.diameter}}cm. </span> <span ng-if="item.toppings.length>0" ng-repeat="topping in item.toppings" ng-init="toppingIndex = $index">{{topping}} <i ng-if="toppingIndex < item.toppings.length - 1">,</i></span> </p>
+                            <p class="cartToppings"><span ng-if="item.dishSize.dishSizeId > 0">Size: {{item.dishSize.size}} {{item.dishSize.diameter}} </span> <span ng-if="item.toppings.length>0" ng-repeat="topping in item.toppings" ng-init="toppingIndex = $index">{{topping}} <i ng-if="toppingIndex < item.toppings.length - 1">,</i></span> </p>
                             <p class="cartToppings" ng-if="item.remarks!=''" style="margin-bottom:5% !important">{{item.remarks}}</p>
                             <div class="commentBox hide commentinput-{{$index}}" style="margin-bottom:10% !important">
                                 <label>Remarks</label>
@@ -1079,7 +1109,7 @@
                                                                 ng-model="dishSizeIdSelectedDish" id="sizeSelect-{{dish.dishId}}"
                                                                 ng-change="selectDishSize(dish.dishId, dish.basePrice)">
                                                             <option style="font-size:14px;" hidden value="0">Select Size</option>
-                                                            <option style="font-size:14px;" ng-repeat="size in dish.dishSizes" value="{{size}}">{{size.size}} Ø {{size.diameter}}cm ({{size.basePrice}}€)</option>
+                                                            <option style="font-size:14px;" ng-repeat="size in dish.dishSizes" value="{{size}}">{{size.size}} {{size.diameter}} ({{size.basePrice}}€)</option>
                                                         </select>
                                                         <p class="m-0 mb-3 p-2">
                                                             <span id="dishSize-{{dish.dishId}}"></span>
@@ -1090,15 +1120,14 @@
                                                     <div class="col-lg-8 col-md-8 col-sm-10 col-xs-10 mx-auto" ng-if="extratype.chooseMultiple" style="margin-bottom:20px">
                                                         <label class="d-block"> {{extratype.typeName}} </label>
                                                         <div ng-repeat="extra in extratype.dishExtras" ng-init="extraIndex=$index" class="custom-control custom-checkbox mb-2 extraType-{{extratype.dishExtraTypeId}}" ng-class="{ 'hide': extraIndex > 2 }">
-                                                            <input ng-disabled="dish.dishSizes.length > 0 && dishSizeIdSelectedDish==='0'" type="checkbox" class="custom-control-input pointer topping-dropdown"
+                                                            <input ng-disabled="dish.dishSizes.length > 0 && dishSizeIdSelectedDish==='0'" type="checkbox" class="custom-control-input pointer topping-select"
                                                                    id="{{extra.dishExtraId}}_{{extraIndex}}"
                                                                    value="{{extra.extraName}}"
                                                                    ng-checked="toppings.indexOf(extra.extraName) > -1"
-                                                                   ng-click="toggleToppings(extra.extraName,extra.extraPrice,extra.sizeToppingPrices)">
+                                                                   ng-click="toggleToppings(extra.extraName, extratype.typeName, extra.extraPrice, extra.sizeToppingPrices)">
                                                             <label class="custom-control-label pointer" for="{{extra.dishExtraId}}_{{extraIndex}}" style="font-size: 12px;">
                                                                 {{extra.extraName}}
-                                                                <span ng-if="dish.dishSizes.length > 0" ng-repeat="toppingPrice in extra.sizeToppingPrices | filter : {'dishSizeId' : dishSizeIdSelectedDish}"> (+{{toppingPrice.price}}€)</span>
-                                                                <span ng-if="dish.dishSizes.length === 0"> (+{{extra.extraPrice}}€)</span>
+                                                                {{dish.dishSizes.length > 0 ? filterToppingSizePrice(dishSizeIdSelectedDish, extra.sizeToppingPrices) : showToppingPrice(extra.extraPrice) }}
                                                             </label>
                                                             <i role="button" class="fas fa-info-circle pointer" ng-click="showDishDesc(extra.allergies)" style="color: #1574F5; float:right"> </i>
                                                         </div>
@@ -1113,14 +1142,13 @@
                                                         <label class="d-block">
                                                             {{extratype.typeName}}
                                                         </label>
-                                                        <select ng-disabled="dish.dishSizes.length > 0 && dishSizeIdSelectedDish==='0'" class="custom-select mt-2 pointer topping-select"
-                                                                ng-model="temp" id="inputGroupSelect-{{extratype.dishExtraTypeId}}"
-                                                                ng-change="selectToppingDropdown(extratype.dishExtraTypeId, extratype.dishExtras)">
+                                                        <select ng-disabled="dish.dishSizes.length > 0 && dishSizeIdSelectedDish==='0'" class="custom-select mt-2 pointer topping-dropdown"
+                                                                ng-model="temp" id="inputGroupSelect-{{extratype.dishExtraTypeId}}" 
+                                                                ng-change="selectToppingDropdown(extratype.dishExtraTypeId, extratype.dishExtras, extratype.typeName)">
                                                             <option style="font-size:14px;" hidden value="Select Value">Select Value</option>
                                                             <option style="font-size:14px;" ng-repeat="extra in extratype.dishExtras" value="{{extra}}">
                                                                 {{extra.extraName}}
-                                                                @*<span ng-if="dish.dishSizes.length > 0"> (+{{sizePrice}}€)</span>*@
-                                                                <span ng-if="dish.dishSizes.length === 0"> (+{{extra.extraPrice}}€)</span>
+                                                                {{dish.dishSizes.length > 0 ? filterToppingSizePrice(dishSizeIdSelectedDish, extra.sizeToppingPrices) : showToppingPrice(extra.extraPrice) }}
                                                             </option>
                                                         </select>
                                                         <p class="m-0 mb-3 p-2">
