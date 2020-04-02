@@ -1126,7 +1126,7 @@
                                                                 ng-model="dishSizeIdSelectedDish" id="sizeSelect-{{dish.dishId}}"
                                                                 ng-change="selectDishSize(dish.dishId, dish.basePrice)">
                                                             <option style="font-size:14px;" hidden value="0">Select Size</option>
-                                                            <option style="font-size:14px;" ng-repeat="size in dish.dishSizes" value="{{size}}">{{size.size}} {{size.diameter}} ({{size.basePrice}}€)</option>
+                                                            <option style="font-size:14px;" ng-repeat="size in dish.dishSizes" value="{{size}}">{{size.size}} {{size.diameter}} {{showToppingPrice(size.basePrice)}}</option>
                                                         </select>
                                                         <p class="m-0 mb-3 p-2">
                                                             <span id="dishSize-{{dish.dishId}}"></span>
