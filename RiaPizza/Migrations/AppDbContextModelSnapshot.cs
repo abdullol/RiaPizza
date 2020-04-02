@@ -312,9 +312,6 @@ namespace RiaPizza.Migrations
                     b.Property<int>("MinOrderCharges")
                         .HasColumnType("int");
 
-                    b.Property<int>("OrderInstance")
-                        .HasColumnType("int");
-
                     b.Property<string>("PostalCode")
                         .HasColumnType("nvarchar(max)");
 
@@ -322,9 +319,6 @@ namespace RiaPizza.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("DeliveryAreaId");
-
-                    b.HasIndex("OrderInstance")
-                        .IsUnique();
 
                     b.ToTable("DeliveryAreas");
                 });
@@ -785,15 +779,6 @@ namespace RiaPizza.Migrations
                     b.HasOne("RiaPizza.Data.ApplicationUser.AppUser", "User")
                         .WithMany("UserRoles")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("RiaPizza.Models.DeliveryArea", b =>
-                {
-                    b.HasOne("RiaPizza.Models.Order", "Orders")
-                        .WithOne("DeliveryAreas")
-                        .HasForeignKey("RiaPizza.Models.DeliveryArea", "OrderInstance")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
