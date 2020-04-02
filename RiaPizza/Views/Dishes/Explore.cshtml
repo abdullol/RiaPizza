@@ -7,11 +7,11 @@
 @section css{
     <link rel="stylesheet" type="text/css" href="~/client-assets/swiper.css">
     <link rel="stylesheet" type="text/css" href="~/client-assets/res/custom.css" />
-    
+
     <style>
         /* border of chekbox */
         .custom-control-label::before {
-            border:1px solid #c1c1c1;
+            border: 1px solid #c1c1c1;
         }
         /* HIDE RADIO */
         .payment-selection {
@@ -20,64 +20,79 @@
             width: 0;
             height: 0;
         }
-        /* IMAGE STYLES */
+            /* IMAGE STYLES */
             .payment-selection + .payment-img {
                 cursor: pointer;
             }
 
-        /* CHECKED STYLES */
+            /* CHECKED STYLES */
             .payment-selection:checked + .payment-img {
                 background: linear-gradient(#142209, #142209);
             }
-        .pointer{
+
+        .pointer {
             cursor: pointer !important;
         }
-        .order-btn{
-            height:45px;
+
+        .order-btn {
+            height: 45px;
         }
+
         @@media only screen and (max-width: 992px) {
-            #sidebar{
-                display:none
+            #sidebar {
+                display: none
             }
-            #mainNav{
-                margin-right:10px !important;
-                width:100%;
+
+            #mainNav {
+                margin-right: 10px !important;
+                width: 100%;
             }
+
             #cart-btn-mob {
                 display: block !important;
             }
-            .order-btn{
-                height:35px;
+
+            .order-btn {
+                height: 35px;
             }
-            .groups{
-                margin-right:0px !important;
+
+            .groups {
+                margin-right: 0px !important;
             }
-            .dishDetails{
-                width:100% !important;
+
+            .dishDetails {
+                width: 100% !important;
             }
-            #myBtn{
-                bottom:90px !important;
+
+            #myBtn {
+                bottom: 90px !important;
             }
-            #swiper-next{
-                display:none;
+
+            #swiper-next {
+                display: none;
             }
-            #search-btn{
+
+            #search-btn {
                 padding-left: 5px;
                 padding-right: 5px;
             }
         }
-        #swiper-next{
-            padding-left:8px;
+
+        #swiper-next {
+            padding-left: 8px;
         }
+
         .product-info-btn {
-            display:block !important;
+            display: block !important;
             padding: 2px 15px 10px 0 !important;
             font-size: 15px;
             color: #1574F5 !important;
         }
+
         .groups {
             margin-right: 360px;
         }
+
         #cart-btn-mob {
             display: none;
             position: fixed;
@@ -89,6 +104,7 @@
             width: auto !important;
             margin-right: 0 !important;
         }
+
         #cart-btn-mob .p1[data-count]:after {
             position: absolute;
             right: 50%;
@@ -103,52 +119,66 @@
             text-align: center;
             min-width: 1em;
         }
-        .cart-btn-section{
+
+        .cart-btn-section {
             position: fixed;
             bottom: 0;
             z-index: 1999;
             width: -webkit-fill-available;
             border-top: 1px solid black;
         }
+
         #cart-btn-mob {
             border: 10px solid white;
             width: -webkit-fill-available;
             height: 80px;
         }
+
         #cart-icon-mob {
             font-size: 20px;
             margin: -7px 0 0 -25px;
         }
+
         #mainNav {
-            height:60px;
+            height: 60px;
         }
-        .swiper-container{
-            top:0.5em;
-        }
-        .mob-cart-items div{
-            padding:0;
-        }
-        .mob-cart-items{
-            font-size:11px
-        }
-        .cartIncreasBtn-mob{
-            width:24px;
-            height:23px;
-        }
-        .swiper-wrapper{
-            margin-left:10px;
-            margin-right:10px;
-        }
-        /*#order-button-wrapper paypal-button{
-            display:none;
-        }*/
 
+        .swiper-container {
+            top: 0.5em;
+        }
 
+        .mob-cart-items div {
+            padding: 0;
+        }
+
+        .mob-cart-items {
+            font-size: 11px
+        }
+
+        .cartIncreasBtn-mob {
+            width: 24px;
+            height: 23px;
+        }
+
+        .swiper-wrapper {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        .dish-desc {
+            font-size: 14px;
+            color: black;
+            font-weight: 400
+        }
+
+            .dish-desc p {
+                color: black !important;
+            }
     </style>
 }
 <!-- <script src="~/Angular/Controllers/ViewDishesPage.js"></script> -->
 <script>
-    App.controller("ViewDishes", ['$scope', '$rootScope','$http' , function ($scope, $rootScope, $http) {
+    App.controller("ViewDishes", ['$scope', '$rootScope', '$http', function ($scope, $rootScope, $http) {
 
         function JsonCallParam(Controller, Action, Parameters) {
             $.ajax({
@@ -241,7 +271,7 @@
         $scope.shopschedule = { timeFrom: '', timeTo: '', isOpen: false };
         //End Ordering Attributes
 
-        $rootScope.$on("LoadUserData", function(e, args) {
+        $rootScope.$on("LoadUserData", function (e, args) {
             if (args) {
                 $scope.loadUserDataInCheckOut();
             }
@@ -343,8 +373,8 @@
         }
         function pushCartItemInOrderItems() {
             for (var i = 0; i < $scope.cart.length; i++) {
-                if ($scope.cart[i].dishSize.dishSizeId) 
-                    var dishToppings = "Size: "+ $scope.cart[i].dishSize.size + $scope.cart[i].dishSize.diameter ;
+                if ($scope.cart[i].dishSize.dishSizeId)
+                    var dishToppings = "Size: " + $scope.cart[i].dishSize.size + $scope.cart[i].dishSize.diameter;
                 else
                     var dishToppings = "";
 
@@ -410,7 +440,7 @@
                     if (dish.dishSizes.length > 0)
                         $scope.cartItem.dishSize = dish.dishSizes.find(s => s.dishSizeId === $scope.dishSizeIdSelectedDish);
                     else
-                        $scope.cartItem.dishSize = { dishSizeId: 0};
+                        $scope.cartItem.dishSize = { dishSizeId: 0 };
 
                     $scope.cart.push($scope.cartItem);
                 }
@@ -460,7 +490,7 @@
             if (list != null) {
                 $scope.dishCategories = list;
             }
-            
+
         };
         $scope.getDishCategories();
         $scope.LoadDishExtras = function (Id, categoryIndex, dishIndex, price) {
@@ -616,7 +646,7 @@
             }
             $scope.coupon = list;
             $scope.discount = $scope.ordertotalPrice.subtotal * $scope.coupon.discountPercent;
-            $scope.ordertotalPrice.totalPrice = ($scope.ordertotalPrice.subtotal + $scope.ordertotalPrice.deliveryCharges)  - $scope.discount;
+            $scope.ordertotalPrice.totalPrice = ($scope.ordertotalPrice.subtotal + $scope.ordertotalPrice.deliveryCharges) - $scope.discount;
             //$scope.ordertotalPrice.totalPrice = $scope.ordertotalPrice.totalPrice - $scope.discount;
             $scope.showDiscount = true;
             $('#couponValidation').html('').removeClass("text-danger").addClass("text-success").append('Coupon found! Discount applied!');
@@ -643,15 +673,28 @@
             $('#orderBtn').show();
             $('.cart-btn-section').show();
         }
-        $scope.showDishDesc = function (allergies) {
+        $scope.showDishDesc = function (allergies, allergiesOf) {
             $(".dishDetails").modal();
-            if (allergies !=='' && allergies !== null){
- $(".dishAllergies").html(allergies);
-            }               
-            else{
-  $(".dishAllergies").html("<h6 style='font-weight:bold'>No Allergies Found</h6>");
+            $(".dishAllergies").html('');
+
+            if (allergies === '' && allergies === null) {
+                $(".dishAllergies").html("<h6 style='font-weight:bold'>No Allergies Found</h6>");
+                return;
             }
-              
+
+            if (allergiesOf == 'toppings') {
+                var allergyList = allergies.split(',');
+                if (allergyList.length > 0) {
+                    $(".dishAllergies").append('<h6 style="font-weight:bold">Allergies</h6> <ul> </ul>');
+                    allergyList.forEach(function (val, key) {
+                        $(".dishAllergies ul").append('<li> ' + val + ' </li>');
+                    })
+                }
+                else
+                    $(".dishAllergies").html(allergies);
+            }
+            else 
+                $(".dishAllergies").html(allergies);
         }
         function cartButtonEffect() {
             var time = 700;
@@ -659,16 +702,16 @@
                 $('#cart-btn-mob').removeClass("bg-warning").addClass("bg-primary");
             }, time);
             $('#cart-btn-mob').removeClass("bg-primary").addClass("bg-warning");
-            
+
         }
 
         $scope.showToppingPrice = function (price) {
-            return price > 0 ? "(+"+price+"€)" : ""; 
+            return price > 0 ? "(+" + price + "€)" : "";
         }
 
         $scope.filterToppingSizePrice = function (id, arr) {
             var price = arr.find(s => s.dishSizeId == id).price;
-            return price > 0 ? "(+"+price+"€)" : ""; 
+            return price > 0 ? "(+" + price + "€)" : "";
         }
     }]);
 </script>
@@ -714,7 +757,7 @@
                             </span>
                             ]
                         </span>
-                        
+
                     </p>
                     <p class="cartToppings" ng-if="item.remarks!=''" style="margin-bottom:5% !important">{{item.remarks}}</p>
                     <div class="commentBox hide commentinput-{{$index}}" style="margin-bottom:10% !important">
@@ -776,7 +819,7 @@
         </div>
     </div>
     <div id="cart-modal" data-backdrop-limit="1" tabindex="-1" role="dialog"
-             aria-labelledby="myModalLabel" aria-hidden="true" class="modal">
+         aria-labelledby="myModalLabel" aria-hidden="true" class="modal">
         <div class="modal-dialog modal-dialog-centered mx-auto my-modal">
             <!-- Modal content-->
             <div class="modal-content">
@@ -1087,12 +1130,12 @@
         <div class="groups">
             <section ng-repeat="dishCategory in dishCategories | orderBy : 'orderBy' " ng-init="categoryIndex=$index" id="cat-{{categoryIndex}}" class="group-item" index="{{$index}}">
                 <div class="container">
-                    <div class="row mx-md-2 mx-0 mt-3 dish-head">
+                    <div class="row mx-md-2 mx-0 mt-3 dish-head {{dishCategory.categoryName}}" data-categoryhead="{{dishCategory.categoryName}}">
                         <div class="col-12 ml-5 py-3 mb-4 mx-auto dish-col" style="background:url(/Uploads/{{dishCategory.image}});">
-                            <h5> {{dishCategory.categoryName}} </h5>
+                            <h5>{{dishCategory.categoryName}} </h5>
                         </div>
                     </div>
-                    <div class="row mx-md-2 mx-0 px-0 dishes" ng-repeat="dish in dishCategory.dishes" ng-init="dishIndex = $index">
+                    <div class="row mx-md-2 mx-0 px-0 dishes" data-category="{{dishCategory.categoryName}}" ng-repeat="dish in dishCategory.dishes" ng-init="dishIndex = $index">
                         <div class="col-12 ml-5 py-1 pl-0 pr-0 mx-auto">
                             <div class="panel-group" id="accordion_{{dish.dishId}}" role="tablist" aria-multiselectable="true">
                                 <div class="panel panel-default">
@@ -1101,16 +1144,15 @@
                                             <div class="col-9">
                                                 <h5 class="panel-title row" style="padding-right:8px;font-weight:600;font-size:18px;">
                                                     {{dish.dishName}} &nbsp;
-                                                    <i class="fas fa-info-circle product-info-btn" onclick="event.preventDefault()" ng-click="showDishDesc(dish.allergies)"> </i>
+                                                    <i class="fas fa-info-circle product-info-btn" onclick="event.preventDefault()" ng-click="showDishDesc(dish.allergies, 'dish')"> </i>
                                                 </h5>
                                             </div>
                                             <div class="col-3 text-right w-25">
                                                 <i class="fas fa-plus border p-3" style="color: #1474F5"></i>
                                             </div>
                                         </div>
-                                        <p ng-if="dish.subName" style="font-size:14px;color:black;font-weight:400">{{dish.subName}}</p>
-                                        <p ng-bind-html="dish.description"></p>
-                                        @*<p style="font-style:italic;color:black;font-size:12px;font-weight:400;"></p>*@
+                                        <span class="dish-desc" ng-bind-html="dish.description"></span>
+                                        <p style="font-style: italic;font-size: 12px;color: #666;" ng-if="dish.subName">{{dish.subName}}</p>
                                         <h4 style="color:#ff8000;font-weight:600;font-size:18px;">{{dish.basePrice}} €</h4>
                                     </div>
                                     <div id="collapse_{{dish.dishId}}" class="panel-collapse collapse in" role="tabpanel"
@@ -1146,7 +1188,7 @@
                                                                 {{extra.extraName}}
                                                                 {{dish.dishSizes.length > 0 ? filterToppingSizePrice(dishSizeIdSelectedDish, extra.sizeToppingPrices) : showToppingPrice(extra.extraPrice) }}
                                                             </label>
-                                                            <i role="button" class="fas fa-info-circle pointer" ng-click="showDishDesc(extra.allergies)" style="color: #1574F5; float:right"> </i>
+                                                            <i role="button" class="fas fa-info-circle pointer" ng-click="showDishDesc(extra.allergies, 'toppings')" style="color: #1574F5; float:right"> </i>
                                                         </div>
                                                         <button ng-click="showMoreExtras(extratype.dishExtraTypeId)" id="more-btn-{{extratype.dishExtraTypeId}}" ng-if="extratype.dishExtras.length > 3" class="more-btn">
                                                             <i class="fas fa-angle-down mr-3 text-dark"></i>Show More
@@ -1160,7 +1202,7 @@
                                                             {{extratype.typeName}}
                                                         </label>
                                                         <select ng-disabled="dish.dishSizes.length > 0 && dishSizeIdSelectedDish==='0'" class="custom-select mt-2 pointer topping-dropdown"
-                                                                ng-model="temp" id="inputGroupSelect-{{extratype.dishExtraTypeId}}" 
+                                                                ng-model="temp" id="inputGroupSelect-{{extratype.dishExtraTypeId}}"
                                                                 ng-change="selectToppingDropdown(extratype.dishExtraTypeId, extratype.dishExtras, extratype.typeName)">
                                                             <option style="font-size:14px;" hidden value="Select Value">Select Value</option>
                                                             <option style="font-size:14px;" ng-repeat="extra in extratype.dishExtras" value="{{extra}}">
@@ -1506,12 +1548,24 @@
 
         function spliceSearch(el) {
             var value = $(el).val().toLowerCase();
-            $(".dishes").filter(function () {
-                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            $(".dish-head").hide();
+            $(".dish-head").each(function () {
+                let val = $(this).data('categoryhead');
+                $('.dishes[data-category="'+val+'"]').each(function () {
+                    var head = $(this).data('category');
+
+                    if ($(this).text().toLowerCase().indexOf(value) > -1) {
+                        $(this).show();
+                        $('.' + head).show();
+                    }
+                    else
+                        $(this).hide();
+                });
             });
         }
+
         $(document).ready(function () {
-            $('.dishlink').css({ "width": "auto" });
+            $('.dishlink').css({ "width": "auto" })
             $("#search-dish").on("keyup", function () {
                 spliceSearch(this);
             });

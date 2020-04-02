@@ -13,16 +13,9 @@
             float: right;
         }
 
-        /*.ck.ck-content ul,
-        .ck.ck-content ul li {
-            list-style-type: inherit;
+        .hide{
+            display:none;
         }
-
-        .ck.ck-content ul {
-             Default user agent stylesheet, you can change it to your needs. */
-        /*padding-left: 40px;*/
-        /*}*/
-
     </style>
 }
 @*<script src="~/Angular/Controllers/DishCtrl.js"></script>*@
@@ -92,14 +85,23 @@
 
         //Start Dish Only Function
         $scope.saveDish = function () {
-            if ($scope.addDish.dishName === "" || Number($scope.addDish.dishCategoryId) === 0 || $scope.addDish.basePrice === 0) { return; }
+            if ($scope.addDish.dishName === "" || Number($scope.addDish.dishCategoryId) === 0 || $scope.addDish.basePrice === 0) {
+                $('#validation').show();
+                return;
+            } else $('#validation').hide()
+
+
             if ($scope.haveToppings) {
                 for (var i = 0; i < $scope.addDishExtraTypes.length; i++) {
-                    if ($scope.addDishExtraTypes[i].typeName === "") { return; }
-                    for (var j = 0; j < $scope.addDishExtraTypes[i].dishExtras.length; j++) { if ($scope.addDishExtraTypes[i].dishExtras[j].extraName === "") { return; } }
+                    if ($scope.addDishExtraTypes[i].typeName === "") { $('#validation').show(); return; } else $('#validation').hide()
+                    for (var j = 0; j < $scope.addDishExtraTypes[i].dishExtras.length; j++) {
+                        if ($scope.addDishExtraTypes[i].dishExtras[j].extraName === "") {
+                            $('#validation').show();
+                            return;
+                        } else $('#validation').hide()
+                    }
                 }
             }
-
 
             if ($scope.multipleSizes) {
                 $scope.addDish.dishSizes = $scope.dishSizes;
@@ -118,6 +120,8 @@
                 swal("Added", "Dish Added!", "success");
 
                 $scope.addDish = { dishName: '', subName: '', description: '', dishCategoryId: 0, basePrice: 0 };
+                CKEDITOR.instances.editor1.value = '';
+                CKEDITOR.instances.editor2.value = '';
                 $scope.addDishExtraTypes = [];
                 $scope.dishSizes = [];
                 $scope.multipleSizes = false;
@@ -226,6 +230,7 @@
             $scope.addDishExtraTypes = [];
             $scope.pushDishExtraType();
         }
+        
     });
 
 </script>
@@ -259,7 +264,7 @@
                         <strong>Add</strong> Dish
                     </h2>
                 </div>
-                <div class="body" ng-init="">
+                <div class="body formBody">
                     <h2 class="card-inside-title">Dish Details</h2>
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 null-marbottom">
@@ -293,7 +298,6 @@
                             <div class="form-group">
 
                                 <label>Allergies <span class="text-danger">*</span></label>
-                                @*<input type="text" class="form-control" placeholder="enter the allergies" ng-model="addDish.allergies" min="0" required>*@
                                 <textarea id="editor1" name="editor1" required>
                                 </textarea>
 
@@ -405,38 +409,33 @@
                                 <div class="row clearfix" ng-if="extraType.dishExtras.length > 0" style="margin-top:30px">
                                     <div class="col-lg-12">
                                         <div class="row">
-                                            <div class="col-lg-3" style="margin-bottom:0"><label>Topping Name <span class="text-danger">*</span></label></div>
-                                            <div class="col-lg-3" style="margin-bottom:0"><label>Allergies</label></div>
-                                            <div class="col-lg-3" ng-if="!multipleSizes" style="margin-bottom:0"><label>Topping Price</label></div>
-                                            <div class="col-lg-2"><label class="right" style="margin-bottom:0">Actions</label></div>
+                                            <div class="col-lg-3 null-marbottom"><label>Topping Name <span class="text-danger">*</span></label></div>
+                                            <div class="col-lg-3 null-marbottom"><label>Allergies</label></div>
+                                            <div class="col-lg-3 null-marbottom" ng-if="!multipleSizes"><label>Topping Price</label></div>
+                                            <div class="col-lg-2 null-marbottom"><label class="right">Actions</label></div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row clearfix" ng-repeat="extra in extraType.dishExtras" ng-init="extraIndex=$index">
                                     <div class="col-lg-12">
                                         <div class="row">
-                                            <div class="col-lg-3">
+                                            <div class="col-lg-3 null-marbottom">
                                                 <div class="form-group">
                                                     <input type="text" class="form-control" placeholder="Topping" ng-model="extra.extraName" required>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-3">
-                                                    <div class="form-group">
-                                                        <input type="text" class="form-control" placeholder="Allergies" ng-model="extra.allergies" />
-                                                    </div>
+                                            <div class="col-lg-3 null-marbottom">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" placeholder="Allergies" ng-model="extra.allergies" />
                                                 </div>
-                                            <div class="col-lg-3" ng-if="!multipleSizes">
+                                            </div>
+                                            <div class="col-lg-3 null-marbottom" ng-if="!multipleSizes">
                                                 <input type="number" class="form-control" placeholder="$$" ng-model="extra.extraPrice" required>
                                             </div>
-                                            <div class="col-lg-2">
+                                            <div class="col-lg-2 null-marbottom">
                                                 <button class="btn btn-danger right" ng-click="removeExtra(extraTypeIndex, extraIndex)"><i class="fas fa-trash-alt"></i></button>
                                             </div>
                                         </div>
-                                        @*<div class="row">
-                                            <div class="col-lg-12">
-                                                <textarea name="editor3"></textarea>
-                                            </div>
-                                        </div>*@
                                     </div>
                                     <div class="col-lg-12" ng-if="multipleSizes" style="margin-top:-20px">
                                         <div class="row">
@@ -453,6 +452,8 @@
                             <div class="col-lg-1"></div>
                         </div>
                     </div>
+
+                    <p class="text-danger" style="display:none" id="validation">Please fill all required data</p>
 
                     <button class="btn btn-info" style="float:right; margin-right:5px">Clear</button>
                     <button ng-click="saveDish()" class="btn btn-success" style="float:right;">Save</button>
@@ -474,7 +475,7 @@
         CKEDITOR.replace('editor1');
         CKEDITOR.replace('editor2');
         CKEDITOR.config.height = 150;
-       
+
     </script>
 
 

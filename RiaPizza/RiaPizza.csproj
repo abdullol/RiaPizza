@@ -9,6 +9,8 @@
     <Compile Remove="Migrations\20200314103954_AddDishExtraInSizeToppingPrice.Designer.cs" />
     <Compile Remove="Migrations\20200314104322_Last.cs" />
     <Compile Remove="Migrations\20200314104322_Last.Designer.cs" />
+    <Compile Remove="Migrations\20200401203923_test.cs" />
+    <Compile Remove="Migrations\20200401203923_test.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
