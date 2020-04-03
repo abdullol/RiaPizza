@@ -686,6 +686,9 @@ namespace RiaPizza.Migrations
                     b.Property<bool>("IsOpen")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ShopLogo")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<TimeSpan>("TimeFrom")
                         .HasColumnType("time");
 

@@ -9,25 +9,31 @@ using Newtonsoft.Json;
 using RiaPizza.Data;
 using RiaPizza.Models;
 using RiaPizza.Services.CouponService;
+using RiaPizza.Services.ScheduleService;
 
 namespace RiaPizza.Controllers
 {
     public class CouponsController : Controller
     {
         private readonly ICouponService _service;
-        public CouponsController(ICouponService service)
+        private readonly IScheduleService _scheduleService;
+        public CouponsController(ICouponService service, 
+            IScheduleService scheduleService)
         {
             _service = service;
+            _scheduleService = scheduleService;
         }
         // GET: Coupons
         public async Task<IActionResult> Index()
         {
-            var allCoupons= await _service.GetAllCoupons();
+            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
+            var allCoupons = await _service.GetAllCoupons();
             return View(allCoupons);
         }
         [Authorize(Roles = "Manager,Admin")]
-        public async Task<ActionResult> Create() 
+        public async Task<ActionResult> Create()
         {
+            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             return View();
         }
 

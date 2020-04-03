@@ -10,6 +10,7 @@ using RiaPizza.Models;
 using RiaPizza.Services.DeliveryAreaService;
 using RiaPizza.Services.DishCategoryService;
 using RiaPizza.Services.DishService;
+using RiaPizza.Services.ScheduleService;
 
 namespace RiaPizza.Controllers
 {
@@ -18,11 +19,14 @@ namespace RiaPizza.Controllers
         private readonly IDishService _service;
         private readonly IDishCategoryService _categoryService;
         private readonly IDeliveryAreaService _areaService;
-        public DishesController(IDishService service, IDishCategoryService categoryService, IDeliveryAreaService areaService)
+        private readonly IScheduleService _scheduleService;
+
+        public DishesController(IDishService service, IDishCategoryService categoryService, IDeliveryAreaService areaService, IScheduleService scheduleService)
         {
             _service = service;
             _categoryService = categoryService;
             _areaService = areaService;
+            _scheduleService = scheduleService;
         }
 
         [Authorize(Roles = "Manager,Admin")]
@@ -32,11 +36,13 @@ namespace RiaPizza.Controllers
             if (id == null || id == 0)
             {
                 var dishes = await _service.AllDishes();
+                ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
                 return View(dishes);
             }
             else
             {
                 var dishes = await _service.SearchWithCategory(Convert.ToInt32(id));
+                ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
                 return View(dishes);
             }
         }
@@ -44,6 +50,7 @@ namespace RiaPizza.Controllers
         [Authorize(Roles = "Manager,Admin")]
         public IActionResult Add()
         {
+            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             return View();
         }
 
@@ -85,19 +92,21 @@ namespace RiaPizza.Controllers
                     SubName = dish.SubName,
                     Rating = dish.Rating
                 };
-                cloneDish.DishSizes = new List<DishSize>();
+
+                var dishSizes = new List<DishSize>();
                 dish.DishSizes.ToList().ForEach(s =>
                 {
-                    var size = new DishSize 
+                    var size = new DishSize
                     {
                         BasePrice = s.BasePrice,
                         Diameter = s.Diameter,
                         Size = s.Size
                     };
-
-                    cloneDish.DishSizes.ToList().Add(size);
+                    dishSizes.Add(size);
                 });
-                cloneDish.DishExtraTypes = new List<DishExtraType>();
+                cloneDish.DishSizes = dishSizes;
+
+                var dishExtraTypes = new List<DishExtraType>();
                 dish.DishExtraTypes.ToList().ForEach(s =>
                 {
                     var dishExtraType = new DishExtraType
@@ -106,7 +115,7 @@ namespace RiaPizza.Controllers
                         Status = s.Status,
                         TypeName = s.TypeName
                     };
-                    dishExtraType.DishExtras = new List<DishExtra>();
+                    var dishExtras = new List<DishExtra>();
                     s.DishExtras.ToList().ForEach(a =>
                     {
                         var dishExtra = new DishExtra
@@ -116,7 +125,7 @@ namespace RiaPizza.Controllers
                             Allergies = a.Allergies,
                             IsAvailable = a.IsAvailable
                         };
-                        dishExtra.SizeToppingPrices = new List<SizeToppingPrice>();
+                        var sizeToppingPrices = new List<SizeToppingPrice>();
                         a.SizeToppingPrices.ToList().ForEach(b =>
                         {
                             var toppingPrice = new SizeToppingPrice
@@ -124,13 +133,15 @@ namespace RiaPizza.Controllers
                                 SizeName = b.SizeName,
                                 Price = b.Price
                             };
-                            dishExtra.SizeToppingPrices.ToList().Add(toppingPrice);
+                            sizeToppingPrices.Add(toppingPrice);
                         });
-
-                        dishExtraType.DishExtras.ToList().Add(dishExtra);
+                        dishExtra.SizeToppingPrices = sizeToppingPrices;
+                        dishExtras.Add(dishExtra);
                     });
-                    cloneDish.DishExtraTypes.ToList().Add(dishExtraType);
+                    dishExtraType.DishExtras = dishExtras;
+                    dishExtraTypes.Add(dishExtraType);
                 });
+                cloneDish.DishExtraTypes = dishExtraTypes;
 
                 await _service.AddDish(cloneDish);
                 return Json("Success");
@@ -283,6 +294,7 @@ namespace RiaPizza.Controllers
                 return RedirectToAction("Index", "Home", new { error = "Error" });
             }
             ViewBag.Categories = await _categoryService.AllDishCategories();
+            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             return View(area);
         }
 

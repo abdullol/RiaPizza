@@ -146,3 +146,12 @@ $(function() {
     }
   });
 });
+
+function toggleRegister() {
+    $('#loginModal').modal('hide');
+    $('#signModal').modal();
+}
+function toggleLogin() {
+    $('#signModal').modal('hide');
+    $('#loginModal').modal();
+}

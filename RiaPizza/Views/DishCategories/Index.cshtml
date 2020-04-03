@@ -1,4 +1,5 @@
-﻿@{
+﻿@model RiaPizza.Models.DishCategory
+@{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
@@ -77,10 +78,12 @@
                                                            placeholder="Enter Dish Category Name" ng-model="addCategoryObj.categoryName">
                                                 </div>
                                             </div>
+                                            <div>
+                                            </div>
                                             <div class="form-group">
                                                 <div class="form-line">
                                                     <input type="text" class="form-control"
-                                                           placeholder="OrderBy" ng-model="addCategoryObj.orderBy">
+                                                           placeholder="Order Number [{{allCategories[allCategories.length-1].orderBy + 1}}]" ng-model="addCategoryObj.orderBy" required>
                                                 </div>
                                             </div>
                                             <label>Image <span class="text-danger">*</span></label>
@@ -88,7 +91,7 @@
                                                 <input style="display:none" type="file" id="fileInput" oninput="showImage()">
                                                 <div id="ImageTab" class="center">
                                                 </div>
-                                                <img style="width:40px;margin-left: 20px; margin-right:20px" id="selectImageBtn" class="icon-colored pointer" onclick="$('#fileInput').click()" src="~/assets/images/add_image.svg" title="add_image.svg">
+                                                <img style="width:40px;margin-left: 20px; margin-right:20px" id="selectImageBtn" class="icon-colored pointer" onclick="$('#fileInput').click()" src="~/assets/images/details_open.png" title="add_image.svg">
                                             </div>
                                         </form>
                                     </div>
@@ -124,14 +127,14 @@
                                             <div class="form-group">
                                                 <div class="form-line">
                                                     <input type="text" class="form-control"
-                                                           placeholder="OrderBy" ng-model="editCategoryObj.orderBy">
+                                                           placeholder="Order Number" ng-model="editCategoryObj.orderBy">
                                                 </div>
                                             </div>
                                             <label>Image</label>
                                             <div class="form-group">
                                                 <input class="center" style="display:none" type="file" id="fileInputEdit" oninput="showImageEdit()">
                                                 <div id="ImageTabEdit" class="center"> </div>
-                                                <img style="width:40px;margin-left: 20px; margin-right:20px" id="selectImageBtnEdit" class="icon-colored pointer center" onclick="$('#fileInputEdit').click()" src="~/assets/images/add_image.svg" title="add_image.svg">
+                                                <img style="width:40px;margin-left: 20px; margin-right:20px" id="selectImageBtnEdit" class="icon-colored pointer center" onclick="$('#fileInputEdit').click()" src="~/assets/images/details_open.png" title="add_image.svg">
                                             </div>
                                         </form>
                                     </div>
@@ -157,7 +160,7 @@
                                     <th>Image</th>
                                     <th>Is Avalaible</th>
                                     <th>Status</th>
-                                    <th>OrderBy</th>
+                                    <th>Order No#</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -191,7 +194,7 @@
                                     <th>Image</th>
                                     <th>Is Avalaible</th>
                                     <th>Status</th>
-                                    <th>OrderBy</th>
+                                    <th>Order No#</th>
                                     <th>Actions</th>
                                 </tr>
                             </tfoot>
@@ -230,6 +233,8 @@
             $('#ImageTabEdit').empty();
             $('#selectImageBtnEdit').show();
         }
+
     </script>
+
 }
 

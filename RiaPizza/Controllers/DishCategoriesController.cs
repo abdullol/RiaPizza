@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using RiaPizza.Models;
 using RiaPizza.Services.DishCategoryService;
+using RiaPizza.Services.ScheduleService;
 
 namespace RiaPizza.Controllers
 {
@@ -17,18 +18,21 @@ namespace RiaPizza.Controllers
     {
         private readonly IDishCategoryService _service;
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IScheduleService _scheduleService;
 
         public DishCategoriesController(
             IDishCategoryService service,
-            IHostingEnvironment hostingEnvironment)
+            IHostingEnvironment hostingEnvironment, IScheduleService scheduleService)
         {
             _service = service;
             _hostingEnvironment = hostingEnvironment;
+            _scheduleService = scheduleService;
         }
 
         [Authorize(Roles = "Manager,Admin")]
         public IActionResult Index()
         {
+            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             return View();
         }
         

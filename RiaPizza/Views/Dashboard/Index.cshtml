@@ -3,6 +3,11 @@
     ViewData["Title"] = "Dashboard";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
+
+<script src="~/Angular/Controllers/ShopScheduleCtrl.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/danialfarid-angular-file-upload/12.2.13/ng-file-upload.min.js"></script>
+
 @section css{
     <style>
         .support-box {
@@ -10,7 +15,7 @@
         }
     </style>
 }
-<div class="container-fluid">
+<div class="container-fluid" ng-controller="ShopScheduleCtrl">
     <div class="block-header">
         <div class="row">
             <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
@@ -59,7 +64,6 @@
                     </h3>
                 </div>
             </form>
-
         </div>
         <div class="col-lg-3 col-sm-6">
             <form action="~/Orders/SearchTodayOrders" onclick="$(this).submit()" target="_blank" style="cursor:pointer">
@@ -71,7 +75,6 @@
                     </h3>
                 </div>
             </form>
-
         </div>
         <div class="col-lg-3 col-sm-6">
             <form action="~/Orders/SearchTodayOrders" onclick="$(this).submit()" target="_blank" style="cursor:pointer">
@@ -81,6 +84,19 @@
                     <h3 class="m-b-10">
                         @ViewBag.TodaySales €
                     </h3>
+                </div>
+            </form>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <form style="cursor: pointer">
+                <input type="hidden" name="imageurl" value="UploadLogo" />
+                <div class="support-box text-center bg-teal">
+                    <div class="text font-17 m-b-5">Upload Logo</div>
+                    <input style="display:none" type="file" id="fileInput" oninput="showImage()">
+                    <div id="ImageTab" class="center">
+                    </div>
+                    <img style="width:40px;margin-left: 20px; margin-right:20px" id="selectImageBtn" class="icon-colored pointer" onclick="$('#fileInput').click()" src="~/assets/images/details_open.png" title="add_image.svg">
+                    <button type="button" class="btn btn-info waves-effect" ng-click="ShopLogoUpdate()">Save</button>
                 </div>
             </form>
         </div>
@@ -204,68 +220,66 @@
                             <tbody class="ordersList">
                                 @foreach (var order in Model)
                                 {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => order.OrderCode)
-                                        @if (order.OrderStatus != "Confirmed")
-                                        {
-                                            {<span class="label bg-green shadow-style">New</span>}
-                                        }
-                                    </td>
-                                    <td>@order.OrderBy.Name</td>
-                                    <td class="status">
-                                        @if (order.OrderStatus == "Pending")
-                                        {<span class="label bg-yellow shadow-style">Pending</span>}
-                                        else if (order.OrderStatus == "Confirmed")
-                                        {<span class="label bg-orange shadow-style">Confirmed</span>}
-                                        else if (order.OrderStatus == "Processing")
-                                        {<span class="label bg-teal shadow-style">Processing</span>}
-                                        else if (order.OrderStatus == "Shipped")
-                                        {<span class="label bg-cyan shadow-style">Shipped</span>}
-                                        else if (order.OrderStatus == "Delivered")
-                                        {<span class="label bg-blue shadow-style">Delivered</span>}
-                                        else if (order.OrderStatus == "Cancelled")
-                                        {<span class="label bg-red shadow-style">Cancelled</span>}
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => order.RecievingTime)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => order.OrderDateTime)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => order.OrderDeliveryAddress.PostalCode)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => order.OrderDeliveryAddress.Address)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => order.OrderBy.Contact)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => order.SubTotal)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => order.TotalBill)
-                                    </td>
-                                    <td>
-                                        <a target="_blank" class="btn btn-warning" href="~/Orders/Invoice/@order.OrderId"><i class="fas fa-print"></i></a>
-                                        <button data-toggle="modal" data-target="#ChangeStatusModal" class="btn btn-success" onclick="setValue(@order.OrderId,'@order.OrderStatus')"><i class="fas fa-toggle-on"></i></button>
-                                        <button type="button" class="btn btn-primary" onclick="showOrderDetails(@order.OrderId)"><i class="fas fa-info-circle"></i></button>
-                                    </td>
-
-
-                                    <td>
-                                        @Html.DisplayFor(modelItem => order.PaymentMethod)
-                                        @if (order.IsPaymentConfirmed == true)
-                                        {<span class="label bg-green shadow-style">Confirmed</span>}
-                                        @if (order.IsPaymentConfirmed == false)
-                                        {<span class="label bg-red shadow-style">Pending</span>}
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => order.Discount)
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.OrderCode)
+                                            @if (order.OrderStatus != "Confirmed")
+                                            {
+                                                {<span class="label bg-green shadow-style">New</span>}
+                                            }
+                                        </td>
+                                        <td>@order.OrderBy.Name</td>
+                                        <td class="status">
+                                            @if (order.OrderStatus == "Pending")
+                                            {<span class="label bg-yellow shadow-style">Pending</span>}
+                                            else if (order.OrderStatus == "Confirmed")
+                                            {<span class="label bg-orange shadow-style">Confirmed</span>}
+                                            else if (order.OrderStatus == "Processing")
+                                            {<span class="label bg-teal shadow-style">Processing</span>}
+                                            else if (order.OrderStatus == "Shipped")
+                                            {<span class="label bg-cyan shadow-style">Shipped</span>}
+                                            else if (order.OrderStatus == "Delivered")
+                                            {<span class="label bg-blue shadow-style">Delivered</span>}
+                                            else if (order.OrderStatus == "Cancelled")
+                                            {<span class="label bg-red shadow-style">Cancelled</span>}
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.RecievingTime)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.OrderDateTime)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.OrderDeliveryAddress.PostalCode)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.OrderDeliveryAddress.Address)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem=>order.OrderBy.Contact)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.SubTotal)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.Discount)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.TotalBill)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.PaymentMethod)
+                                            @if (order.IsPaymentConfirmed == true)
+                                            {<span class="label bg-green shadow-style">Confirmed</span>}
+                                            @if (order.IsPaymentConfirmed == false)
+                                            {<span class="label bg-red shadow-style">Pending</span>}
+                                        </td>
+                                        <td>
+                                            <a target="_blank" class="btn btn-warning" href="~/Orders/Invoice/@order.OrderId"><i class="fas fa-print"></i></a>
+                                            <button data-toggle="modal" data-target="#ChangeStatusModal" class="btn btn-success" onclick="setValue(@order.OrderId,'@order.OrderStatus')"><i class="fas fa-toggle-on"></i></button>
+                                            <button type="button" class="btn btn-primary" onclick="showOrderDetails(@order.OrderId)"><i class="fas fa-info-circle"></i></button>
+                                        </td>
+                                    </tr>
                                 }
                             </tbody>
                             <tfoot>
@@ -301,6 +315,15 @@
 
     <script src="https://www.google.com/cloudprint/client/cpgadget.js">
     </script>
+
+    <script>
+        function showImage() {
+            var file_data = $("#fileInput").prop("files")[0];
+            $('#ImageTab').append('<img style="cursor:pointer" src="' + window.URL.createObjectURL(file_data) + '" alt="' + file_data.name + '" /> <i onclick="ClearFile()"');
+            $('#selectImageBtn').hide();
+        }
+    </script>
+
     <script>
         window.onload = function () {
             var gadget = new cloudprint.Gadget();
@@ -370,6 +393,16 @@
         window.RiaPizzaConfig = getOrderTableSortOrder();
 
     </script>
+
+    <script>
+        $(document).ready(function () {
+            $('.custom-file-input').on("change", function () {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).next('.custom-file-label').html(fileName);
+            });
+        });
+    </script>
+
     <script src="~/assets/js/table.min.js"></script>
     <script src="~/assets/js/pages/tables/jquery-datatable.js"></script>
     <script src="~/assets/js/pages/index.js"></script>
