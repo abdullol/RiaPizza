@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ria Pizza</title>
     <!-- BootStrap CSS -->
     <link rel="stylesheet" href="~/client-assets/res/bootstrap.css">
 
@@ -20,159 +21,31 @@
     <script src="https://www.paypalobjects.com/api/checkout.js"></script>
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="~/client-assets/res/sass/style.css" type="text/css">
-
+    <link href="~/client-assets/res/sass/style.css" rel="stylesheet" type="text/css">
+    <link href="~/client-assets/custom/preloader.css" rel="stylesheet" />
+    <link href="~/client-assets/custom/layout.css" rel="stylesheet" />
+    <!-- Custom CSS -->
 
     <!--Angular Scripts-->
-   @* <script src="~/lib/angular.js/angular.min.js"></script>*@
-     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-sanitize.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
     <!--Angular Scripts-->
 
-    <style>
-        .pointer {
-            cursor: pointer;
-        }
-
-        .goog-te-banner-frame skiptranslate {
-            display: none;
-        }
-
-        body {
-            top: 0 !important;
-        }
-
-        .goog-te-banner-frame {
-            display: none !important;
-        }
-
-        #goog-gt-tt, .goog-te-balloon-frame {
-            display: none !important;
-        }
-
-        .goog-text-highlight {
-            background: none !important;
-            box-shadow: none !important;
-        }
-    </style>
-
     <script>
-
-        var App = angular.module('RiaPizza', ['paypal-button','ngSanitize','ngRoute']);
-
+        var App = angular.module('RiaPizza', ['paypal-button', 'ngSanitize', 'ngRoute']);
         paypal.Button.driver('angular', window.angular);
-
-        App.controller("Auth",['$scope',  '$rootScope', function ($scope, $rootScope) {
-            function JsonCallParam(Controller, Action, Parameters) {
-                $.ajax({
-                    type: "POST",
-                    traditional: true,
-                    async: false,
-                    cache: false,
-                    url: '/' + Controller + '/' + Action,
-                    context: document.body,
-                    data: Parameters,
-                    success: function (json) {
-                        list = null;
-                        list = json;
-                    }
-                    ,
-                    error: function (xhr) {
-                        list = null;
-                    }
-                });
-            }
-            function JsonCall(Controller, Action) {
-                $.ajax({
-                    type: "POST",
-                    traditional: true,
-                    async: false,
-                    cache: false,
-                    url: '/' + Controller + '/' + Action,
-                    context: document.body,
-                    success: function (json) {
-                        list = null; list = json;
-                    },
-                    error: function (xhr) {
-                        list = null;
-                        //debugger;
-                    }
-                });
-            }
-
-            $scope.registerUser = { fullName: "", firstName: "", lastName: "", address: "", city: "", email: "", userName: "", password: "", phoneNumber: "" };
-            $scope.loginUser = { username: "", password: "" };
-
-            $scope.usernameExists = false;
-            $scope.isLoggedIn = false;
-            $scope.user = {};
-            $scope.userOrders = [];
-            $scope.register = function () {
-                JsonCallParam("Auth", "RegisterUser", { "registerDto": JSON.stringify($scope.registerUser) });
-                if (list == "Success") {
-                    $('#signModal').modal('hide');
-                    $('#loginModal').modal();
-                }
-                else if (list == "UsernameExists") {
-                    $scope.usernameExists = true;
-                }
-            }
-            $scope.login = function () {
-                JsonCallParam("Auth", "LoginUser", { "loginDto": JSON.stringify($scope.loginUser) });
-                if (list == "Success") {
-                    $('#loginModal').modal('hide');
-                    $scope.loadUser();
-                }
-                else
-                    $scope.loginUnsuccessful = true;
-            }
-            $scope.logout = function () {
-                JsonCall("Auth", "LogoutUser");
-                $scope.isLoggedIn = false;
-                $scope.user = {};
-            }
-            $scope.loadUser = function () {
-                JsonCall("Auth", "GetLoggedInUser");
-                if (list != false) {
-                    $scope.isLoggedIn = true;
-                    $scope.user = list;
-                    $rootScope.$emit("LoadUserData", true);
-                }
-                else {
-                    $scope.isLoggedIn = false;
-                    $scope.user = {};
-                }
-            }
-            $scope.routeToPersonalData = function () {
-                if ($scope.isLoggedIn) {
-                    window.load
-                    JsonCall("MyAccount", "PersonalData");
-                }
-            }
-
-            $scope.loadOrders = function () {
-                if ($scope.isLoggedIn) {
-                    JsonCallParam("Orders", "GetUserOrders", { id: $scope.user.id });
-                    $scope.userOrders = list;
-                }
-                else {
-                    var orders = localStorage.getItem('orders');
-                    if (orders) {
-                        var ordersList = JSON.parse(localStorage.orders);
-                        JsonCallParam("Orders", "GetUserOrdersFromCodes", { "orderCodes": JSON.stringify(ordersList) });
-                        $scope.userOrders = list;
-                    } else $scope.userOrders = [];
-
-                }
-            }
-        }]);
     </script>
+    <script src="~/Angular/Controllers/AuthCtrl.js"></script>
     @RenderSection("css", required: false)
-    <title>Ria Pizza</title>
 </head>
 
 <body ng-app="RiaPizza">
+    <div class="preloader-wrapper">
+        <div class="preloader">
+            <img src="~/assets/images/logo.png" alt="logo" />
+        </div>
+    </div>
     <!-- Navbar -->
     <nav class="navbar bg-transparent px-5 py-3 align-items-center" ng-controller="Auth" ng-init="loadUser()">
         <a href="/">
@@ -516,13 +389,14 @@
         </div>
     </footer>
     <!-- Footer Ends -->
-    <!-- jQuery -->
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    @*<script src="~/client-assets/res/jquery-3.4.1.js" type="text/javascript"></script>*@
 
+
+    <!--Scripts-->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="~/client-assets/res/bootstrap.bundle.js" type="text/javascript"></script>
     <script src="https://kit.fontawesome.com/2def6b71ee.js" crossorigin="anonymous" type="text/javascript"></script>
     <script src="~/client-assets/res/js/index.js" type="text/javascript"></script>
+    <!--Scripts-->
 
     <!--Google Translator Start-->
     <script type="text/javascript">
@@ -531,30 +405,13 @@
         }
     </script>
     <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <script src="~/client-assets/custom/translator.js"></script>
     <!--Google Translator End-->
 
-    <script>
-        function toggleRegister() {
-            $('#loginModal').modal('hide');
-            $('#signModal').modal();
-        }
-        function toggleLogin() {
-            $('#signModal').modal('hide');
-            $('#loginModal').modal();
-        }
-
-        $('.translation-links a').click(function () {
-            var lang = $(this).data('lang');
-            var $frame = $('.goog-te-menu-frame:first');
-            if (!$frame.size()) {
-                alert("Error: Could not find Google translate frame.");
-                return false;
-            }
-            $frame.contents().find('.goog-te-menu2-item span.text:contains(' + lang + ')').get(0).click();
-            return false;
+    <script type="text/javascript">
+        $(document).ready(function ($) {
+            $('.preloader-wrapper').fadeOut();
         });
-
-
     </script>
 
     @RenderSection("scripts", required: false)

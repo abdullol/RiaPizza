@@ -85,19 +85,21 @@ namespace RiaPizza.Controllers
                     SubName = dish.SubName,
                     Rating = dish.Rating
                 };
-                cloneDish.DishSizes = new List<DishSize>();
+
+                var dishSizes = new List<DishSize>();
                 dish.DishSizes.ToList().ForEach(s =>
                 {
-                    var size = new DishSize 
+                    var size = new DishSize
                     {
                         BasePrice = s.BasePrice,
                         Diameter = s.Diameter,
                         Size = s.Size
                     };
-
-                    cloneDish.DishSizes.ToList().Add(size);
+                    dishSizes.Add(size);
                 });
-                cloneDish.DishExtraTypes = new List<DishExtraType>();
+                cloneDish.DishSizes = dishSizes;
+
+                var dishExtraTypes = new List<DishExtraType>();
                 dish.DishExtraTypes.ToList().ForEach(s =>
                 {
                     var dishExtraType = new DishExtraType
@@ -106,7 +108,7 @@ namespace RiaPizza.Controllers
                         Status = s.Status,
                         TypeName = s.TypeName
                     };
-                    dishExtraType.DishExtras = new List<DishExtra>();
+                    var dishExtras = new List<DishExtra>();
                     s.DishExtras.ToList().ForEach(a =>
                     {
                         var dishExtra = new DishExtra
@@ -116,7 +118,7 @@ namespace RiaPizza.Controllers
                             Allergies = a.Allergies,
                             IsAvailable = a.IsAvailable
                         };
-                        dishExtra.SizeToppingPrices = new List<SizeToppingPrice>();
+                        var sizeToppingPrices = new List<SizeToppingPrice>();
                         a.SizeToppingPrices.ToList().ForEach(b =>
                         {
                             var toppingPrice = new SizeToppingPrice
@@ -124,13 +126,15 @@ namespace RiaPizza.Controllers
                                 SizeName = b.SizeName,
                                 Price = b.Price
                             };
-                            dishExtra.SizeToppingPrices.ToList().Add(toppingPrice);
+                            sizeToppingPrices.Add(toppingPrice);
                         });
-
-                        dishExtraType.DishExtras.ToList().Add(dishExtra);
+                        dishExtra.SizeToppingPrices = sizeToppingPrices;
+                        dishExtras.Add(dishExtra);
                     });
-                    cloneDish.DishExtraTypes.ToList().Add(dishExtraType);
+                    dishExtraType.DishExtras = dishExtras;
+                    dishExtraTypes.Add(dishExtraType);
                 });
+                cloneDish.DishExtraTypes = dishExtraTypes;
 
                 await _service.AddDish(cloneDish);
                 return Json("Success");

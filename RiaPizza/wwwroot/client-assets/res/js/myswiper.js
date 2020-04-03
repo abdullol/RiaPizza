@@ -1,9 +1,9 @@
 var lastCat = "cat1";
 var mySwiper = new Swiper(".swiper-container", {
-    // slidesPerView: 'auto',
-    slidesPerView: 6,
+    slidesPerView: 'auto',
+    //slidesPerView: 6,
     spaceBetween: 20,
-    freeMode: 0,
+    freeMode: true,
     loop: false,
     watchOverflow: !0,
     navigation: {
@@ -12,7 +12,7 @@ var mySwiper = new Swiper(".swiper-container", {
     }
 });
 
-mySwiper.slidesPerView = 8;
+//mySwiper.slidesPerView = 8;
 mySwiper.update();
 
 mySwiper.on("reachBeginning", function () {
@@ -30,22 +30,6 @@ function next() {
     mySwiper.slideNext();
 }
 
-var waypoints = $(".group-item ").waypoint({
-    handler: function (direction) {
-        var index = this.element.getAttribute("index");
-
-        if (direction === "down") {
-            index = parseInt(index) - 1;
-        } else {
-            index = parseInt(index) - 2;
-        }
-
-        mySwiper.slideTo(index);
-        console.log("Last Cat2 : " + index);
-    }
-});
-
-// ? Show/Less grid checkboxes
 function show() {
     var moreChecks = document.getElementById("more-checks");
     var btn = document.getElementById("more-btn");
@@ -70,6 +54,8 @@ function showSearchBar() {
     var searchBtn = document.getElementById("search-btn");
     var dishList = document.getElementById("dish-list");
     var searchBox = document.getElementById("search-box");
+    $('.swiper-next').hide();
+    $('#mainNav').css('height', '75px');
 
     searchBtn.style.display = "none";
     dishList.style.display = "none";
@@ -80,8 +66,58 @@ function hideSearchBar() {
     var searchBtn = document.getElementById("search-btn");
     var dishList = document.getElementById("dish-list");
     var searchBox = document.getElementById("search-box");
+    $('.swiper-next').show();
+    $('#mainNav').css('height', '60px');
+
+    var input = document.getElementById('search-dish');
+    input.value = "";
+    spliceSearch(input);
 
     searchBtn.style.display = "flex";
     dishList.style.display = "flex";
     searchBox.style.display = "none";
 }
+
+function spliceSearch(el) {
+    var value = $(el).val().toLowerCase();
+    $(".dish-head").hide();
+    $(".dish-head").each(function () {
+        let val = $(this).data('categoryhead');
+        $('.dishes[data-category="' + val + '"]').each(function () {
+            var head = $(this).data('category');
+
+            if ($(this).text().toLowerCase().indexOf(value) > -1) {
+                $(this).show();
+                $('.' + head).show();
+            }
+            else
+                $(this).hide();
+        });
+    });
+}
+
+$(document).ready(function () {
+    $('.dishlink').css({ "width": "auto" })
+    $("#search-dish").on("keyup", function () {
+        spliceSearch(this);
+    });
+    var waypoints = $(".group-item ").waypoint({
+        handler: function (direction) {
+            var index = this.element.getAttribute("index");
+
+            if (direction === "down") {
+                index = parseInt(index) - 1;
+            } else {
+                index = parseInt(index) - 2;
+            }
+
+            mySwiper.slideTo(index);
+            console.log("Last Cat2 : " + index);
+        }
+    });
+});
+
+$(window).onscroll = function () {
+    $('.dishlink').css({ "width": "auto" });
+    scrollFunction();
+};
