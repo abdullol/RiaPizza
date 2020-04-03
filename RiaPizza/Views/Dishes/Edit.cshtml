@@ -5,21 +5,23 @@
 }
 
 @section css{
-
+    <link href="~/assets/js/Trumbowyg-master/dist/ui/trumbowyg.css" rel="stylesheet" />
     <style>
         .null-marbottom {
             margin-bottom: 0 !important;
         }
-        .hide{
-            display:none;
+
+        .hide {
+            display: none;
         }
-        .right{
+
+        .right {
             float: right;
         }
     </style>
 }
 <script>
-    App.controller("EditDish",['$scope',  '$rootScope', function ($scope, $rootScope) {
+    App.controller("EditDish", ['$scope', '$rootScope', function ($scope, $rootScope) {
         function JsonCallParam(Controller, Action, Parameters) {
             $.ajax({
                 type: "POST",
@@ -66,7 +68,7 @@
             if (list == "Success")
                 location.reload();
             else
-                swal("Failed", "Please Try Later!", "error"); $('#addExtra').modal('hide'); 
+                swal("Failed", "Please Try Later!", "error"); $('#addExtra').modal('hide');
         }
         $scope.getDishExtra = function (Id) {
             JsonCallParam("Dishes", "GetDishExtra", { id: Id });
@@ -103,7 +105,7 @@
                 $scope.addDishExtra.sizeToppingPrices.push(toppingPrice);
             }
         }
-        $scope.setExtraTypeEditModalValues = function(id, name, allowMultiple) {
+        $scope.setExtraTypeEditModalValues = function (id, name, allowMultiple) {
             $("#DishExtraTypeId").val(id);
             $("#TypeName").val(name);
             if (allowMultiple == 'True')
@@ -365,13 +367,17 @@
                             <div class="col-lg-12 col-md-12 null-marbottom">
                                 <div class="form-group">
                                     <label>Allergies</label>
-                                    <input type="text" asp-for="Allergies" class="form-control" placeholder="Allergies">
+                                    <textarea id="editor1" asp-for="Allergies">
+                                        @Model.Allergies
+                                    </textarea>
                                 </div>
                             </div>
                             <div class="col-md-12 col-md-12">
                                 <div class="form-group">
                                     <label>Description</label>
-                                    <textarea placeholder="Enter Description of Dish" asp-for="Description" class="form-control"></textarea>
+                                    <textarea id="editor2" asp-for="Description">
+                                        @Model.Description
+                                    </textarea>
                                 </div>
                             </div>
                             <div class="col-md-12 col-md-12">
@@ -459,9 +465,9 @@
                                     <th width="25%">
                                         @extraType.TypeName
                                         @if (extraType.ChooseMultiple)
-                                        { <span class="badge badge-info text-white">Mutiple</span> }
+                                        {<span class="badge badge-info text-white">Mutiple</span> }
                                         else
-                                        { <span class="badge badge-warning text-white">Single</span> }
+                                        { <span class="badge badge-warning text-white">Single</span>}
                                     </th>
                                     <th width="25%">Price</th>
                                     <th width="35%">Alergies</th>
@@ -518,4 +524,12 @@
 
     <script src="~/assets/js/form.min.js"></script>
     <script src="~/assets/js/pages/forms/form-wizard.js"></script>
+
+    <script src="https://cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace('editor1');
+        CKEDITOR.replace('editor2');
+        CKEDITOR.config.height = 150;
+
+    </script>
 }

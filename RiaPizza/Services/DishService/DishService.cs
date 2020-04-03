@@ -54,13 +54,17 @@ namespace RiaPizza.Services.DishService
         }
         public async Task AddDish(Dish addDish)
         {
-            addDish.Status = true;
+            try
+            {
+                addDish.Status = true;
 
-            await _context.Dishes.AddAsync(addDish);
-            await _context.SaveChangesAsync();
+                await _context.Dishes.AddAsync(addDish);
+                await _context.SaveChangesAsync();
 
-            
-            await SaveToppingPrices(addDish);
+
+                await SaveToppingPrices(addDish);
+            }
+            catch(Exception ex) { }
         }
         private async Task SaveToppingPrices(Dish addDish)
         {

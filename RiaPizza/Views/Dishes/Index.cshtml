@@ -66,7 +66,7 @@
                                 <tr>
                                     <th>Category</th>
                                     <th>Dish</th>
-                                    <th>Sub Name</th>
+                                    @*<th>Sub Name</th>*@
                                     <th>Price</th>
                                     <th>Status</th>
                                     <th>Actions</th>
@@ -81,7 +81,7 @@
                                     <tr>
                                         <td>@dish.DishCategory.CategoryName</td>
                                         <td>@dish.DishName</td>
-                                        <td>@dish.SubName</td>
+                                        @*<td>@dish.SubName</td>*@
                                         <td>€ @dish.BasePrice</td>
                                         <td>
                                             @if (dish.Status)
@@ -104,6 +104,7 @@
                                             {
                                                 <button class="btn btn-success" onclick="confirmEnable(@dish.DishId)"><i class="fas fa-toggle-on"></i></button>
                                             }
+                                            <button class="btn btn-warning" onclick="confirmDuplication(@dish.DishId)"><i class="fas fa-clone"></i></button>
                                             <div class="modal fade bd-example-modal-lg details_@count" tabindex="-1" role="dialog"
                                                  aria-labelledby="myLargeModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-lg">
@@ -119,8 +120,8 @@
                                                                 <div class="col-lg-12">
                                                                     <h5>Description: </h5>
                                                                     @Html.Raw(dish.Description)
-                                                                    <h5>Allergies: </h5> 
-                                                                 @Html.Raw(dish.Allergies)
+                                                                    <h5>Allergies: </h5>
+                                                                    @Html.Raw(dish.Allergies)
                                                                 </div>
                                                                 @if (dish.DishExtraTypes != null)
                                                                 {
@@ -181,9 +182,6 @@
                                                         <span class="check"></span>
                                                     </span>
                                                 </label>
-                                           
-
-
                                         </td>
 
                                     </tr>
@@ -195,7 +193,7 @@
                                 <tr>
                                     <th>Category</th>
                                     <th>Dish</th>
-                                    <th>Sub Name</th>
+                                    @*<th>Sub Name</th>*@
                                     <th>Price</th>
                                     <th>Status</th>
                                     <th>Actions</th>
@@ -351,6 +349,33 @@
 
             });
         }
+
+        function confirmDuplication(Id) {
+            swal({
+                title: "Are you sure?",
+                text: "You want to clone dish",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, clone it!",
+                closeOnConfirm: false
+            }, function () {
+                $.ajax({
+                    type: "POST",
+                    url: '/Dishes/DuplicateDish',
+                    data: { id: Id },
+                    success: function () {
+                        swal("Cloned!", "You cloned a dish!", "success");
+                        window.location.href = "/Dishes/Index";
+                    },
+                    error: function (xhr) {
+                        swal("Error", "Please Try again later!", "error");
+                    }
+                });
+
+            });
+        }
+
         $(document).ready(function () {
             $(".filter-button").click(function () {
                 $('#searchForm').slideToggle();

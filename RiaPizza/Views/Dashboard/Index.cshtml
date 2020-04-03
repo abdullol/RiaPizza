@@ -174,9 +174,10 @@
                                     <div class="col-12">
                                         <div class="row">
                                             <div class="col-md-3"><h6>Item Name</h6></div>
-                                            <div class="col-md-3"><h6>Extras</h6></div>
-                                            <div class="col-md-3"><h6>Quantity</h6></div>
-                                            <div class="col-md-3"><h6>Total Price</h6></div>
+                                            <div class="col-md-4"><h6>Extras</h6></div>
+                                            <div class="col-md-3"><h6>Remarks</h6></div>
+                                            <div class="col-md-1"><h6>Qty</h6></div>
+                                            <div class="col-md-1"><h6>Price</h6></div>
                                         </div>
                                         <div class="row" id="OrderItemsDetails"></div>
                                     </div>
@@ -195,7 +196,7 @@
                     </h2>
                 </div>
                 <div class="tableBody">
-                    <div class="table-responsive" style="overflow:hidden">
+                    <div class="table-responsive" >
                         <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
                             <thead>
                                 <tr>
@@ -208,10 +209,12 @@
                                     <th>Address</th>
                                     <th>Mobile #</th>
                                     <th>SubTotal</th>
-                                    <th>Discount</th>
+
                                     <th>TotalBill</th>
-                                    <th>PaymentMethod</th>
                                     <th>Action</th>
+                                    <th>PaymentMethod</th>
+                                    <th>Discount</th>
+
                                 </tr>
                             </thead>
                             <tbody class="ordersList">
@@ -253,7 +256,7 @@
                                             @Html.DisplayFor(modelItem => order.OrderDeliveryAddress.Address)
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => order.OrderBy.Contact)
+                                            @Html.DisplayFor(modelItem=>order.OrderBy.Contact)
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => order.SubTotal)
@@ -290,10 +293,11 @@
                                     <th>Address</th>
                                     <th>Mobile #</th>
                                     <th>SubTotal</th>
-                                    <th>Discount</th>
+
                                     <th>TotalBill</th>
-                                    <th>PaymentMethod</th>
                                     <th>Action</th>
+                                    <th>PaymentMethod</th>
+                                    <th>Discount</th>
                                 </tr>
                             </tfoot>
                         </table>
@@ -368,7 +372,14 @@
                     $('#OrderByDetails').append("<div class='col-md-6'><b>Order By :</b>" + orderby.name + "</div> <div class='col-md-6'><b>Email :</b>" + orderby.email + "</div> <div class='col-md-6'><b>Contact :</b>" + orderby.contact + "</div> <div class='col-md-6'><b>Company :</b>" + orderby.company + "</div>");
                     $('#OrderAddressDetails').append("<div class='col-md-6'><b>City :</b> " + address.city + "</div> <div class='col-md-6'><b>Address :</b> " + address.address + "</div> <div class='col-md-6'><b>Floor :</b> " + address.floor + "</div> <div class='col-md-6'><b>Postal Code :</b> " + address.postalCode + "</div>");
                     for (var i = 0; i < orderitems.length; i++) {
-                        $('#OrderItemsDetails').append("<div class='col-md-3'>" + orderitems[i].dish.dishName + "</div> <div class='col-md-3'>" + orderitems[i].extras + "</div> <div class='col-md-3'>" + orderitems[i].quantity + "</div> <div class='col-md-3'>" + orderitems[i].totalPrice + "</div>");
+                        var remarks = ""
+                        orderitems[i].remarks != null ? remarks = orderitems[i].remarks : remarks = "";
+                        $('#OrderItemsDetails').append(
+                            "<div class='col-md-3'> " + orderitems[i].dish.dishName + "</div >" +
+                            "<div class='col-md-4'>" + orderitems[i].extras + "</div>" +
+                            "<div class='col-md-3'>" + remarks + "</div>" +
+                            "<div class='col-md-1'>" + orderitems[i].quantity + "</div>" +
+                            "<div class='col-md-1'>" + orderitems[i].totalPrice + "</div>");
                     }
                 }
             });

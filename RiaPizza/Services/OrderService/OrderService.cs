@@ -54,8 +54,9 @@ namespace RiaPizza.Services.OrderService
         {
             try
             {
-                var previousOrder = await _context.Orders.MaxAsync(s => s.OrderId);
-                var code = "00" + previousOrder;
+                var todayDate = DateTime.Now.ToString("dd:MM:yy");
+                var code = todayDate.Split(':')[0] + todayDate.Split(':')[1] + todayDate.Split(':')[2] + await TodayOrdersCount();
+
                 return code;
             }
             catch (Exception ex)

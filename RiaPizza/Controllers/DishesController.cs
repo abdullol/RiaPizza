@@ -73,6 +73,80 @@ namespace RiaPizza.Controllers
             }
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Manager,Admin")]
+        public async Task<JsonResult> DuplicateDish(int id)
+        {
+            try
+            {
+                var dish = await _service.GetDish(id);
+
+                var cloneDish = new Dish
+                {
+                    Allergies = dish.Allergies,
+                    BasePrice = dish.BasePrice,
+                    Description = dish.Description,
+                    DishCategoryId = dish.DishCategoryId,
+                    DishName = dish.DishName,
+                    SubName = dish.SubName,
+                    Rating = dish.Rating
+                };
+                cloneDish.DishSizes = new List<DishSize>();
+                dish.DishSizes.ToList().ForEach(s =>
+                {
+                    var size = new DishSize 
+                    {
+                        BasePrice = s.BasePrice,
+                        Diameter = s.Diameter,
+                        Size = s.Size
+                    };
+
+                    cloneDish.DishSizes.ToList().Add(size);
+                });
+                cloneDish.DishExtraTypes = new List<DishExtraType>();
+                dish.DishExtraTypes.ToList().ForEach(s =>
+                {
+                    var dishExtraType = new DishExtraType
+                    {
+                        ChooseMultiple = s.ChooseMultiple,
+                        Status = s.Status,
+                        TypeName = s.TypeName
+                    };
+                    dishExtraType.DishExtras = new List<DishExtra>();
+                    s.DishExtras.ToList().ForEach(a =>
+                    {
+                        var dishExtra = new DishExtra
+                        {
+                            ExtraName = a.ExtraName,
+                            ExtraPrice = a.ExtraPrice,
+                            Allergies = a.Allergies,
+                            IsAvailable = a.IsAvailable
+                        };
+                        dishExtra.SizeToppingPrices = new List<SizeToppingPrice>();
+                        a.SizeToppingPrices.ToList().ForEach(b =>
+                        {
+                            var toppingPrice = new SizeToppingPrice
+                            {
+                                SizeName = b.SizeName,
+                                Price = b.Price
+                            };
+                            dishExtra.SizeToppingPrices.ToList().Add(toppingPrice);
+                        });
+
+                        dishExtraType.DishExtras.ToList().Add(dishExtra);
+                    });
+                    cloneDish.DishExtraTypes.ToList().Add(dishExtraType);
+                });
+
+                await _service.AddDish(cloneDish);
+                return Json("Success");
+            }
+            catch (Exception ex)
+            {
+                return Json("Failed");
+            }
+        }
+
         [Authorize(Roles = "Manager,Admin")]
         public async Task<IActionResult> Edit(int id)
         {
