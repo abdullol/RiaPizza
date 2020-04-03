@@ -24,8 +24,8 @@
 
 
     <!--Angular Scripts-->
-   @* <script src="~/lib/angular.js/angular.min.js"></script>*@
-     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    @* <script src="~/lib/angular.js/angular.min.js"></script>*@
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-sanitize.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
     <!--Angular Scripts-->
@@ -59,11 +59,11 @@
 
     <script>
 
-        var App = angular.module('RiaPizza', ['paypal-button','ngSanitize','ngRoute']);
+        var App = angular.module('RiaPizza', ['paypal-button', 'ngSanitize', 'ngRoute']);
 
         paypal.Button.driver('angular', window.angular);
 
-        App.controller("Auth",['$scope',  '$rootScope', function ($scope, $rootScope) {
+        App.controller("Auth", ['$scope', '$rootScope', function ($scope, $rootScope) {
             function JsonCallParam(Controller, Action, Parameters) {
                 $.ajax({
                     type: "POST",
@@ -163,7 +163,6 @@
                         JsonCallParam("Orders", "GetUserOrdersFromCodes", { "orderCodes": JSON.stringify(ordersList) });
                         $scope.userOrders = list;
                     } else $scope.userOrders = [];
-
                 }
             }
         }]);
@@ -176,7 +175,7 @@
     <!-- Navbar -->
     <nav class="navbar bg-transparent px-5 py-3 align-items-center" ng-controller="Auth" ng-init="loadUser()">
         <a href="/">
-            <img src="~/assets/images/logo.png" alt="logo" class="img-fluid" style="max-height: 2.5rem;" />
+            <img src="~/Uploads/@ViewBag.ShopLogo" alt="logo" class="img-fluid" style="max-height: 2.5rem;" />
         </a>
         <!-- Language dropdown -->
         <div class="nav-wrapper d-md-block d-none ml-auto mr-4 mt-2">

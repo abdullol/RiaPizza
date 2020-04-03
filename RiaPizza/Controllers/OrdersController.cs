@@ -20,6 +20,7 @@ using RiaPizza.Services.DishCategoryService;
 using RiaPizza.Services.DishService;
 using RiaPizza.Services.NotifyOrder;
 using RiaPizza.Services.OrderService;
+using RiaPizza.Services.ScheduleService;
 
 namespace RiaPizza.Controllers
 {
@@ -31,6 +32,7 @@ namespace RiaPizza.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly IDishService _dishService;
         private readonly IDishCategoryService _dishCatService;
+        private readonly IScheduleService _scheduleService;
         private IHostingEnvironment _env;
         public OrdersController(
             IOrderService service,
@@ -40,6 +42,7 @@ namespace RiaPizza.Controllers
             IHostingEnvironment env,
             IDishService dishService,
             IDishCategoryService dishCatService
+            , IScheduleService scheduleService
             )
         {
             _service = service;
@@ -49,6 +52,7 @@ namespace RiaPizza.Controllers
             _env = env;
             _dishService = dishService;
             _dishCatService = dishCatService;
+            _scheduleService = scheduleService;
         }
 
         [Authorize(Roles = "Manager,Admin")]
@@ -112,11 +116,11 @@ namespace RiaPizza.Controllers
         }
 
         [Authorize(Roles = "Manager,Admin")]
-        public async  Task<IActionResult> Reports(List<Order> order)
+        public async Task<IActionResult> Reports(List<Order> order)
         {
             ViewBag.DishList = await _dishService.AllDishes();
             ViewBag.DishCatList = await _dishCatService.AllDishCategories();
-            ViewBag.Users =await _userManager.Users.ToListAsync();
+            ViewBag.Users = await _userManager.Users.ToListAsync();
             return View(order);
         }
 
@@ -127,9 +131,9 @@ namespace RiaPizza.Controllers
         {
             ViewBag.DishList = await _dishService.AllDishes();
             ViewBag.DishCatList = await _dishCatService.AllDishCategories();
-            ViewBag.Users =await _userManager.Users.ToListAsync();
+            ViewBag.Users = await _userManager.Users.ToListAsync();
             var orderSearch = await _service.SearchByDate(DF, DT);
-            if(status != null && status != "")
+            if (status != null && status != "")
             {
                 var statusFiltered = orderSearch.Where(s => s.OrderStatus == status).ToList();
                 return View("Reports", statusFiltered);
@@ -140,11 +144,11 @@ namespace RiaPizza.Controllers
         [HttpPost]
         [ActionName("ReportByFilter")]
         [Authorize(Roles = "Manager,Admin")]
-        public async Task<IActionResult> Reports(string status,string number,string address, int DishId,int DishCatId,int userId)
+        public async Task<IActionResult> Reports(string status, string number, string address, int DishId, int DishCatId, int userId)
         {
             ViewBag.DishList = await _dishService.AllDishes();
             ViewBag.DishCatList = await _dishCatService.AllDishCategories();
-            ViewBag.Users=await _userManager.Users.ToListAsync();
+            ViewBag.Users = await _userManager.Users.ToListAsync();
 
             if (status != null)
             {
@@ -171,10 +175,10 @@ namespace RiaPizza.Controllers
                 var searchByAddress = await _service.SearchByAddress(address);
                 return View("Reports", searchByAddress);
             }
-            else if (userId!=0) 
+            else if (userId != 0)
             {
                 //var usersNotInRole = context.Users.Where(m => m.Roles.All(r => r.RoleId != role.Id));
-               var serchByUser= await _service.SearchByUser(userId);
+                var serchByUser = await _service.SearchByUser(userId);
                 return View("Reports", serchByUser);
             }
             return View();
@@ -298,8 +302,10 @@ namespace RiaPizza.Controllers
                 var orderItems = await _service.GetOrderItems(id);
                 ViewBag.Address = address;
                 ViewBag.OrderCode = await _service.GetOrderCode(id);
+                ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
                 return View(orderItems);
             }
+            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             return RedirectToAction("Index", "Home");
         }
 
@@ -313,6 +319,6 @@ namespace RiaPizza.Controllers
             await _service.DeleteOrder(id);
             return RedirectToAction("Index", "Orders");
         }
-      
+
     }
 }

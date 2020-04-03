@@ -37,7 +37,7 @@
     }
 
     $scope.allCategories = [];
-    $scope.addCategoryObj = { categoryName: '',orderBy: '', isAvailable: true };
+    $scope.addCategoryObj = { categoryName: '', orderBy: '', isAvailable: true };
     $scope.editCategoryObj = { dishCategoryId: 0, categoryName: '', orderBy: 0, isAvailable: true };
     $scope.category = new FormData();
 
@@ -61,10 +61,8 @@
     $scope.addCategory = function () {
         var formdata = new FormData();
         var fileInput = document.getElementById('fileInput');
-
         formdata.append(fileInput.files[0].name, fileInput.files[0]);
         formdata.append("category", JSON.stringify($scope.addCategoryObj));
-
         var xhr = new XMLHttpRequest();
         xhr.open('POST', '/DishCategories/Create');
         xhr.send(formdata);
@@ -91,7 +89,7 @@
             closeOnConfirm: false
         }, function () {
             JsonCallParam("DishCategories", "Delete", { id: cat });
-            if (list == "Success") {
+            if (list === "Success") {
                 swal("Deleted", "Dish Category Deleted!", "success");
                 $scope.getAllCategories();
             }
@@ -99,7 +97,6 @@
                 swal("Error", "Please Try again later!", "error");
             }
         });
-
     };
 
     $scope.editCategory = function () {
@@ -109,7 +106,6 @@
             formdata.append(fileInput.files[0].name, fileInput.files[0]);
         }
         formdata.append("dishcategory", JSON.stringify($scope.editCategoryObj));
-
         var xhr = new XMLHttpRequest();
         xhr.open('POST', '/DishCategories/Edit');
         xhr.send(formdata);
@@ -122,5 +118,5 @@
             }
         };
         return false;
-    }
+    };
 });
