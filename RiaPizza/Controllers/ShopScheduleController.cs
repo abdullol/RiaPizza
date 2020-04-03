@@ -27,6 +27,7 @@ namespace RiaPizza.Controllers
         public IActionResult Index()
         {
             var schedule = _scheduleService.GetSchedule();
+            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             ViewBag.isOpen = true;
             return View(schedule);
         }

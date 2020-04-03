@@ -85,6 +85,7 @@ namespace RiaPizza.Controllers
         public IActionResult Register()
         {
             ViewBag.Rolelist = new SelectList(_roleManager.Roles, "Name", "Name");
+            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             return View();
         }
 
@@ -184,6 +185,7 @@ namespace RiaPizza.Controllers
         {
             RoleDto roleList = new RoleDto();
             roleList.RoleList = _roleManager.Roles;
+            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             return View(roleList);
         }
 
@@ -259,6 +261,7 @@ namespace RiaPizza.Controllers
         public async Task<ActionResult> AllUsers()
         {
             ViewBag.Role = new SelectList(_roleManager.Roles, "Name", "Name");
+            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             var users = await _userManager.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role).ToListAsync();
             return View(users);
         }

@@ -11,26 +11,31 @@ using Newtonsoft.Json;
 using RiaPizza.Data;
 using RiaPizza.Models;
 using RiaPizza.Services.DeliveryAreaService;
+using RiaPizza.Services.ScheduleService;
 
 namespace RiaPizza.Controllers
 {
     public class DeliveryAreasController : Controller
     {
         private readonly IDeliveryAreaService _service;
+        private readonly IScheduleService _scheduleService;
 
-        public DeliveryAreasController(IDeliveryAreaService service)
+        public DeliveryAreasController(IDeliveryAreaService service, IScheduleService scheduleService)
         {
             _service = service;
+            _scheduleService = scheduleService;
         }
 
         [Authorize(Roles = "Manager,Admin")]
         public IActionResult Index()
         {
+            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             return View();
         }
 
         public async Task<JsonResult> GetAllAreas()
         {
+            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             var allAreas = await _service.AllDeliveryAreas();
             return Json(allAreas);
         }
