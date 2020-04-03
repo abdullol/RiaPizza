@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using RiaPizza.Data.ApplicationUser;
 using RiaPizza.DTOs.Auth;
 using RiaPizza.DTOs.Role;
+using RiaPizza.Services.ScheduleService;
 
 namespace RiaPizza.Controllers
 {
@@ -20,18 +21,22 @@ namespace RiaPizza.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly RoleManager<AppRole> _roleManager;
+        private readonly IScheduleService _scheduleService;
 
         public AuthController(UserManager<AppUser> userManager,
-            SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager)
+            SignInManager<AppUser> signInManager, RoleManager<AppRole> roleManager
+            , IScheduleService scheduleService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _scheduleService = scheduleService;
         }
 
         [HttpGet]
         public IActionResult Login()
         {
+            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             return View();
         }
 
@@ -54,6 +59,7 @@ namespace RiaPizza.Controllers
             var result = await _signInManager.PasswordSignInAsync(loginDto.username, loginDto.password, false, false);
             if (result.Succeeded)
             {
+                ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
                 return RedirectToAction("Index", "Dashboard");
             }
             else
@@ -79,6 +85,7 @@ namespace RiaPizza.Controllers
         public IActionResult Register()
         {
             ViewBag.Rolelist = new SelectList(_roleManager.Roles, "Name", "Name");
+            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             return View();
         }
 
@@ -178,6 +185,7 @@ namespace RiaPizza.Controllers
         {
             RoleDto roleList = new RoleDto();
             roleList.RoleList = _roleManager.Roles;
+            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             return View(roleList);
         }
 
@@ -253,6 +261,7 @@ namespace RiaPizza.Controllers
         public async Task<ActionResult> AllUsers()
         {
             ViewBag.Role = new SelectList(_roleManager.Roles, "Name", "Name");
+            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             var users = await _userManager.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role).ToListAsync();
             return View(users);
         }

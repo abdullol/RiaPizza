@@ -36,6 +36,7 @@ namespace RiaPizza.Services.ScheduleService
             {
                 schedule.TimeFrom = timings.TimeFrom;
                 schedule.TimeTo = timings.TimeTo;
+                schedule.ShopLogo = timings.ShopLogo;
 
                 _context.ShopSchedule.Update(schedule);
                 await _context.SaveChangesAsync();

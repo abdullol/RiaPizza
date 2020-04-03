@@ -11,5 +11,6 @@ namespace RiaPizza.Models
         public bool IsOpen { get; set; }
         public TimeSpan TimeFrom { get; set; }
         public TimeSpan TimeTo { get; set; }
+        public string ShopLogo { get; set; }
     }
 }

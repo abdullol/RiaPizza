@@ -34,6 +34,7 @@ namespace RiaPizza.Controllers
             ViewBag.TodayDeliveredCount = await _orderService.TodayDeliveredCount();
             ViewBag.TodaySales = await _orderService.TodaySale();
             ViewBag.isOpen = _scheduleService.isShopOpen();
+            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
 
             return View(orders);
         }

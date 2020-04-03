@@ -10,6 +10,7 @@ using RiaPizza.Models;
 using RiaPizza.Services.DeliveryAreaService;
 using RiaPizza.Services.DishCategoryService;
 using RiaPizza.Services.DishService;
+using RiaPizza.Services.ScheduleService;
 
 namespace RiaPizza.Controllers
 {
@@ -18,11 +19,14 @@ namespace RiaPizza.Controllers
         private readonly IDishService _service;
         private readonly IDishCategoryService _categoryService;
         private readonly IDeliveryAreaService _areaService;
-        public DishesController(IDishService service, IDishCategoryService categoryService, IDeliveryAreaService areaService)
+        private readonly IScheduleService _scheduleService;
+
+        public DishesController(IDishService service, IDishCategoryService categoryService, IDeliveryAreaService areaService, IScheduleService scheduleService)
         {
             _service = service;
             _categoryService = categoryService;
             _areaService = areaService;
+            _scheduleService = scheduleService;
         }
 
         [Authorize(Roles = "Manager,Admin")]
@@ -32,11 +36,13 @@ namespace RiaPizza.Controllers
             if (id == null || id == 0)
             {
                 var dishes = await _service.AllDishes();
+                ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
                 return View(dishes);
             }
             else
             {
                 var dishes = await _service.SearchWithCategory(Convert.ToInt32(id));
+                ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
                 return View(dishes);
             }
         }
@@ -44,6 +50,7 @@ namespace RiaPizza.Controllers
         [Authorize(Roles = "Manager,Admin")]
         public IActionResult Add()
         {
+            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             return View();
         }
 
@@ -287,6 +294,7 @@ namespace RiaPizza.Controllers
                 return RedirectToAction("Index", "Home", new { error = "Error" });
             }
             ViewBag.Categories = await _categoryService.AllDishCategories();
+            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             return View(area);
         }
 

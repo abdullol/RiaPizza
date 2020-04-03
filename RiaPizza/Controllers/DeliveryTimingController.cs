@@ -8,21 +8,27 @@ using Microsoft.AspNetCore.Mvc;
 using RiaPizza.Data;
 using RiaPizza.Models;
 using RiaPizza.Services.DeliveryTimingService;
+using RiaPizza.Services.ScheduleService;
 
 namespace RiaPizza.Controllers
 {
     public class DeliveryTimingController : Controller
     {
         private readonly IDeliveryTimingService _Service;
-        public DeliveryTimingController(IDeliveryTimingService Service)
+        private readonly IScheduleService _scheduleService;
+
+        public DeliveryTimingController(IDeliveryTimingService Service, 
+            IScheduleService scheduleService)
         {
             _Service = Service;
+            _scheduleService = scheduleService;
         }
 
         [Authorize(Roles = "Manager,Admin")]
         public async Task<ActionResult> Index()
         {
             var getAllTiming = await  _Service.GetAllTiming();
+            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             return View(getAllTiming);
         }
 
@@ -35,6 +41,7 @@ namespace RiaPizza.Controllers
         [Authorize(Roles = "Manager,Admin")]
         public ActionResult Create()
         {
+            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             return View();
         }
 
