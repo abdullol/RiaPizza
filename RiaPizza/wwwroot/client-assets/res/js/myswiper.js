@@ -1,9 +1,10 @@
+
 var lastCat = "cat1";
 var mySwiper = new Swiper(".swiper-container", {
+    //slidesPerView: 'auto',
     slidesPerView: 'auto',
-    //slidesPerView: 6,
     spaceBetween: 20,
-    freeMode: true,
+    freeMode: false,
     loop: false,
     watchOverflow: !0,
     navigation: {
@@ -28,25 +29,6 @@ function next() {
     console.log("in next");
 
     mySwiper.slideNext();
-}
-
-function show() {
-    var moreChecks = document.getElementById("more-checks");
-    var btn = document.getElementById("more-btn");
-    var btn2 = document.getElementById("less-btn")
-
-    moreChecks.style.display = "block";
-    btn.style.display = "none"
-    btn2.style.display = "block"
-}
-function less() {
-    var moreChecks = document.getElementById("more-checks");
-    var btn = document.getElementById("more-btn");
-    var btn2 = document.getElementById("less-btn")
-
-    moreChecks.style.display = "none";
-    btn.style.display = "block"
-    btn2.style.display = "none"
 }
 
 // ! Showing/Hiding Search Bar
