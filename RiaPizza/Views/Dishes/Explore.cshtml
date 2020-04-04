@@ -509,6 +509,7 @@
             $('#chooseDishes').hide();
             $('#orderTab').show();
             $('#orderBtn').hide();
+            topFunction();
 
             $('.cart-btn-section').show();
             $scope.loadUserDataInCheckOut();
@@ -955,9 +956,9 @@
         <!-- Restaurant Description ends -->
 
         <div class="js-menu-category-bar-sticky sticky-top mr" id="mainNav">
-            <div class="swiper-container container">
+            <div class="swiper-container">
                 <button type="button" onclick="showSearchBar()" class="left fas fa-search fa-1x border-0 bg-transparent" id="search-btn" style="background:#f8f5f2 !important; top:0"></button>
-                <div class="swiper-wrapper container" id="dish-list">
+                <div class="swiper-wrapper" id="dish-list">
                     @for (int i = 0; i < dishCategories.Count(); i++)
                     {
                         <a href="#cat-@i" data-category="@i" class="swiper-slide nav-link js-scroll-trigger dishlink" style="width:auto; font-weight:bold; font-size:16px !important">@dishCategories[i].CategoryName</a>
@@ -1297,4 +1298,6 @@
     <script src="~/client-assets/res/js/myscroller.js"></script>
     <script src="~/client-assets/res/js/jquery.waypoints.js"></script>
     <script src="~/client-assets/res/js/myswiper.js"></script>
+    <script>
+    </script>
 }
