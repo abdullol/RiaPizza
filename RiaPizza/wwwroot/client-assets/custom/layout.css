@@ -22,3 +22,26 @@ body {
     background: none !important;
     box-shadow: none !important;
 }
+
+.order-head-mob {
+    display: none;
+}
+
+@media only screen and (max-width: 992px) {
+    .order-head {
+        display: none;
+    }
+
+    .order-head-mob {
+        display: initial;
+        font-weight: bold;
+    }
+
+    .orders-list-modal {
+        text-align: left !important;
+    }
+}
+
+.modal-header {
+    background: black !important;
+}

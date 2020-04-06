@@ -42,6 +42,7 @@ namespace RiaPizza.Services.DishService
         {
             var dish = await _context.Dishes.FindAsync(editDish.DishId);
 
+            dish.DishCategoryId = editDish.DishCategoryId;
             dish.DishName = editDish.DishName;
             dish.SubName = editDish.SubName;
             dish.Allergies = editDish.Allergies;

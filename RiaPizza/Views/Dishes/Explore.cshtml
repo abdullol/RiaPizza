@@ -8,10 +8,14 @@
     <link rel="stylesheet" type="text/css" href="~/client-assets/swiper.css">
     <link rel="stylesheet" type="text/css" href="~/client-assets/res/custom.css" />
     <link rel="stylesheet" type="text/css" href="~/client-assets/custom/explore.css" />
+
 }
 <!-- <script src="~/Angular/Controllers/ViewDishesPage.js"></script> -->
 
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
 <script>
+
+
     App.controller("ViewDishes", ['$scope', '$rootScope', '$http', function ($scope, $rootScope, $http) {
 
         function JsonCallParam(Controller, Action, Parameters) {
@@ -52,7 +56,7 @@
         }
 
         //Styling
-        $('#paypalbtn').hide();
+        $('#paypal-button').hide();
         //Styling
 
         //Start Choose Dishes Attributes
@@ -77,31 +81,45 @@
         $scope.userAddressId = "0";
         $scope.postalCode = "";
         $scope.postalArea = "";
-        $scope.paypal = {
+
+        paypal.Button.render({
+            // Configure environment
             env: 'sandbox',
             client: {
                 sandbox: 'AWi18rxt26-hrueMoPZ0tpGEOJnNT4QkiMQst9pYgaQNAfS1FLFxkxQuiaqRBj1vV5PmgHX_jA_c1ncL',
-                production: '<insert production client id>'
+                production: 'demo_production_client_id'
             },
+            // Customize button (optional)
+            locale: 'en_US',
+            style: {
+                size: 'large',
+                color: 'blue',
+                shape: 'rect',
+            },
+
+            // Enable Pay Now checkout flow (optional)
+            commit: false,
+
             payment: function () {
                 var env = this.props.env;
                 var client = this.props.client;
                 return paypal.rest.payment.create(env, client, {
                     transactions: [
                         {
-                            amount: { total: $scope.order.totalBill.toString(), currency: 'EUR' }
+                            amount: { total: $scope.ordertotalPrice.totalPrice.toString(), currency: 'EUR' }
                         }
                     ]
                 });
             },
+            // Execute the payment
             onAuthorize: function (data, actions) {
-                // Optional: display a confirmation page here
-                return actions.payment.execute().then(function (data) {
+                return actions.payment.execute().then(function () {
                     $scope.order.isPaymentConfirmed = true;
                     $scope.processOrder();
                 });
             }
-        };
+        }, '#paypal-button');
+
         $scope.shopschedule = { timeFrom: '', timeTo: '', isOpen: false };
         //End Ordering Attributes
 
@@ -113,18 +131,18 @@
 
         //Start Ordering Methods
         $scope.createOrder = function () {
+            if (!$scope.shopschedule.isOpen) {
+                $('.shopClosed').modal();
+                return;
+            }
+
             if ($scope.order.paymentMethod === 'Cash') {
                 $scope.processOrder();
             }
             else if ($scope.order.paymentMethod === 'Paypal') {
                 $('#cashbtn').hide();
                 $('#showpaypalbtn-guide').slideToggle();
-                $('#paypalbtn').slideToggle();
-
-                $('#checkoutForm input').attr('disabled', 'disabled');
-                $('#checkoutForm select').attr('disabled', 'disabled');
-                $('#checkoutForm button').attr('disabled', 'disabled');
-                $('.address-option').attr('disabled', 'disabled');
+                $('#paypal-button').slideToggle();
 
             }
         }
@@ -151,11 +169,6 @@
             }
         }
         $scope.processOrder = function () {
-            if (!$scope.shopschedule.isOpen) {
-                $('.shopClosed').modal();
-                return;
-            }
-
             $scope.order.discount = $scope.discount;
             $scope.order.subTotal = $scope.ordertotalPrice.subtotal;
             $scope.order.totalBill = $scope.ordertotalPrice.totalPrice;
@@ -348,7 +361,7 @@
                 $("#qty-" + Id).val(1);
 
                 var isVis = $('#collapse_' + Id).is(':visible');
-                if (!isVis) 
+                if (!isVis)
                     $('#dish-expand-icon-' + Id).removeClass('fa-plus').addClass('fa-minus');
                 else
                     $('#dish-expand-icon-' + Id).addClass('fa-plus').removeClass('fa-minus');
@@ -553,14 +566,20 @@
 
         }
 
+        $scope.cashSelection = function () {
+            $('#cashbtn').show();
+            $('#showpaypalbtn-guide').slideUp();
+            $('#paypal-button').slideUp();
+        }
+
         $scope.showToppingPrice = function (price) {
-            return price > 0 ? "(+" + price + "€)" : "";
+            return price > 0 ? "(+" + price.toFixed(2) + "€)" : "";
         }
 
         $scope.filterToppingSizePrice = function (id, arr) {
             if (id !== '0' && id != 0) {
                 var price = arr.find(s => s.dishSizeId == id).price;
-                return price > 0 ? "(+" + price + "€)" : "";
+                return price > 0 ? "(+" + price.toFixed(2) + "€)" : "";
             }
         }
     }]);
@@ -593,7 +612,7 @@
                         </div>
                         <div class="col-4" style="padding:0">
                             <a role="button" ng-click="showRemarkBar($index)" class="btn" style="padding: 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-pencil-alt"></i></a>
-                            <span style="font-size: 12px; color: #000;">{{item.totalPrice}}€</span>
+                            <span style="font-size: 12px; color: #000;">{{item.totalPrice | number : 2}}€</span>
                             <a role="button" ng-click="removeItem($index)" class="btn" style="padding: 0 0 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-trash-alt"></i></a>
                         </div>
                     </div>
@@ -623,25 +642,25 @@
                     <p style="font-size: 13px;">Sub-total</p>
                 </div>
                 <div class="col-6 text-right mt-2">
-                    <p style="margin-right: -30px;font-size: 13px;" ng-init="postalCode = @Model.PostalCode">{{ordertotalPrice.subtotal}} €</p>
+                    <p style="margin-right: -30px;font-size: 13px;" ng-init="postalCode = @Model.PostalCode">{{ordertotalPrice.subtotal | number : 2}} €</p>
                 </div>
                 <div class="col-6 text-left mt-2 mb-0" style="margin-left: -20px;" ng-if="showDiscount">
                     <p style="font-size: 13px;">Discount</p>
                 </div>
                 <div class="col-6 text-right mt-2" ng-if="showDiscount">
-                    <p style="margin-right: -30px;font-size: 13px;">- {{discount}} €</p>
+                    <p style="margin-right: -30px;font-size: 13px;">- {{discount | number : 2}} €</p>
                 </div>
                 <div class="col-6 text-left mb-2" style="margin-left: -20px;">
                     <p style="font-size: 13px;">Delivery costs</p>
                 </div>
                 <div class="col-6 text-right">
-                    <p style="margin-right: -30px; font-size: 13px;" ng-init="ordertotalPrice.deliveryCharges = @Model.DeliveryCharges">{{ordertotalPrice.deliveryCharges}}</p>
+                    <p style="margin-right: -30px; font-size: 13px;" ng-init="ordertotalPrice.deliveryCharges = @Model.DeliveryCharges">{{ordertotalPrice.deliveryCharges | number : 2}}</p>
                 </div>
                 <div class="col-6" style="margin-top: -20px; margin-left: -20px;">
                     <p class="font-weight-bold text-left" style="font-size: 13px;">Total</p>
                 </div>
                 <div class="col-6" style="margin-top: -20px;">
-                    <p class="font-weight-bold text-right" style="margin-right: -30px;  font-size: 13px;">{{ordertotalPrice.totalPrice}} €</p>
+                    <p class="font-weight-bold text-right" style="margin-right: -30px;  font-size: 13px;">{{ordertotalPrice.totalPrice | number : 2}} €</p>
                 </div>
             </div>
             <div class="row p-0">
@@ -703,7 +722,7 @@
                                 </div>
                                 <div class="col-4">
                                     <a role="button" ng-click="showRemarkBar($index)" class="btn" style="padding: 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-pencil-alt"></i></a>
-                                    <span style="font-size: 12px; color: #000;">{{item.totalPrice}}€</span>
+                                    <span style="font-size: 12px; color: #000;">{{item.totalPrice | number : 2}}€</span>
                                     <a class="btn" ng-click="removeItem($index)" style="padding: 0 0 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-trash-alt"></i></a>
                                 </div>
                             </div>
@@ -732,19 +751,19 @@
                             <p style="font-size: 13px;">Sub-total</p>
                         </div>
                         <div class="col-6 text-right mt-2">
-                            <p style="margin-right: -30px;font-size: 13px;" ng-init="postalCode = @Model.PostalCode">{{ordertotalPrice.subtotal}} €</p>
+                            <p style="margin-right: -30px;font-size: 13px;" ng-init="postalCode = @Model.PostalCode">{{ordertotalPrice.subtotal | number : 2}} €</p>
                         </div>
                         <div class="col-6 text-left mb-2" style="margin-left: -20px;">
                             <p style="font-size: 13px;">Delivery costs</p>
                         </div>
                         <div class="col-6 text-right">
-                            <p style="margin-right: -30px; font-size: 13px;" ng-init="ordertotalPrice.deliveryCharges = @Model.DeliveryCharges">{{ordertotalPrice.deliveryCharges}}</p>
+                            <p style="margin-right: -30px; font-size: 13px;" ng-init="ordertotalPrice.deliveryCharges = @Model.DeliveryCharges">{{ordertotalPrice.deliveryCharges | number : 2}}</p>
                         </div>
                         <div class="col-6" style="margin-top: -20px; margin-left: -20px;">
                             <p class="font-weight-bold text-left" style="font-size: 13px;">Total</p>
                         </div>
                         <div class="col-6" style="margin-top: -20px;">
-                            <p class="font-weight-bold text-right" style="margin-right: -30px;  font-size: 13px;">{{ordertotalPrice.totalPrice}} €</p>
+                            <p class="font-weight-bold text-right" style="margin-right: -30px;  font-size: 13px;">{{ordertotalPrice.totalPrice | number : 2}} €</p>
                         </div>
                     </div>
                     <div class="row p-0">
@@ -1003,7 +1022,7 @@
                                         </div>
                                         <span class="dish-desc" ng-bind-html="dish.description"></span>
                                         <p style="font-style: italic;font-size: 12px;color: #666;" ng-if="dish.subName">{{dish.subName}}</p>
-                                        <h4 style="color:#ff8000;font-weight:600;font-size:18px;">{{dish.basePrice}} €</h4>
+                                        <h4 style="color:#ff8000;font-weight:600;font-size:18px;">{{dish.basePrice | number : 2 }} €</h4>
                                     </div>
                                     <div id="collapse_{{dish.dishId}}" class="panel-collapse collapse in" role="tabpanel"
                                          aria-labelledby="heading_{{dish.dishId}}">
@@ -1011,14 +1030,14 @@
                                             <div class="container align-items-center">
                                                 <div class="row" ng-if="dish.dishSizes.length > 0">
                                                     <div class="col-lg-8 col-md-8 col-sm-10 col-xs-10 mx-auto" ng-if="!extratype.chooseMultiple">
-                                                        <label class="d-block">
+                                                        <!--<label class="d-block">
                                                             lhre Sauce:
-                                                        </label>
+                                                        </label>-->
                                                         <select class="custom-select mt-2 pointer"
                                                                 ng-model="dishSizeIdSelectedDish" id="sizeSelect-{{dish.dishId}}"
                                                                 ng-change="selectDishSize(dish.dishId, dish.basePrice)">
                                                             <option style="font-size:14px;" hidden value="0">Select Size</option>
-                                                            <option style="font-size:14px;" ng-repeat="size in dish.dishSizes" value="{{size}}">{{size.size}} {{size.diameter}} ({{size.basePrice}}€)</option>
+                                                            <option style="font-size:14px;" ng-repeat="size in dish.dishSizes" value="{{size}}">{{size.size}} {{size.diameter}} ({{size.basePrice | number : 2}}€)</option>
                                                         </select>
                                                         <p class="m-0 mb-3 p-2">
                                                             <span id="dishSize-{{dish.dishId}}"></span>
@@ -1074,7 +1093,7 @@
                                                         </form>
                                                     </div>
                                                     <div class="text-left" style="width:60%; float:right">
-                                                        <button ng-disabled="dish.dishSizes.length > 0 && dishSizeIdSelectedDish==='0'" class="btn btn-primary order-btn" ng-click="addToCart(dish)" id="totalPrice-{{dishIndex}}">{{cartItem.totalPrice}} €</button>
+                                                        <button ng-disabled="dish.dishSizes.length > 0 && dishSizeIdSelectedDish==='0'" class="btn btn-primary order-btn" ng-click="addToCart(dish)" id="totalPrice-{{dishIndex}}">{{cartItem.totalPrice | number : 2}} €</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1221,7 +1240,7 @@
                     </div>
                     <div class="col-12 mb-2">
                         <label>
-                            <input type="radio" name="paymentMethod" value="Cash" class="payment-selection" ng-model="order.paymentMethod" checked>
+                            <input type="radio" name="paymentMethod" value="Cash" class="payment-selection" ng-click="cashSelection()" ng-model="order.paymentMethod" checked>
                             <img src="~/client-assets/res/img/payment_0.png" alt="" class="img-fluid border mr-3 p-2 payment-img">
                         </label>
 
@@ -1236,7 +1255,7 @@
                         <div class="form-group mb-0 pl-2 mt-3">
                             <label class="label2">You pay (with):</label>
                             <select class="form-control address-option">
-                                <option>Exact amount: {{ordertotalPrice.totalPrice}} €</option>
+                                <option>Exact amount: {{ordertotalPrice.totalPrice | number : 2 }} €</option>
                             </select>
                         </div>
                     </div>
@@ -1278,7 +1297,9 @@
                     </div>-->
                     <div class="col-md-6 mb-4 text-center">
                         <p id="showpaypalbtn-guide" class="hide text-info" style="font-size:18px">Please Click on Paypal to process payment online!</p>
-                        <paypal-button id="paypalbtn" env="paypal.env" client="paypal.client" payment="paypal.payment" commit="paypal.commit" on-authorize="paypal.onAuthorize"></paypal-button>
+
+                        <div id="paypal-button"></div>
+                        @*<paypal-button id="paypalbtn" env="paypal.env" client="paypal.client" payment="paypal.payment" commit="paypal.commit" on-authorize="paypal.onAuthorize"></paypal-button>*@
                         <input id="cashbtn" type="submit" ng-disabled="checkoutForm.$invalid" class="btn btn-primary btn-block py-2 rounded-0 font-weight-bold" value="Order and pay" />
                     </div>
                     <div class="col-12">
