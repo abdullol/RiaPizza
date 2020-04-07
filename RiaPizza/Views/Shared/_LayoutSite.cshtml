@@ -18,7 +18,7 @@
           rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+    @*<script src="https://www.paypalobjects.com/api/checkout.js"></script>*@
 
     <!-- Custom CSS -->
     <link href="~/client-assets/res/sass/style.css" rel="stylesheet" type="text/css">
@@ -33,8 +33,7 @@
     <!--Angular Scripts-->
 
     <script>
-        var App = angular.module('RiaPizza', ['paypal-button', 'ngSanitize', 'ngRoute']);
-        paypal.Button.driver('angular', window.angular);
+        var App = angular.module('RiaPizza', ['ngSanitize', 'ngRoute']);
     </script>
     <script src="~/Angular/Controllers/AuthCtrl.js"></script>
     @RenderSection("css", required: false)
@@ -313,7 +312,7 @@
                             </div>
                         </div>
                         <div ng-if="userOrders.length > 0">
-                            <div class="row text-center font-weight-bold mb-4 mt-1">
+                            <div class="row text-center font-weight-bold mb-4 mt-1 order-head">
                                 <div class="col-2">
                                     Code
                                 </div>
@@ -334,26 +333,31 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row text-center border-bottom pt-3" style="font-size:15px" ng-repeat="order in userOrders">
-                                <div class="col-2">
-                                    {{order.orderCode}}
+                            <div class="row text-center border-bottom pt-3 orders-list-modal" style="font-size:15px" ng-repeat="order in userOrders">
+                                <div class="col-md-2 col-xs-12">
+                                    <span class="order-head-mob">Code:</span>  {{order.orderCode}}
                                 </div>
-                                <div class="col-2">
+                                <div class="col-md-2 col-xs-12">
+                                    <span class="order-head-mob">Total Bill:</span>
                                     {{order.totalBill}}
                                     <span ng-if="order.isPaymentConfirmed" class="badge badge-success">Paid</span>
                                     <span ng-if="!order.isPaymentConfirmed" class="badge badge-danger">Pending</span>
                                 </div>
-                                <div class="col-2">
+                                <div class="col-md-2 col-xs-12">
+                                    <span class="order-head-mob">Status:</span>
                                     <span class="badge badge-success">{{order.orderStatus}}</span>
                                 </div>
-                                <div class="col-6 text-md-left">
+                                <div class="col-md-6 col-xs-12 text-md-left">
                                     <div class="row" ng-repeat="item in order.orderItems">
-                                        <div class="col-2">
+                                        <div class="col-md-2 col-xs-12">
+                                            <span class="order-head-mob">Quantity:</span>
                                             {{item.quantity}}x
                                         </div>
-                                        <div class="col-10">
+                                        <div class="col-md-10 col-xs-12">
+                                            <span class="order-head-mob">Dishes:</span>
                                             <h4 style="font-size:18px">{{item.dish.dishName}}</h4>
-                                            <p class="pl-0">{{item.extras}}</p>
+                                            <p class="pl-0 mb-0">{{item.extras}}</p>
+                                            <p class="pl-0" ng-if="item.remarks"> <strong>Remarks:</strong> {{item.remarks}}</p>
                                         </div>
                                     </div>
                                 </div>

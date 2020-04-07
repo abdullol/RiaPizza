@@ -52,7 +52,7 @@ namespace RiaPizza
             );
             services.ConfigureApplicationCookie(
                options => options.AccessDeniedPath = "/Access/Denied"
-           );
+            );
             services.AddTransient<IDeliveryAreaService, DeliveryAreaService>();
             services.AddTransient<IDishCategoryService, DishCategoryService>();
             services.AddTransient<IDishService, DishService>();
