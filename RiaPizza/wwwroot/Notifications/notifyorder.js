@@ -50,6 +50,10 @@ connection.on("notifyOrder", function (order) {
             '<td>' + order.orderBy.name + '</td>' +
             '<td>' + orderStatus + '</td>' +
             '<td>' + order.recievingTime + '</td>' +
+            '<td>' + order.orderDateTime + '</td>' +
+            '<td>' + order.orderDeliveryAddress.postalCode + '</td>' +
+            '<td>' + order.orderDeliveryAddress.address + '</td>' +
+            '<td>' + order.orderBy.contact + '</td>' +
             '<td>' + order.subTotal + '</td>' +
             '<td>' + order.discount + '</td>' +
             '<td>' + order.totalBill + '</td>' +

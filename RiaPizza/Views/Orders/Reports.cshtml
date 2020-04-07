@@ -32,48 +32,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
 
-                <div class="modal fade bd-example-modal-lg orderDetails-modal" tabindex="-1" role="dialog"
-                     aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="myLargeModalLabel">Order Detail</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <h4 class="modal-title">Order By</h4>
-                                <br />
-                                <div class="row clearfix" id="OrderByDetails"></div>
-                                <hr />
-
-                                <h4 class="modal-title">Order Delivery Address</h4>
-                                <br />
-                                <div class="row clearfix" id="OrderAddressDetails"></div>
-                                <hr />
-
-                                <h4 class="modal-title">Orders Items</h4>
-                                <br />
-                                <div class="row clearfix">
-                                    <div class="col-12">
-                                        <div class="row">
-                                            <div class="col-md-3"><h6>Item Name</h6></div>
-                                            <div class="col-md-4"><h6>Extras</h6></div>
-                                            <div class="col-md-3"><h6>Remarks</h6></div>
-                                            <div class="col-md-1"><h6>Qty</h6></div>
-                                            <div class="col-md-1"><h6>Price</h6></div>
-                                        </div>
-                                        <div class="row" id="OrderItemsDetails"></div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div id="orderDetailsModal"></div>
                 <div class="header">
                     <h2>
                         <strong>Search Orders By</strong>
@@ -276,7 +235,7 @@
                                 <button style="float:right" class="btn btn-primary">Search</button>
                             </div>
                         </div>
-                       
+
                     </form>
 
                     <div class="table-responsive">
@@ -339,6 +298,7 @@
 </div>
 
 @section scripts{
+    <script src="~/UtilityMethods/showOrderDetails.js"></script>
     <script src="~/assets/js/table.min.js"></script>
 
     <!-- Custom Js -->
@@ -359,34 +319,6 @@
             $('#heading-date').click();
         });
 
-        function showOrderDetails(Id) {
-            $('#OrderByDetails').empty();
-            $('#OrderAddressDetails').empty();
-            $('#OrderItemsDetails').empty();
-            $.ajax({
-                type: "POST",
-                url: '/Orders/GetOrderDetails',
-                data: { id: Id },
-                success: function (order) {
-                    let orderby = order.orderBy;
-                    let address = order.address;
-                    let orderitems = order.orderItems;
-                    $('#OrderByDetails').append("<div class='col-md-6'><b>Order By :</b>" + orderby.name + "</div> <div class='col-md-6'><b>Email :</b>" + orderby.email + "</div> <div class='col-md-6'><b>Contact :</b>" + orderby.contact + "</div> <div class='col-md-6'><b>Company :</b>" + orderby.company + "</div>");
-                    $('#OrderAddressDetails').append("<div class='col-md-6'><b>City :</b> " + address.city + "</div> <div class='col-md-6'><b>Address :</b> " + address.address + "</div> <div class='col-md-6'><b>Floor :</b> " + address.floor + "</div> <div class='col-md-6'><b>Postal Code :</b> " + address.postalCode + "</div>");
-                    for (var i = 0; i < orderitems.length; i++) {
-                        var remarks = ""
-                        orderitems[i].remarks != null ? remarks = orderitems[i].remarks : remarks = "";
-                        $('#OrderItemsDetails').append(
-                            "<div class='col-md-3'> " + orderitems[i].dish.dishName + "</div >" +
-                            "<div class='col-md-4'>" + orderitems[i].extras + "</div>" +
-                            "<div class='col-md-3'>" + remarks + "</div>" +
-                            "<div class='col-md-1'>" + orderitems[i].quantity + "</div>" +
-                            "<div class='col-md-1'>" + orderitems[i].totalPrice + "</div>");
-                    }
-                }
-            });
 
-            $('.orderDetails-modal').modal();
-        }
     </script>
 }

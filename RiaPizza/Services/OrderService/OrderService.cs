@@ -246,19 +246,14 @@ namespace RiaPizza.Services.OrderService
             var order = await _context.Orders.FindAsync(id);
             return order.OrderCode;
         }
-        public async Task<OrderDetailsDto> GetOrderDetails(int id)
+        public async Task<Order> GetOrderDetails(int id)
         {
             var order = await GetOrder(id);
             order.OrderItems.ToList().ForEach(s => s.Order = null);
             order.OrderBy.Order = null;
             order.OrderDeliveryAddress.Order = null;
-            var orderDetails = new OrderDetailsDto
-            {
-                Address = order.OrderDeliveryAddress,
-                OrderBy = order.OrderBy,
-                OrderItems = order.OrderItems
-            };
-            return orderDetails;
+            
+            return order;
         }
         public async Task<List<Order>> GetUserOrders(int id)
         {

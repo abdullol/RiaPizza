@@ -21,6 +21,7 @@ using RiaPizza.Services.DishService;
 using RiaPizza.Services.NotifyOrder;
 using RiaPizza.Services.OrderService;
 using RiaPizza.Services.ScheduleService;
+using RiaPizza.Services.RenderViewService;
 
 namespace RiaPizza.Controllers
 {
@@ -33,23 +34,20 @@ namespace RiaPizza.Controllers
         private readonly IDishService _dishService;
         private readonly IDishCategoryService _dishCatService;
         private readonly IScheduleService _scheduleService;
-        private IHostingEnvironment _env;
         public OrdersController(
             IOrderService service,
             IAccountService accountService,
             IHubContext<NotifyHub> hubContext,
             UserManager<AppUser> userManager,
-            IHostingEnvironment env,
             IDishService dishService,
-            IDishCategoryService dishCatService
-            , IScheduleService scheduleService
+            IDishCategoryService dishCatService,
+            IScheduleService scheduleService
             )
         {
             _service = service;
             _accountService = accountService;
             _hubContext = hubContext;
             _userManager = userManager;
-            _env = env;
             _dishService = dishService;
             _dishCatService = dishCatService;
             _scheduleService = scheduleService;
@@ -278,12 +276,14 @@ namespace RiaPizza.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Manager,Admin")]
-        public async Task<JsonResult> GetOrderDetails(int id)
+        public async Task<ContentResult> GetOrderDetails(int id)
         {
             var orderDetails = await _service.GetOrderDetails(id);
-            return Json(orderDetails);
+            var result = await this.RenderViewToStringAsync("/Views/Orders/_OrderDetails.cshtml", orderDetails);
+            return Content(result);
         }
 
+      
         public async Task<JsonResult> GetUserOrders(int id)
         {
             var orders = await _service.GetUserOrders(id);

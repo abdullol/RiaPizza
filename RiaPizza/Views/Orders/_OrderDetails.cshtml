@@ -1,0 +1,97 @@
+﻿@model RiaPizza.Models.Order
+
+
+<div class="modal fade bd-example-modal-lg orderDetails-modal" tabindex="-1" role="dialog"
+     aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myLargeModalLabel">Order Detail</h5>
+                <button class="close" onclick="$('.orderDetails-modal').modal('hide')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="orderDetailsBody">
+
+                <b>Order Time:</b> @Model.OrderDateTime
+                <br />
+                <b>Sub Total:</b> @Model.SubTotal
+                <br />
+                <b>Discount:</b> @Model.Discount
+                <br />
+                <b>Delivery Charges:</b> @((Model.TotalBill - Model.SubTotal) - Model.Discount)
+                <br />
+                <b>Total Bill:</b> @Model.TotalBill
+                <br />
+                <b>Payment Method:</b>
+                @if (Model.IsPaymentConfirmed)
+                { @Model.PaymentMethod <span class='badge badge-success text-white'>Confirmed</span>}
+                else
+                { @Model.PaymentMethod <span class='badge badge-danger text-white'>Pending</span>}
+
+                <br />
+                <b>Remarks:</b> @Model.Remarks
+                <br /><br />
+                <h5 class="modal-title">Order By</h5>
+                <br />
+                <div class="row clearfix" id="OrderByDetails">
+                    <div class='col-md-6'>
+                        <b>Order By :</b> @Model.OrderBy.Name
+                    </div> <div class='col-md-6'>
+                        <b>Email :</b> @Model.OrderBy.Email
+                    </div> <div class='col-md-6'>
+                        <b>Contact :</b> @Model.OrderBy.Contact
+                    </div> <div class='col-md-6'>
+                        <b>Company :</b> @Model.OrderBy.Company
+                    </div>
+                </div>
+                <hr />
+
+                <h5 class="modal-title">Order Delivery Address</h5>
+                <br />
+                <div class="row clearfix" id="OrderAddressDetails">
+                    <div class='col-md-6'>
+                        <b>City :</b> @Model.OrderDeliveryAddress.City
+                    </div>
+                    <div class='col-md-6'>
+                        <b>Address :</b> @Model.OrderDeliveryAddress.Address
+                    </div>
+                    <div class='col-md-6'>
+                        <b>Floor :</b> @Model.OrderDeliveryAddress.Floor
+                    </div>
+                    <div class='col-md-6'>
+                        <b>Postal Code :</b> @Model.OrderDeliveryAddress.PostalCode
+                    </div>
+                </div>
+                <hr />
+
+                <h5 class="modal-title">Orders Items</h5>
+                <br />
+                <div class="row clearfix">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-md-3"><h6>Item Name</h6></div>
+                            <div class="col-md-4"><h6>Extras</h6></div>
+                            <div class="col-md-3"><h6>Remarks</h6></div>
+                            <div class="col-md-1"><h6>Qty</h6></div>
+                            <div class="col-md-1"><h6>Price</h6></div>
+                        </div>
+                        <div class="row" id="OrderItemsDetails">
+                            @foreach (var item in Model.OrderItems)
+                            {
+                                <div class='col-md-3'> @item.Dish.DishName </div>
+                                <div class='col-md-4'> @item.Extras </div>
+                                <div class='col-md-3'> @item.Remarks </div>
+                                <div class='col-md-1'> @item.Quantity</div>
+                                <div class='col-md-1'> @item.TotalPrice</div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" onclick="$('.orderDetails-modal').modal('hide')">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

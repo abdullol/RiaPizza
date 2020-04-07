@@ -20,6 +20,7 @@ using RiaPizza.Services.DishCategoryService;
 using RiaPizza.Services.DishService;
 using RiaPizza.Services.NotifyOrder;
 using RiaPizza.Services.OrderService;
+using RiaPizza.Services.RenderViewService;
 using RiaPizza.Services.ScheduleService;
 
 namespace RiaPizza
