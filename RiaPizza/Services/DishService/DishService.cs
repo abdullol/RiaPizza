@@ -48,6 +48,7 @@ namespace RiaPizza.Services.DishService
             dish.Allergies = editDish.Allergies;
             dish.Description = editDish.Description;
             dish.BasePrice = editDish.BasePrice;
+            dish.DishCategoryId = editDish.DishCategoryId;
             dish.Rating = editDish.Rating;
 
             _context.Dishes.Update(dish);
