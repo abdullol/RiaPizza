@@ -600,12 +600,12 @@
                     <p class="cartToppings">
                         <span ng-if="item.dishSize.dishSizeId > 0">Size: {{item.dishSize.size}} {{item.dishSize.diameter}} </span>
                         <span ng-repeat="toppingItems in item.toppings" ng-if="toppingItems.toppings.length>0">
-                            {{toppingItems.handler}}: [
+                         
                             <span ng-repeat="topping in toppingItems.toppings" ng-init="toppingIndex = $index">
                                 {{topping}}
                                 <i ng-if="toppingIndex < toppingItems.toppings.length - 1">,</i>
                             </span>
-                            ]
+                            
                         </span>
 
                     </p>
@@ -1192,12 +1192,17 @@
                             <select class="form-control address-option" ng-model="order.recievingTime" name="recievingTime" required>
                                 <option hidden value="">-select delivery time-</option>
                                 <option>As soon as possible</option>
-                                <option>17:45</option>
-                                <option>18:00</option>
-                                <option>18:15</option>
-                                <option>18:30</option>
-                                <option>18:45</option>
-                                <option>19:00</option>
+                                <option>00:30</option>
+                                <option>00:45</option>
+                                <option>01:00</option>
+                                <option>01:15</option>
+                                <option>01:30</option>
+                                <option>01:45</option>
+                                <option>02:00</option>
+                                <option>02:15</option>
+                                <option>02:30</option>
+                                <option>02:45</option>
+                                <option>03:00</option>
                             </select>
                             <p class="text-danger pt-4" ng-show="checkoutForm.recievingTime.$touched && checkoutForm.recievingTime.$error.required">* Please select recieving time.</p>
                         </div>

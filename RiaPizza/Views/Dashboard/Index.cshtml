@@ -366,11 +366,12 @@
                 url: '/Orders/GetOrderDetails',
                 data: { id: Id },
                 success: function (order) {
+                 //   console.log(order);
                     let orderby = order.orderBy;
                     let address = order.address;
                     let orderitems = order.orderItems;
                     $('#OrderByDetails').append("<div class='col-md-6'><b>Order By :</b>" + orderby.name + "</div> <div class='col-md-6'><b>Email :</b>" + orderby.email + "</div> <div class='col-md-6'><b>Contact :</b>" + orderby.contact + "</div> <div class='col-md-6'><b>Company :</b>" + orderby.company + "</div>");
-                    $('#OrderAddressDetails').append("<div class='col-md-6'><b>City :</b> " + address.city + "</div> <div class='col-md-6'><b>Address :</b> " + address.address + "</div> <div class='col-md-6'><b>Floor :</b> " + address.floor + "</div> <div class='col-md-6'><b>Postal Code :</b> " + address.postalCode + "</div>");
+                    $('#OrderAddressDetails').append("<div class='col-md-6'><b>City :</b> " + address.city + "</div> <div class='col-md-6'><b>Address :</b> " + address.address + "</div> <div class='col-md-6'><b>Floor :</b> " + address.floor + "</div> <div class='col-md-6'><b>Postal Code :</b> " + address.postalCode + "</div> </div> <div class='col-md-12'><b>Remarks :</b> " + address.postalCode + "</div>");
                     for (var i = 0; i < orderitems.length; i++) {
                         var remarks = ""
                         orderitems[i].remarks != null ? remarks = orderitems[i].remarks : remarks = "";
