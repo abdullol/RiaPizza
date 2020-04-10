@@ -316,6 +316,12 @@ namespace RiaPizza.Controllers
             return RedirectToAction("Index");
         }
 
+        public async Task<IActionResult> DeleteSize(int id)
+        {
+            await _service.DeleteDishSize(id);
+            return RedirectToAction("Index", "Dishes");
+        }
+
         public async Task<IActionResult> DeleteDishes(int[] dishIds)
         {
             await _service.DelMultipleDish(dishIds);

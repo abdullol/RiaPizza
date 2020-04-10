@@ -3,8 +3,9 @@
     ViewData["Title"] = "Invoice";
     //Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
     Layout = null;
-    var tax = Model.TotalBill * 0.14;
-    var totalWithTax = Model.TotalBill + tax;
+    var tax = Model.TotalBill * 0.10;
+    var totalWithTaxInt = Model.TotalBill + tax;
+    string totalWithTax = string.Format("{0:N2}", Convert.ToDecimal(totalWithTaxInt));
 }
 
 <!DOCTYPE html>
@@ -107,7 +108,7 @@
                                                         <tr class="roww" style="">
                                                             <td class="one">QSESRQ</td>
                                                             <td class="two">
-                                                                <div><h6>2455787515558</h6></div>
+                                                                <div><h6>@Model.OrderBy.Contact</h6></div>
                                                                 <div style="margin-top: 20px;">
                                                                     @Model.OrderBy.Name <br>
                                                                     @Model.OrderDeliveryAddress.Address<br>
@@ -142,9 +143,9 @@
                                                             <tr style="border-bottom: none;">
                                                                 <td>@count</td>
                                                                 <td width="850px">
-                                                                    {DISH: @item.Dish.DishName}-{EXTRA: @item.Extras}-{QUANTITY: @item.Quantity}-{EXTRAPRICE:$@item.DishPriceWithAddOnes}
+                                                                    DISH: @item.Dish.DishName | EXTRAS: @item.Extras | QUANTITY: @item.Quantity
                                                                 </td>
-                                                                <td>$@item.DishBasePrice</td>
+                                                                <td>€@item.DishPriceWithAddOnes</td>
                                                             </tr>
                                                             count++;
                                                         }
