@@ -5,15 +5,49 @@
 }
 @section css{
     <style>
-        .carousel-indicators .active{
-            background-color:#DE0019 !important;
+        .carousel-indicators .active {
+            background-color: #DE0019 !important;
+        }
+
+        .suggestion-list {
+            list-style: none;
+            list-style-type: none;
+            font-weight: bold;
+            padding-left: 0;
+            width: 60%;
+            margin: auto;
+        }
+        .header-front{
+            background:black;
+        }
+
+        .suggestion-list li {
+            padding: 10px;
+            background: #fff;
+            color: black;
+            text-align: left;
+            display: none;
+        }
+
+        .active {
+            background: #efefef;
+        }
+
+        .suggestion-list li {
+            cursor: pointer;
+        }
+        .bg-img-overlay{
+            background: transparent !important;
+            clip-path: none !important;
         }
     </style>
 
 }
 <!-- Header -->
-<header id="header" class="mt-n5">
-    <div class="bg-img-overlay" style="background-color:black">
+<div class="header-front">
+</div>
+<header id="header">
+    <div class="bg-img-overlay">
         <div class="container">
             <div class="row py-4">
                 <div class="col-12 text-center text-white">
@@ -24,22 +58,24 @@
                     <form action="~/Dishes/Explore" method="get">
                         <div class="input-group input-group-lg mx-auto">
                             <i class="fas fa-map-marker-alt fa-1x pin p-3 align-self-center"></i>
-                            <input name="areaname" type="text" class="form-control" autoComplete="on" list="suggestions">
-                            <datalist id="suggestions">
-                                @foreach (var area in Model)
-                                {
-                                    <option value="@area.AreaName">@area.AreaName - @area.PostalCode</option>
-                                }
-                            </datalist>
+                            <input name="areaname" id="area-search" type="text" class="form-control" autoComplete="off">
+
                             <div class="input-group-prepend">
                                 <button class="btn btn-disabled btn-show font-weight-bold text-white" style="background:#DE0019">Show</button>
                             </div>
                         </div>
+                        <ul class="suggestion-list">
+                            @foreach (var area in Model.OrderByDescending(s=>s.MinOrderCharges))
+                            {
+                                <li data-value="@area.AreaName"><i class="fa fa-home"></i> &nbsp; &nbsp; @area.AreaName - @area.PostalCode</li>
+                            }
+                        </ul>
                         <h6 class="text-white mt-4">@ViewBag.Error</h6>
                     </form>
                 </div>
             </div>
         </div>
+
     </div>
 </header>
 <!-- Header ends -->
@@ -112,20 +148,28 @@
         </div>
     </div>
 </section>
-<!-- How it works ends -->
-<!-- More -->
-@*<section class="more">
-    <div class="container p-4">
-        <div class="row p-4 align-items-center">
-            <div class="col-md-6 mb-5 text-md-left text-center">
-                <h3>Want more?</h3>
-                <h4 class="mb-4">Check out exciting news about food and lifestyle on our blog</h4>
-                <a href="#">> Visit the blog</a>
-            </div>
-            <div class="col-md-6 mt-5  text-md-right text-center">
-                <img src="~/client-assets/res/img/blog.png" alt="" class="img-fluid">
-            </div>
-        </div>
-    </div>
-</section>*@
-<!-- More ends -->
+
+@section scripts{
+    <script>
+        $(function () {
+
+            $("#area-search").on("keyup", function (e) {
+                var value = $(this).val().toLowerCase();
+                if (value === '') {
+                    $(".suggestion-list li").hide();
+                    return false;
+                }
+                $(".suggestion-list li").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+
+            });
+            $('.suggestion-list li').click(function () {
+                var val = $(this).data('value');
+                $('#area-search').val(val);
+                $(".suggestion-list li").hide();
+            });
+        });
+
+    </script>
+}

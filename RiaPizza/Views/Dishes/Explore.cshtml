@@ -8,6 +8,18 @@
     <link rel="stylesheet" type="text/css" href="~/client-assets/swiper.css">
     <link rel="stylesheet" type="text/css" href="~/client-assets/res/custom.css" />
     <link rel="stylesheet" type="text/css" href="~/client-assets/custom/explore.css" />
+    <style>
+        .topping-info {
+            color: #1574F5;
+            float: right
+        }
+        .tip label{
+            width: 100%;
+            padding: 8px;
+            background: #f0f0f0;
+            margin-bottom: 5px;
+        }
+    </style>
 
 }
 <!-- <script src="~/Angular/Controllers/ViewDishesPage.js"></script> -->
@@ -16,7 +28,7 @@
 <script>
 
 
-    App.controller("ViewDishes", ['$scope', '$rootScope', '$http', function ($scope, $rootScope, $http) {
+    App.controller("ViewDishes", ['$scope', '$rootScope', '$http', '$compile', function ($scope, $rootScope, $http, $compile) {
 
         function JsonCallParam(Controller, Action, Parameters) {
             $.ajax({
@@ -75,7 +87,7 @@
         //Start Ordering Attributes
         $scope.order = { recievingTime: '', orderCode: '', remarks: '', totalBill: 0, paymentMethod: 'Cash', isPaymentConfirmed: false, orderStatus: '', subTotal: 0, discount: 0, userId: 0, orderBy: {}, orderDeliveryAddress: {}, orderItems: {} };
         $scope.orderBy = { name: '', email: '', contact: '', company: '' };
-        $scope.orderDeliveryAddress = { city: '', floor: '', address: '', postalCode: '' };
+        $scope.orderDeliveryAddress = { city:'', floor: '', address: '', postalCode: '' };
         $scope.orderItems = [];
         $scope.userAddresses = [];
         $scope.userAddressId = "0";
@@ -151,7 +163,7 @@
             if (list != false) {
                 var user = list;
                 $scope.orderDeliveryAddress.address = user.address;
-                $scope.orderDeliveryAddress.city = user.city;
+                //$scope.orderDeliveryAddress.city = user.city;
 
                 $scope.orderBy.name = user.firstName + ' ' + user.lastName;
                 $scope.orderBy.email = user.email;
@@ -209,12 +221,12 @@
         $scope.fillUserAddress = function () {
             if (Number($scope.userAddressId) !== 0) {
                 var add = $scope.userAddresses.find(x => x.appUserAddressId === Number($scope.userAddressId))
-                $scope.orderDeliveryAddress.city = add.city;
+                //$scope.orderDeliveryAddress.city = add.city;
                 $scope.orderDeliveryAddress.floor = add.floor;
                 $scope.orderDeliveryAddress.address = add.address;
 
                 $('#checkoutForm input[name="address"]').val(add.address);
-                $('#checkoutForm input[name="city"]').val(add.city);
+                //$('#checkoutForm input[name="city"]').val(add.city);
                 $('#checkoutForm input[name="floor"]').val(add.floor);
             }
         }
@@ -418,6 +430,7 @@
             var extra = JSON.parse(obj);
             let extraName = extra.extraName;
             let price = extra.extraPrice;
+            let extraAllergies = extra.allergies;
             if (extra.sizeToppingPrices.length > 0) {
                 price = extra.sizeToppingPrices.find(s => s.dishSizeId === $scope.dishSizeIdSelectedDish).price;
             }
@@ -440,7 +453,10 @@
             $scope.cartItem.priceWithExtras = $scope.cartItem.priceWithExtras + price;
 
             updatePrice();
-            $('#inputSelectedValue-' + id).html(extraName);
+
+            $('#inputSelectedValue-' + id).html(extraName +
+                '<i role="button" class="fas fa-info-circle topping-info pointer" onclick="showDishDesc(`' + extraAllergies + '`)"></i>');
+
         };
         $scope.selectDishSize = function (id, dishPrice) {
             var obj = document.getElementById('sizeSelect-' + id).value;
@@ -583,6 +599,25 @@
             }
         }
     }]);
+    function showDishDesc(allergies) {
+        $(".dishDetails").modal();
+        $(".dishAllergies").html('');
+
+        if (allergies === '' || allergies === 'null') {
+            $(".dishAllergies").html("<h6 style='font-weight:bold'>No Allergies Found</h6>");
+            return;
+        }
+
+        var allergyList = allergies.split(',');
+        if (allergyList.length > 0) {
+            $(".dishAllergies").append('<h6 style="font-weight:bold">Allergies</h6> <ul> </ul>');
+            allergyList.forEach(function (val, key) {
+                $(".dishAllergies ul").append('<li> ' + val + ' </li>');
+            })
+        }
+        else
+            $(".dishAllergies").html(allergies);
+    }
 </script>
 <div ng-controller="ViewDishes" id="ViewDishes">
     <!-- Sidebar -->
@@ -590,10 +625,15 @@
         <div class="container-fluid" ng-init="loadCart()">
             <div class="row py-2" style="margin-top: -10px; border-bottom: 1px solid #eee;">
                 <div class="col-12 text-center">
-                    <h6 style="font-size: 14px; font-weight: 600; color: rgb(102, 102, 102);">Basket</h6>
+                    <h6 style="font-size: 14px;
+        font-weight: 600;
+        color: rgb(102, 102, 102);
+    ">Basket</h6>
                 </div>
             </div>
-            <div class="row pt-4 pb-2" style="border-bottom: 1px solid #eee; width: 360px;">
+            <div class="row pt-4 pb-2" style="border-bottom: 1px solid #eee;
+        width: 360px;
+    ">
                 <div ng-if="cart.length === 0">
                     <i class="fas fa-shopping-cart" style="font-size:-webkit-xxx-large; margin: auto; padding: 5% 0 0 40%;"></i>
                     <p class="basket-empty__text" style="text-align: center; margin: 10px;">Choose delicious dishes from the menu and order your menu.</p>
@@ -927,7 +967,7 @@
         </div>
         <div class="modal fade dishDetails" role="dialog" style="width: 50%; margin: auto; top: 10%;">
             <div class="modal-dialog" style="background-color:white">
-                <div class="modal-header" style="border-bottom:none">
+                <div class="modal-header text-white" style="border-bottom:none">
                     <h4>More Product Information</h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
@@ -1002,6 +1042,7 @@
                     <div class="row mx-md-2 mx-0 mt-3 dish-head {{dishCategory.categoryName}}" data-categoryhead="{{dishCategory.categoryName}}">
                         <div class="col-12 ml-5 py-3 mb-4 mx-auto dish-col" style="background:url(/Uploads/{{dishCategory.image}});">
                             <h5>{{dishCategory.categoryName}} </h5>
+                            <!--<p>{{dishCategory.description}}</p> -->
                         </div>
                     </div>
                     <div class="row mx-md-2 mx-0 px-0 dishes" data-category="{{dishCategory.categoryName}}" ng-repeat="dish in dishCategory.dishes" ng-init="dishIndex = $index">
@@ -1030,13 +1071,13 @@
                                             <div class="container align-items-center">
                                                 <div class="row" ng-if="dish.dishSizes.length > 0">
                                                     <div class="col-lg-8 col-md-8 col-sm-10 col-xs-10 mx-auto" ng-if="!extratype.chooseMultiple">
-                                                        <!--<label class="d-block">
-                                                            lhre Sauce:
-                                                        </label>-->
+                                                        <label class="d-block">
+                                                            {{dish.dishName}}
+                                                        </label>
                                                         <select class="custom-select mt-2 pointer"
                                                                 ng-model="dishSizeIdSelectedDish" id="sizeSelect-{{dish.dishId}}"
                                                                 ng-change="selectDishSize(dish.dishId, dish.basePrice)">
-                                                            <option style="font-size:14px;" hidden value="0">Select Size</option>
+                                                            <option style="font-size:14px;" hidden value="0">Select {{dish.dishName}} Size</option>
                                                             <option style="font-size:14px;" ng-repeat="size in dish.dishSizes" value="{{size}}">{{size.size}} {{size.diameter}} ({{size.basePrice | number : 2}}€)</option>
                                                         </select>
                                                         <p class="m-0 mb-3 p-2">
@@ -1044,10 +1085,10 @@
                                                         </p>
                                                     </div>
                                                 </div>
-                                                <div class="row" ng-repeat="extratype in dish.dishExtraTypes" ng-init="dishExtraTypeIndex = $index">
+                                                <div class="row" ng-repeat="extratype in dish.dishExtraTypes | orderBy : 'order'" ng-init="dishExtraTypeIndex = $index">
                                                     <div class="col-lg-8 col-md-8 col-sm-10 col-xs-10 mx-auto" ng-if="extratype.chooseMultiple" style="margin-bottom:20px">
                                                         <label class="d-block"> {{extratype.typeName}} </label>
-                                                        <div ng-repeat="extra in extratype.dishExtras" ng-init="extraIndex=$index" class="custom-control custom-checkbox mb-2 extraType-{{extratype.dishExtraTypeId}}" ng-class="{ 'hide': extraIndex > 2 }">
+                                                        <div ng-repeat="extra in extratype.dishExtras | orderBy : 'order'" ng-init="extraIndex=$index" class="custom-control custom-checkbox mb-2 extraType-{{extratype.dishExtraTypeId}}" ng-class="{ 'hide': extraIndex > 2 }">
                                                             <input ng-disabled="dish.dishSizes.length > 0 && dishSizeIdSelectedDish==='0'" type="checkbox" class="custom-control-input pointer topping-select"
                                                                    id="{{extra.dishExtraId}}_{{extraIndex}}"
                                                                    value="{{extra.extraName}}"
@@ -1057,7 +1098,7 @@
                                                                 {{extra.extraName}}
                                                                 {{dish.dishSizes.length > 0 ? filterToppingSizePrice(dishSizeIdSelectedDish, extra.sizeToppingPrices) : showToppingPrice(extra.extraPrice) }}
                                                             </label>
-                                                            <i role="button" class="fas fa-info-circle pointer" ng-click="showDishDesc(extra.allergies, 'toppings')" style="color: #1574F5; float:right"> </i>
+                                                            <i role="button" class="fas fa-info-circle topping-info pointer" ng-click="showDishDesc(extra.allergies, 'toppings')"></i>
                                                         </div>
                                                         <button ng-click="showMoreExtras(extratype.dishExtraTypeId)" id="more-btn-{{extratype.dishExtraTypeId}}" ng-if="extratype.dishExtras.length > 3" class="more-btn">
                                                             <i class="fas fa-angle-down mr-3 text-dark"></i>Show More
@@ -1073,14 +1114,13 @@
                                                         <select ng-disabled="dish.dishSizes.length > 0 && dishSizeIdSelectedDish==='0'" class="custom-select mt-2 pointer topping-dropdown"
                                                                 ng-model="temp" id="inputGroupSelect-{{extratype.dishExtraTypeId}}"
                                                                 ng-change="selectToppingDropdown(extratype.dishExtraTypeId, extratype.dishExtras, extratype.typeName)">
-                                                            <option style="font-size:14px;" hidden value="Select Value">Select Value</option>
-                                                            <option style="font-size:14px;" ng-repeat="extra in extratype.dishExtras" value="{{extra}}">
+                                                            <option style="font-size:14px;" hidden value="Select Value">{{extratype.placeholder}}</option>
+                                                            <option style="font-size:14px;" ng-repeat="extra in extratype.dishExtras | orderBy : 'order'" value="{{extra}}">
                                                                 {{extra.extraName}}
                                                                 {{dish.dishSizes.length > 0 ? filterToppingSizePrice(dishSizeIdSelectedDish, extra.sizeToppingPrices) : showToppingPrice(extra.extraPrice) }}
                                                             </option>
                                                         </select>
-                                                        <p class="m-0 mb-3 p-2">
-                                                            <span id="inputSelectedValue-{{extratype.dishExtraTypeId}}"></span> @*<i class="fas fa-info-circle" href="#"></i>*@
+                                                        <p class="m-0 mb-3 p-2" id="inputSelectedValue-{{extratype.dishExtraTypeId}}">
                                                         </p>
                                                     </div>
                                                 </div>
@@ -1111,212 +1151,232 @@
     </div>
 
     <!-- Ready to eat section -->
-    <section class="ready hide" id="orderTab">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <h1 class="eat-h"><a class="pointer" role="button" ng-click="backToDishes()"><i class="fas fa-chevron-left" style="font-size:30px"></i></a>&nbsp;  Ready to eat?</h1>
-                    <p class="eat-para">Where do you want your order to be delivered?</p>
-                </div>
-                <div class="col-12">
-                    <div class="divider"></div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group mb-0 pl-2 mt-4">
-                        <label class="label">From which address are you ordering?</label>
-                        <select class="form-control address-option" id="selectaddress" name="selectaddress" ng-init="userAddressId = 0" ng-model="userAddressId" ng-change="fillUserAddress()">
-                            <option value="0" selected="selected">Fill in new address</option>
-                            <option ng-repeat="add in userAddresses" value="{{add.appUserAddressId}}">{{add.address}}</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <form id="checkoutForm" name="checkoutForm" ng-submit="createOrder()" novalidate>
-                <input type="hidden" id="postalArea" value="@Model.AreaName" />
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group mb-0 pl-2 mt-3">
-                            <label class="label">Address</label>
-                            <input type="text" class="form-control address-option" ng-model="orderDeliveryAddress.address" name="address" required>
-                            <p class="text-danger pt-4" ng-show="checkoutForm.address.$touched && checkoutForm.address.$error.required">* Address is required.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group mb-0 pl-2 mt-3">
-                            <label class="label">Postcode</label>
-                            <input type="text" class="form-control address-option" ng-init="orderDeliveryAddress.postalCode = @Model.PostalCode" disabled ng-model="orderDeliveryAddress.postalCode" name="postalCode" required>
-                            <p class="text-danger pt-4" ng-show="checkoutForm.postalCode.$touched && checkoutForm.postalCode.$error.required">* PostalCode is required.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group mb-0 pl-2 mt-3">
-                            <label label>City</label>
-                            <input type="text" class="form-control address-option" ng-model="orderDeliveryAddress.city" name="city" required>
-                            <p class="text-danger pt-4" ng-show="checkoutForm.city.$touched && checkoutForm.city.$error.required">* City is required.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group mb-0 pl-2 mt-3">
-                            <label class="label">Floor</label>
-                            <input type="text" class="form-control address-option" name="floor" ng-model="orderDeliveryAddress.floor">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 mb-3">
-                        <div class="eat-para2">How can we reach you?</div>
-                    </div>
-                    <div class="col-12 mb-3">
-                        <div class="divider"></div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group mb-0 pl-2 mt-3">
-                            <label class="label">Name</label>
-                            <input type="text" class="form-control address-option" ng-model="orderBy.name" name="name" required>
-                            <p class="text-danger pt-4" ng-show="checkoutForm.name.$touched && checkoutForm.name.$error.required">* Name is required.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group mb-0 pl-2 mt-3">
-                            <label class="label">Email</label>
-                            <input type="email" class="form-control address-option" ng-model="orderBy.email" name="email" required>
-                            <p class="text-danger pt-4" ng-show="checkoutForm.email.$touched && checkoutForm.email.$error.required">* Email is required.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group mb-0 pl-2 mt-3">
-                            <label class="label">Phone number</label>
-                            <input type="text" class="form-control address-option" ng-model="orderBy.contact" name="contact" required>
-                            <p class="text-danger pt-4" ng-show="checkoutForm.contact.$touched && checkoutForm.contact.$error.required">* Phonenumber is required.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group mb-0 pl-2 mt-3">
-                            <label class="label">Company name</label>
-                            <input type="text" class="form-control address-option" ng-model="orderBy.company" name="company">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <p class="eat-para2">When would you like your food?</p>
-                    </div>
-                    <div class="col-12">
-                        <div class="divider"></div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group mb-0 pl-2 mt-3">
-                            <label class="label">Please choose a delivery time</label>
-                            <select class="form-control address-option" ng-model="order.recievingTime" name="recievingTime" required>
-                                <option hidden value="">-select delivery time-</option>
-                                <option>As soon as possible</option>
-                                <option>00:30</option>
-                                <option>00:45</option>
-                                <option>01:00</option>
-                                <option>01:15</option>
-                                <option>01:30</option>
-                                <option>01:45</option>
-                                <option>02:00</option>
-                                <option>02:15</option>
-                                <option>02:30</option>
-                                <option>02:45</option>
-                                <option>03:00</option>
-                            </select>
-                            <p class="text-danger pt-4" ng-show="checkoutForm.recievingTime.$touched && checkoutForm.recievingTime.$error.required">* Please select recieving time.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group mb-2 pl-2 mt-3">
-                            <label class="label">Remarks</label>
-                            <textarea cols="30" rows="7" class="form-control address-option" ng-model="order.remarks"></textarea>
-                        </div>
-                        <div class="form-control remarks">
-                            <input type="checkbox" class="p-3">
-                            <span class="remarks-check">Save these remarks for your next order.</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-12 mb-3">
-                        <div class="eat-para2">How would you like to pay?</div>
-                    </div>
-                    <div class="col-12 mb-3">
-                        <div class="divider"></div>
-                    </div>
-                    <div class="col-12 mb-2">
-                        <label>
-                            <input type="radio" name="paymentMethod" value="Cash" class="payment-selection" ng-click="cashSelection()" ng-model="order.paymentMethod" checked>
-                            <img src="~/client-assets/res/img/payment_0.png" alt="" class="img-fluid border mr-3 p-2 payment-img">
-                        </label>
-
-                        <label>
-                            <input type="radio" name="paymentMethod" value="Paypal" class="payment-selection" ng-model="order.paymentMethod">
-                            <img src="~/client-assets/res/img/payment_6.png" alt="" class="img-fluid border p-2 payment-img">
-                        </label>
-
-                        <p class="text-danger pt-4" ng-show="checkoutForm.paymentMethod.$touched && checkoutForm.paymentMethod.$error.required">* Please select Payment Method.</p>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group mb-0 pl-2 mt-3">
-                            <label class="label2">You pay (with):</label>
-                            <select class="form-control address-option">
-                                <option>Exact amount: {{ordertotalPrice.totalPrice | number : 2 }} €</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 mb-3">
-                        <div class="eat-para2">Voucher</div>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <div class="divider"></div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <ul class="acc">
-                            <li>
-                                <button class="acc_ctrl"><span style="letter-spacing: 0 !important; text-decoration: underline; font-size: 13px; color: rgb(102, 102, 102);">Do you have a voucher or coupon?</span> </button>
-                                <div class="small-panel" id="voucherPanel">
-                                    <div class="acc_panel">
-                                        <div class="input-group mb-3">
-                                            <input type="text" class="form-control" ng-model="coupon.code" placeholder="Voucher code">
-                                            <div class="input-group-append">
-                                                <button onclick="event.preventDefault()" ng-click="validateCoupon()" class="btn-primary" id="basic-addon2">check</button>
+                            <section class="ready hide" id="orderTab">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h1 class="eat-h"><a class="pointer" role="button" ng-click="backToDishes()"><i class="fas fa-chevron-left" style="font-size:30px"></i></a>&nbsp;  Ready to eat?</h1>
+                                            <p class="eat-para">Where do you want your order to be delivered?</p>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="divider"></div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group mb-0 pl-2 mt-4">
+                                                <label class="label">From which address are you ordering?</label>
+                                                <select class="form-control address-option" id="selectaddress" name="selectaddress" ng-init="userAddressId = 0" ng-model="userAddressId" ng-change="fillUserAddress()">
+                                                    <option value="0" selected="selected">Fill in new address</option>
+                                                    <option ng-repeat="add in userAddresses" value="{{add.appUserAddressId}}">{{add.address}}</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
-                                    <p id="couponValidation"></p>
+                                    <form id="checkoutForm" name="checkoutForm" ng-submit="createOrder()">
+                                        <input type="hidden" id="postalArea" value="@Model.AreaName" />
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group mb-0 pl-2 mt-3">
+                                                    <label class="label">Address</label>
+                                                    <input type="text" class="form-control address-option" ng-model="orderDeliveryAddress.address" name="address" required>
+                                                    <p class="text-danger pt-4" ng-show="checkoutForm.address.$touched && checkoutForm.address.$error.required">* Address is required.</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group mb-0 pl-2 mt-3">
+                                                    <label class="label">Postcode</label>
+                                                    <input type="text" class="form-control address-option" ng-init="orderDeliveryAddress.postalCode = @Model.PostalCode"
+                                                           ng-model="orderDeliveryAddress.postalCode" name="postalCode" disabled required>
+                                                    <p class="text-danger pt-4" ng-show="checkoutForm.postalCode.$touched && checkoutForm.postalCode.$error.required">* PostalCode is required.</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group mb-0 pl-2 mt-3">
+                                                    <label label>City</label>
+                                                    <input type="text" class="form-control address-option" ng-init="orderDeliveryAddress.city = '@Model.City'"
+                                                           ng-model="orderDeliveryAddress.city" name="city" value="@Model.City" disabled required>
+                                                    <p class="text-danger pt-4" ng-show="checkoutForm.city.$touched && checkoutForm.city.$error.required">* City is required.</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group mb-0 pl-2 mt-3">
+                                                    <label class="label">Floor</label>
+                                                    <input type="text" class="form-control address-option" name="floor" ng-model="orderDeliveryAddress.floor">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 mb-3">
+                                                <div class="eat-para2">How can we reach you?</div>
+                                            </div>
+                                            <div class="col-12 mb-3">
+                                                <div class="divider"></div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group mb-0 pl-2 mt-3">
+                                                    <label class="label">Name</label>
+                                                    <input type="text" class="form-control address-option" ng-model="orderBy.name" name="name" required>
+                                                    <p class="text-danger pt-4" ng-show="checkoutForm.name.$touched && checkoutForm.name.$error.required">* Name is required.</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group mb-0 pl-2 mt-3">
+                                                    <label class="label">Email</label>
+                                                    <input type="email" class="form-control address-option" ng-model="orderBy.email" name="email" required>
+                                                    <p class="text-danger pt-4" ng-show="checkoutForm.email.$touched && checkoutForm.email.$error.required">* Email is required.</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group mb-0 pl-2 mt-3">
+                                                    <label class="label">Phone number</label>
+                                                    <input type="text" class="form-control address-option" ng-model="orderBy.contact" name="contact" required>
+                                                    <p class="text-danger pt-4" ng-show="checkoutForm.contact.$touched && checkoutForm.contact.$error.required">* Phonenumber is required.</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group mb-0 pl-2 mt-3">
+                                                    <label class="label">Company name</label>
+                                                    <input type="text" class="form-control address-option" ng-model="orderBy.company" name="company">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <p class="eat-para2">When would you like your food?</p>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="divider"></div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group mb-0 pl-2 mt-3">
+                                                    <label class="label">Please choose a delivery time</label>
+                                                    <select class="form-control address-option" ng-model="order.recievingTime" name="recievingTime" required>
+                                                        <option hidden value="">-select delivery time-</option>
+                                                        <option>As soon as possible</option>
+                                                        <option>00:30</option>
+                                                        <option>00:45</option>
+                                                        <option>01:00</option>
+                                                        <option>01:15</option>
+                                                        <option>01:30</option>
+                                                        <option>01:45</option>
+                                                        <option>02:00</option>
+                                                        <option>02:15</option>
+                                                        <option>02:30</option>
+                                                        <option>02:45</option>
+                                                        <option>03:00</option>
+                                                    </select>
+                                                    <p class="text-danger pt-4" ng-show="checkoutForm.recievingTime.$touched && checkoutForm.recievingTime.$error.required">* Please select recieving time.</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group mb-2 pl-2 mt-3">
+                                                    <label class="label">Remarks</label>
+                                                    <textarea cols="30" rows="7" class="form-control address-option" ng-model="order.remarks"></textarea>
+                                                </div>
+                                                <div class="form-control remarks">
+                                                    <input type="checkbox" class="p-3">
+                                                    <span class="remarks-check">Save these remarks for your next order.</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-12 mb-3">
+                                                <div class="eat-para2">How would you like to pay?</div>
+                                            </div>
+                                            <div class="col-12 mb-3">
+                                                <div class="divider"></div>
+                                            </div>
+                                            <div class="col-12 mb-2">
+                                                <label>
+                                                    <input type="radio" name="paymentMethod" value="Cash" class="payment-selection" ng-click="cashSelection()" ng-model="order.paymentMethod" checked>
+                                                    <img src="~/client-assets/res/img/payment_0.png" alt="" class="img-fluid border mr-3 p-2 payment-img">
+                                                </label>
+
+                                                <label>
+                                                    <input type="radio" name="paymentMethod" value="Paypal" class="payment-selection" ng-model="order.paymentMethod">
+                                                    <img src="~/client-assets/res/img/payment_6.png" alt="" class="img-fluid border p-2 payment-img">
+                                                </label>
+
+                                                <p class="text-danger pt-4" ng-show="checkoutForm.paymentMethod.$touched && checkoutForm.paymentMethod.$error.required">* Please select Payment Method.</p>
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 mb-3">
+                                                <div class="eat-para2">Total Amount: {{ordertotalPrice.totalPrice | number : 2 }} €</div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <div class="divider"></div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 mb-3">
+                                                <div class="eat-para2">Would you like to give tip?</div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <div class="divider"></div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <div class="form-group mb-0 pl-2 mt-3">
+                                                    <div class="switch tip">
+                                                        <label>
+                                                            <input class="mr-2" type="radio" name="tip" value="true" ng-model="order.tip" required />
+                                                            Yes
+                                                        </label>
+                                                        <label>
+                                                            <input class="mr-2" type="radio" name="tip" value="true" ng-model="order.tip" required />
+                                                            No
+                                                        </label>
+                                                    </div>
+                                                    <p class="text-danger pt-4" ng-show="checkoutForm.tip.$touched && checkoutForm.tip.$error.required">* This field is required.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 mb-3">
+                                                <div class="eat-para2">Voucher</div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <div class="divider"></div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <ul class="acc">
+                                                    <li>
+                                                        <button class="acc_ctrl"><span style="letter-spacing: 0 !important; text-decoration: underline; font-size: 13px; color: rgb(102, 102, 102);">Do you have a voucher or coupon?</span> </button>
+                                                        <div class="small-panel" id="voucherPanel">
+                                                            <div class="acc_panel">
+                                                                <div class="input-group mb-3">
+                                                                    <input type="text" class="form-control" ng-model="coupon.code" placeholder="Voucher code">
+                                                                    <div class="input-group-append">
+                                                                        <button onclick="event.preventDefault()" ng-click="validateCoupon()" class="btn-primary" id="basic-addon2">check</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <p id="couponValidation"></p>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-6"></div>
+                                            <div class="col-md-6 mb-4 text-center">
+                                                <p id="showpaypalbtn-guide" class="hide text-info" style="font-size:18px">Please Click on Paypal to process payment online!</p>
+                                                <div id="paypal-button"></div>
+                                                <input id="cashbtn" type="submit" class="btn btn-primary btn-block py-2 rounded-0 font-weight-bold" value="Order and pay" />
+                                            </div>
+                                            <div class="col-12">
+                                                <p style="font-size: 12px; color: rgb(207, 202, 196); margin-bottom: 0; padding-left: 0;">By clicking on ORDER AND PAY you agree with the contents of the shopping cart, the data you filled out, our <a href="#">privacy statement</a> and <a href="#">terms of use</a></p>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col-md-6"></div>
-                    <!--<div class="col-12 mb-4">
-                        <p style="font-size: 13px; color: rgb(102, 102, 102); line-height: 19px;">When placing an order, you will receive a confirmation, Food Tracker status messages and a request to review the restaurant via email or otherwise (such as push messages).</p>
-                        <div class="form-control remarks">
-                            <input type="checkbox" class="p-3">
-                            <span class="remarks-check">Save these remarks for your next order.</span>
+
+                            </section>
+                            <!-- Ready to eat section ends -->
                         </div>
-                    </div>-->
-                    <div class="col-md-6 mb-4 text-center">
-                        <p id="showpaypalbtn-guide" class="hide text-info" style="font-size:18px">Please Click on Paypal to process payment online!</p>
-
-                        <div id="paypal-button"></div>
-                        @*<paypal-button id="paypalbtn" env="paypal.env" client="paypal.client" payment="paypal.payment" commit="paypal.commit" on-authorize="paypal.onAuthorize"></paypal-button>*@
-                        <input id="cashbtn" type="submit" ng-disabled="checkoutForm.$invalid" class="btn btn-primary btn-block py-2 rounded-0 font-weight-bold" value="Order and pay" />
-                    </div>
-                    <div class="col-12">
-                        <p style="font-size: 12px; color: rgb(207, 202, 196); margin-bottom: 0; padding-left: 0;">By clicking on ORDER AND PAY you agree with the contents of the shopping cart, the data you filled out, our <a href="#">privacy statement</a> and <a href="#">terms of use</a></p>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-    </section>
-    <!-- Ready to eat section ends -->
-</div>
 
 @section scripts{
     <script src="https://unpkg.com/swiper/js/swiper.min.js"></script>
@@ -1325,5 +1385,10 @@
     <script src="~/client-assets/res/js/jquery.waypoints.js"></script>
     <script src="~/client-assets/res/js/myswiper.js"></script>
     <script>
+        $(function () {
+            $('.sizeSelect').click(function () {
+
+            })
+        })
     </script>
 }

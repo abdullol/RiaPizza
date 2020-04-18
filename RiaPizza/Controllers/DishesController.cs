@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using RiaPizza.DTOs.Dish.ToppingSequence;
 using RiaPizza.Models;
 using RiaPizza.Services.DeliveryAreaService;
 using RiaPizza.Services.DishCategoryService;
@@ -353,6 +354,21 @@ namespace RiaPizza.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> UpdateToppingSequence(IFormCollection form)
+        {
+            var dishId = JsonConvert.DeserializeObject<int>(form["dishId"]);
+            try
+            {
+                var dishExtraTypes = JsonConvert.DeserializeObject<IEnumerable<ExtraTypeSequenceDto>>(form["toppingSequence"]);
+                await _service.UpdateToppingSequence(dishExtraTypes, dishId);
+                return RedirectToAction("Edit", "Dishes", new { @id = dishId });
+            }
+            catch(Exception ex)
+            {
+                return RedirectToAction("Edit", "Dishes", new { @id = dishId });
+            }
+        }
 
     }
 }

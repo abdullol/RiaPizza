@@ -37,8 +37,8 @@
     }
 
     $scope.allCategories = [];
-    $scope.addCategoryObj = { categoryName: '', orderBy: '', isAvailable: true };
-    $scope.editCategoryObj = { dishCategoryId: 0, categoryName: '', orderBy: 0, isAvailable: true };
+    $scope.addCategoryObj = { categoryName: '', description: "", orderBy: '', isAvailable: true };
+    $scope.editCategoryObj = { dishCategoryId: 0, description: "", categoryName: '', orderBy: 0, isAvailable: true };
     $scope.category = new FormData();
 
     $scope.getAllCategories = function () {
@@ -49,7 +49,13 @@
     }
 
     $scope.openEditModal = function (category) {
-        $scope.editCategoryObj = { dishCategoryId: category.dishCategoryId, categoryName: category.categoryName, orderBy: category.orderBy, isAvailable: category.isAvailable };
+        $scope.editCategoryObj = {
+            dishCategoryId: category.dishCategoryId,
+            categoryName: category.categoryName,
+            orderBy: category.orderBy,
+            isAvailable: category.isAvailable,
+            description: category.description
+        };
 
         $('#ImageTabEdit').append('<img style="cursor:pointer" src="/Uploads/' + category.image + '" alt="' + category.categoryName + '" /> <i onclick="ClearFileEdit()" class="fas fa-window-close centerBtn"></i>');
         $('#selectImageBtnEdit').hide();

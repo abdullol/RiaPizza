@@ -18,6 +18,15 @@
         .right {
             float: right;
         }
+
+        tr {
+            border-bottom: none;
+        }
+
+        .table tbody tr td {
+            border-top: none;
+            border-bottom: none;
+        }
     </style>
 }
 <script>
@@ -105,9 +114,10 @@
                 $scope.addDishExtra.sizeToppingPrices.push(toppingPrice);
             }
         }
-        $scope.setExtraTypeEditModalValues = function (id, name, allowMultiple) {
+        $scope.setExtraTypeEditModalValues = function (id, name, placeholder, allowMultiple) {
             $("#DishExtraTypeId").val(id);
             $("#TypeName").val(name);
+            $("#Placeholder").val(placeholder);
             if (allowMultiple == 'True')
                 $("#ChooseMultiple").val("true");
             else
@@ -166,11 +176,18 @@
                                                    placeholder="Enter Type Name" name="TypeName" required>
                                         </div>
                                     </div>
-                                    <label>Allow Multiple <span class="text-danger">*</span></label>
+                                    <label>Placeholder <span class="text-danger">*</span></label>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <input type="text" class="form-control" id="Placeholder"
+                                                   placeholder="Enter Placeholder" name="Placeholder" required>
+                                        </div>
+                                    </div>
+                                    <label>Topping Selector <span class="text-danger">*</span></label>
                                     <div class="form-group">
                                         <select class="form-control" id="ChooseMultiple" name="ChooseMultiple">
-                                            <option value="true">True</option>
-                                            <option value="false">False</option>
+                                            <option value="true">Checkbox</option>
+                                            <option value="false">Dropdown</option>
                                         </select>
                                     </div>
                                 </form>
@@ -260,12 +277,12 @@
                                                    placeholder="Enter Extra Type Name" name="TypeName">
                                         </div>
                                     </div>
-                                    <label>Choose Multiple <span class="text-danger">*</span></label>
+                                    <label>Topping Selector <span class="text-danger">*</span></label>
                                     <div class="form-group">
                                         <div class="form-line">
                                             <select class="form-control" name="ChooseMultiple">
-                                                <option value="True">Allow</option>
-                                                <option value="False">Disable</option>
+                                                <option value="True">Checkbox</option>
+                                                <option value="False">Dropdown</option>
                                             </select>
                                         </div>
                                     </div>
@@ -382,7 +399,7 @@
                             </div>
                             <div class="col-md-12 col-md-12">
                                 <div class="form-group">
-                                    <input class="btn btn-success" type="submit" name="submit" value="Submit" style="float:right; margin-right:5px" />
+                                    <input class="btn btn-success" type="submit" name="submit" value="Submit" style="float: right; margin-right: 5px " />
                                 </div>
                             </div>
                         </div>
@@ -391,8 +408,8 @@
 
                     <h4 class="card-inside-title"> Dish Sizes </h4>
                     <div class="row">
-                        <div class="col-12">
-                            <table>
+                        <div class="col-12 body table-responsive">
+                            <table class="table table-striped">
                                 <tr>
                                     <th width="30%">Size</th>
                                     <th width="30%">Price</th>
@@ -402,35 +419,35 @@
                             </table>
                             @foreach (var size in Model.DishSizes)
                             {
-                                <form method="post" action="~/Dishes/EditDishSize">
+                                <form class="table-responsive" method="post" action="~/Dishes/EditDishSize">
                                     <input type="hidden" name="DishSizeId" value="@size.DishSizeId" />
                                     <input type="hidden" name="DishId" value="@Model.DishId" />
-                                    <table>
+                                    <table class="table table-striped">
                                         <tr>
-                                            <td class="no-padding" width="30%">
+                                            <td width="30%">
                                                 <div class="form-group">
                                                     <input type="text" class="form-control" placeholder="Size" name="Size" value="@size.Size" />
                                                 </div>
                                             </td>
-                                            <td class="no-padding" width="30%">
+                                            <td width="30%">
                                                 <div class="form-group">
                                                     <input type="text" class="form-control" placeholder="Price" name="BasePrice" value="@size.BasePrice" />
                                                 </div>
                                             </td>
-                                            <td class="no-padding" width="30%">
+                                            <td width="30%">
                                                 <div class="form-group"><input type="text" class="form-control" placeholder="Diameter" name="Diameter" value="@size.Diameter" /></div>
                                             </td>
-                                            <td class="no-padding text-center" width="10%">
-                                                <button class="btn btn-primary"><i class="fas fa-save"></i></button>
-                                                <a href="~/Dishes/DeleteSize/@size.DishSizeId" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                                            <td class="text-center" width="10%">
+                                                <button class="btn tblActnBtn"><i class="material-icons">save</i></button>
+                                                <a href="~/Dishes/DeleteSize/@size.DishSizeId" class="btn tblActnBtn"><i class="material-icons">delete</i></a>
                                             </td>
                                         </tr>
                                     </table>
                                 </form>
                             }
-                            <form id="add-dish-size" style="display:none" method="post" action="~/Dishes/AddDishSize">
+                            <form class="table-responsive" id="add-dish-size" style="display:none" method="post" action="~/Dishes/AddDishSize">
                                 <input type="hidden" name="DishId" value="@Model.DishId" />
-                                <table>
+                                <table class="table table-striped">
                                     <tr>
                                         <td width="30%">
                                             <div class="form-group"><input type="text" class="form-control" placeholder="Size" name="Size" /></div>
@@ -457,62 +474,95 @@
                     </h2>
 
                     <br />
-                    <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
-                        @foreach (var extraType in Model.DishExtraTypes)
-                        {
-                            <thead>
-                                <tr>
-                                    <th width="25%">
-                                        @extraType.TypeName
-                                        @if (extraType.ChooseMultiple)
-                                        {<span class="badge badge-info text-white">Mutiple</span> }
-                                        else
-                                        { <span class="badge badge-warning text-white">Single</span>}
-                                    </th>
-                                    <th width="25%">Price</th>
-                                    <th width="35%">Alergies</th>
-                                    <th width="15%" class="text-center">
-                                        <a class="btn btn-danger" href="~/Dishes/DeleteDishExtraType?returnId=@Model.DishId&DishExtraTypeId=@extraType.DishExtraTypeId"><i class="fa fa-trash"></i></a>
-                                        <button ng-click="setExtraTypeEditModalValues(@extraType.DishExtraTypeId,'@extraType.TypeName','@extraType.ChooseMultiple')" data-toggle="modal" data-target="#editExtraType" class="btn btn-warning">
-                                            <i class="fa fa-pencil-alt"></i>
-                                        </button>
-                                        <button ng-click="initializeDishExtra(@extraType.DishExtraTypeId)" data-toggle="modal" data-target="#addExtra" class="btn btn-success">
-                                            <i class="fa fa-plus"></i>
-                                        </button>
-
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var extra in extraType.DishExtras)
+                    <div class="body table-responsive">
+                        <div class="pb-2">
+                            <table class="table" id="extra-types">
+                                @foreach (var extraType in Model.DishExtraTypes.OrderBy(s=>s.Order))
                                 {
-                                    <tr>
-                                        <td>@extra.ExtraName</td>
-                                        <td>
-                                            @if (Model.DishSizes.Count() == 0)
-                                            {
-                                                @extra.ExtraPrice
-                                            }
-                                            else
-                                            {
-                                                foreach (var price in extra.SizeToppingPrices)
-                                                {
-                                                    <span>@price.SizeName: @price.Price</span>
-                                                }
-                                            }
-                                        </td>
+                                    <tr class="extra-type" data-id="@extraType.DishExtraTypeId">
+                                        <td colspan="4">
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th width="30%">Topping Heading</th>
+                                                        <th width="25%">Placeholder</th>
+                                                        <th width="25%">Topping Selector</th>
+                                                        <th width="20%" class="text-center">Action</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <td width="30%">@extraType.TypeName</td>
+                                                        <td width="25%">@extraType.Placeholder</td>
+                                                        <td width="25%">
+                                                            @if (extraType.ChooseMultiple)
+                                                            {<span><i class="fas fa-check-square"></i> Checkbox</span> }
+                                                            else
+                                                            { <span><i class="fas fa-caret-square-down"></i> Dropdown</span>}
+                                                        </td>
+                                                        <td width="20%" class="text-center">
+                                                            <button onclick="deleteExtraType(@extraType.DishExtraTypeId, @Model.DishId)" class="btn tblActnBtn">
+                                                                <i class="material-icons">delete</i>
+                                                            </button>
+                                                            <button ng-click="setExtraTypeEditModalValues(@extraType.DishExtraTypeId,'@extraType.TypeName','@extraType.Placeholder','@extraType.ChooseMultiple')" data-toggle="modal" data-target="#editExtraType" class="btn tblActnBtn">
+                                                                <i class="material-icons">edit</i>
+                                                            </button>
+                                                            <button ng-click="initializeDishExtra(@extraType.DishExtraTypeId)" data-toggle="modal" data-target="#addExtra" class="btn tblActnBtn">
+                                                                <i class="material-icons">add</i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </thead>
+                                            </table>
 
-                                        <td>@extra.Allergies</td>
-                                        <td class="text-center">
-                                            <a class="btn btn-danger" href="~/Dishes/DeleteDishExtra?returnId=@Model.DishId&DishExtraId=@extra.DishExtraId"><i class="fa fa-trash"></i></a>
-                                            <button ng-click="getDishExtra(@extra.DishExtraId)" data-toggle="modal" data-target="#editExtra" class="btn btn-info"><i class="fa fa-pencil-alt"></i></button>
+                                            <table class="table table-striped width-per-90 m-auto">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="20%">Name</th>
+                                                        <th width="30%">Allergies</th>
+                                                        <th width="40%">Topping Price</th>
+                                                        <th class="text-center" width="10%">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="dish-extras-ordering">
+                                                    @foreach (var extra in extraType.DishExtras.OrderBy(s=>s.Order))
+                                                    {
+                                                        <tr data-id="@extra.DishExtraId">
+                                                            <td>@extra.ExtraName</td>
+                                                            <td>@extra.Allergies</td>
+                                                            <td>
+                                                                @if (Model.DishSizes.Count() == 0)
+                                                                {
+                                                                    @extra.ExtraPrice
+                                                                }
+                                                                else
+                                                                {
+                                                                    foreach (var price in extra.SizeToppingPrices)
+                                                                    {
+                                                                        <span>@price.SizeName: @price.Price</span>
+                                                                    }
+                                                                }
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <button onclick="deleteExtra(@extra.DishExtraId, @Model.DishId)" class="btn tblActnBtn">
+                                                                    <i class="material-icons">delete</i>
+                                                                </button>
+                                                                <button ng-click="getDishExtra(@extra.DishExtraId)" data-toggle="modal" data-target="#editExtra" class="btn tblActnBtn">
+                                                                    <i class="material-icons">edit</i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
                                         </td>
                                     </tr>
                                 }
-                            </tbody>
-                        }
-                    </table>
+                            </table>
+                        </div>
+                    </div>
 
+                    <div>
+                        <button onclick="saveSequence(@Model.DishId)" class="btn btn-success float-right">Save Sequence</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -522,11 +572,77 @@
 
 @section scripts{
 
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
     <script src="~/assets/js/form.min.js"></script>
     <script src="~/assets/js/pages/forms/form-wizard.js"></script>
 
     <script src="https://cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>
     <script>
+
+        function saveSequence(dishId) {
+            var extraTypes = [];
+            $('#extra-types .extra-type').each(function (i) {
+                var typeId = $(this).data('id');
+                var extras = [];
+                $(this).find('.dish-extras-ordering tr').each(function (j) {
+                    var extraId = $(this).data('id');
+                    extras.push({ id: extraId, order: j+1 });
+                })
+                extraTypes.push({ id: typeId, order: i+1, dishExtras: extras });
+            });
+            $.ajax({
+                type: "POST",
+                url: '/Dishes/UpdateToppingSequence',
+                data: { "toppingSequence": JSON.stringify(extraTypes), "dishId":dishId },
+                success: function () {
+                    swal("Updated!", "Topping Sequence Updated!", "success");
+                    window.location.reload();
+                },
+                error: function (xhr) {
+                    swal("Error", "Please Try again later!", "error");
+                }
+            });
+        }
+
+        function deleteExtraType(itemId, returnId) {
+            var url = "/Dishes/DeleteDishExtraType?returnId=" + returnId + "&DishExtraTypeId=" + itemId;
+            confirm(url);
+        }
+        function deleteExtra(itemId, returnId) {
+            var url = "/Dishes/DeleteDishExtra?returnId=" + returnId + "&DishExtraId=" + itemId;
+            confirm(url);
+        }
+
+        function confirm(url) {
+            swal({
+                title: "Are you sure?",
+                text: "You want to delete the item",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, clone it!",
+                closeOnConfirm: false
+            }, function () {
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    success: function () {
+                        swal("Delete!", "You item deleted!", "success");
+                        window.location.reload();
+                    },
+                    error: function (xhr) {
+                        swal("Error", "Please Try again later!", "error");
+                    }
+                });
+
+            });
+        }
+
+        $("tbody").sortable({
+            items: "> tr",
+            appendTo: "parent",
+            helper: "clone"
+        }).disableSelection();
         CKEDITOR.replace('editor1');
         CKEDITOR.replace('editor2');
         CKEDITOR.config.height = 150;

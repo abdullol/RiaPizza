@@ -1,4 +1,5 @@
-﻿using RiaPizza.Models;
+﻿using RiaPizza.DTOs.Dish.ToppingSequence;
+using RiaPizza.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,5 +32,6 @@ namespace RiaPizza.Services.DishService
         Task DeleteDishExtraType(int id);
         Task DelMultipleDish(int[] dishIds);
         Task AddDishExtraType(DishExtraType dishExtraType);
+        Task UpdateToppingSequence(IEnumerable<ExtraTypeSequenceDto> sequenceDto, int dishId);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RiaPizza.Data;
+using RiaPizza.DTOs.Dish.ToppingSequence;
 using RiaPizza.Models;
 using System;
 using System.Collections.Generic;
@@ -134,6 +135,7 @@ namespace RiaPizza.Services.DishService
             var editExtraType = await _context.DishExtraTypes.FindAsync(editDishExtraType.DishExtraTypeId);
             editExtraType.TypeName = editDishExtraType.TypeName;
             editExtraType.ChooseMultiple = editDishExtraType.ChooseMultiple;
+            editExtraType.Placeholder = editDishExtraType.Placeholder;
             editExtraType.Status = editDishExtraType.Status;
             _context.DishExtraTypes.Update(editExtraType);
             await _context.SaveChangesAsync();
@@ -235,6 +237,23 @@ namespace RiaPizza.Services.DishService
         {
             var sizes = await _context.DishSize.Where(s => s.DishId == id).ToListAsync();
             return sizes;
+        }
+
+        public async Task UpdateToppingSequence(IEnumerable<ExtraTypeSequenceDto> sequenceDto, int dishId)
+        {
+            var extraTypes = await _context.DishExtraTypes.Where(s => s.DishId == dishId).Include(s => s.DishExtras).ToListAsync();
+            extraTypes.ForEach(s => {
+                var extraType = sequenceDto.SingleOrDefault(a => a.id == s.DishExtraTypeId);
+                s.Order = extraType.order;
+
+                s.DishExtras.ToList().ForEach(a => {
+                    var extra = extraType.dishExtras.SingleOrDefault(b => b.id == a.DishExtraId);
+                    a.Order = extra.order;
+                });
+            });
+
+            _context.UpdateRange(extraTypes);
+            await _context.SaveChangesAsync();
         }
     }
 }

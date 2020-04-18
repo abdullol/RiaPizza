@@ -11,6 +11,7 @@ namespace RiaPizza.Models
         [Key]
         public int DishCategoryId { get; set; }
         public string CategoryName { get; set; }
+        public string Description { get; set; }
         public bool IsAvailable { get; set; }
         public bool Status { get; set; }
         public string Image { get; set; }

@@ -44,6 +44,13 @@
                                     </div>
                                     <div class="modal-body">
                                         <form>
+                                            <label>City <span class="text-danger">*</span></label>
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <input type="text" class="form-control"
+                                                           placeholder="Enter City Name" ng-model="addAreaObj.city">
+                                                </div>
+                                            </div>
                                             <label>Area <span class="text-danger">*</span></label>
                                             <div class="form-group">
                                                 <div class="form-line">
@@ -96,6 +103,13 @@
                                     </div>
                                     <div class="modal-body">
                                         <form>
+                                            <label for="password">City</label>
+                                            <div class="form-group">
+                                                <div class="form-line">
+                                                    <input type="text" class="form-control"
+                                                           placeholder="Enter City Name" ng-model="editAreaObj.city">
+                                                </div>
+                                            </div>
                                             <label for="password">Area</label>
                                             <div class="form-group">
                                                 <div class="form-line">
@@ -162,9 +176,9 @@
                                         <div ng-if="!area.status" class="badge col-red">disable</div>
                                     </td>
                                     <td>
-                                        <button class="btn btn-primary" ng-click="openEditModal(area)"><i class="fas fa-pencil-alt"></i></button>
-                                        <a class="btn btn-danger" @*href="~/DeliveryAreas/Delete/{{area.deliveryAreaId}}"*@ ng-click="delDeliveryArea(area.deliveryAreaId)" ><i class="fas fa-trash-alt"></i></a>
-                                        <a href="~/DeliveryAreas/ChangeStatus/{{area.deliveryAreaId}}" class="btn btn-success"><i class="fas fa-toggle-on"></i></a>
+                                        <button class="btn tblActnBtn" ng-click="openEditModal(area)"><i class="fas fa-pencil-alt"></i></button>
+                                        <button class="btn tblActnBtn" ng-click="delDeliveryArea(area.deliveryAreaId)" ><i class="fas fa-trash-alt"></i></button>
+                                        <a class="btn tblActnBtn" href="~/DeliveryAreas/ChangeStatus/{{area.deliveryAreaId}}"><i class="fas fa-toggle-on pt-2"></i></a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -189,4 +203,11 @@
 @section scripts{
     <script src="~/assets/js/table.min.js"></script>
     <script src="~/assets/js/pages/tables/jquery-datatable.js"></script>
+    <script>
+         function getOrderTableSortOrder() {
+            return { SortOrder: [[0, "desc"]] };
+        }
+
+        window.RiaPizzaConfig = getOrderTableSortOrder();
+    </script>
 }

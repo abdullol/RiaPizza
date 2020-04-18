@@ -59,96 +59,110 @@
                     <h2>
                         <strong>Dish Categories</strong>
                         <button data-toggle="modal" data-target="#addModal" class="btn btn-info" style="float:right"> Add <i class="fa fa-plus"></i></button>
-                        <div class="modal fade" id="addModal" role="dialog"
-                             aria-labelledby="formModal" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="formModal">Add Dish Category</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form>
-                                            <label>Category Name <span class="text-danger">*</span></label>
-                                            <div class="form-group">
-                                                <div class="form-line">
-                                                    <input type="text" class="form-control"
-                                                           placeholder="Enter Dish Category Name" ng-model="addCategoryObj.categoryName">
-                                                </div>
-                                            </div>
-                                            <div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="form-line">
-                                                    <input type="text" class="form-control"
-                                                           placeholder="Order Number [{{allCategories[allCategories.length-1].orderBy + 1}}]" ng-model="addCategoryObj.orderBy" required>
-                                                </div>
-                                            </div>
-                                            <label>Image <span class="text-danger">*</span></label>
-                                            <div class="form-group">
-                                                <input style="display:none" type="file" id="fileInput" oninput="showImage()">
-                                                <div id="ImageTab" class="center">
-                                                </div>
-                                                <img style="width:40px;margin-left: 20px; margin-right:20px" id="selectImageBtn" class="icon-colored pointer" onclick="$('#fileInput').click()" src="~/assets/images/details_open.png" title="add_image.svg">
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-info waves-effect" ng-click="addCategory()">Save</button>
-                                        <button type="button" class="btn btn-danger waves-effect"
-                                                data-dismiss="modal">
-                                            Cancel
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal fade" id="editModal" role="dialog"
-                             aria-labelledby="formModal" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="formModal">Edit Dish Category</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form>
-                                            <label for="password">Area</label>
-                                            <div class="form-group">
-                                                <div class="form-line">
-                                                    <input type="text" class="form-control"
-                                                           placeholder="Enter Dish Category Name" ng-model="editCategoryObj.categoryName">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="form-line">
-                                                    <input type="text" class="form-control"
-                                                           placeholder="Order Number" ng-model="editCategoryObj.orderBy">
-                                                </div>
-                                            </div>
-                                            <label>Image</label>
-                                            <div class="form-group">
-                                                <input class="center" style="display:none" type="file" id="fileInputEdit" oninput="showImageEdit()">
-                                                <div id="ImageTabEdit" class="center"> </div>
-                                                <img style="width:40px;margin-left: 20px; margin-right:20px" id="selectImageBtnEdit" class="icon-colored pointer center" onclick="$('#fileInputEdit').click()" src="~/assets/images/details_open.png" title="add_image.svg">
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-info waves-effect" ng-click="editCategory()">Save</button>
-                                        <button type="button" class="btn btn-danger waves-effect"
-                                                data-dismiss="modal">
-                                            Cancel
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </h2>
+                    <div class="modal fade" id="addModal" role="dialog"
+                         aria-labelledby="formModal" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="formModal">Add Dish Category</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <label>Category Name <span class="text-danger">*</span></label>
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <input type="text" class="form-control"
+                                                       placeholder="Enter Dish Category Name" ng-model="addCategoryObj.categoryName">
+                                            </div>
+                                        </div>
+                                        <label>Description</label>
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <input type="text" class="form-control"
+                                                       placeholder="Enter Description" ng-model="addCategoryObj.description">
+                                            </div>
+                                        </div>
+                                        <label>Order NO.</label>
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <input type="text" class="form-control"
+                                                       placeholder="Order Number [{{allCategories[allCategories.length-1].orderBy + 1}}]" ng-model="addCategoryObj.orderBy" required>
+                                            </div>
+                                        </div>
+                                        <label>Image <span class="text-danger">*</span></label>
+                                        <div class="form-group">
+                                            <input style="display:none" type="file" id="fileInput" oninput="showImage()">
+                                            <div id="ImageTab" class="center">
+                                            </div>
+                                            <img style="width:40px;margin-left: 20px; margin-right:20px" id="selectImageBtn" class="icon-colored pointer" onclick="$('#fileInput').click()" src="~/assets/images/details_open.png" title="add_image.svg">
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-info waves-effect" ng-click="addCategory()">Save</button>
+                                    <button type="button" class="btn btn-danger waves-effect"
+                                            data-dismiss="modal">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="editModal" role="dialog"
+                         aria-labelledby="formModal" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="formModal">Edit Dish Category</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="form-group">
+                                            <label for="Name">Name</label>
+                                            <div class="form-line">
+                                                <input type="text" class="form-control"
+                                                       placeholder="Enter Dish Category Name" ng-model="editCategoryObj.categoryName">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="Description">Description</label>
+                                            <div class="form-line">
+                                                <input type="text" class="form-control"
+                                                       placeholder="Enter Description" ng-model="editCategoryObj.description">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="orderby">Order NO.</label>
+                                            <div class="form-line">
+                                                <input type="text" class="form-control"
+                                                       placeholder="Order Number" ng-model="editCategoryObj.orderBy">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Image</label>
+                                            <input class="center" style="display:none" type="file" id="fileInputEdit" oninput="showImageEdit()">
+                                            <div id="ImageTabEdit" class="center"> </div>
+                                            <img style="width:40px;margin-left: 20px; margin-right:20px" id="selectImageBtnEdit" class="icon-colored pointer center" onclick="$('#fileInputEdit').click()" src="~/assets/images/details_open.png" title="add_image.svg">
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-info waves-effect" ng-click="editCategory()">Save</button>
+                                    <button type="button" class="btn btn-danger waves-effect"
+                                            data-dismiss="modal">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="body">
                     <div class="table-responsive">
@@ -181,9 +195,9 @@
                                     </td>
                                     <td>{{cat.orderBy}}</td>
                                     <td>
-                                        <button class="btn btn-primary" ng-click="openEditModal(cat)"><i class="fas fa-pencil-alt"></i></button>
-                                        <button class="btn btn-danger" ng-click="delDishCategory(cat.dishCategoryId)"><i class="fas fa-trash-alt"></i></button>
-                                        <a href="~/DishCategories/ToggleDishCategories/{{cat.dishCategoryId}}" class="btn btn-success"><i class="fas fa-toggle-on"></i></a>
+                                        <button class="btn tblActnBtn" ng-click="openEditModal(cat)"><i class="fas fa-pencil-alt"></i></button>
+                                        <button class="btn tblActnBtn" ng-click="delDishCategory(cat.dishCategoryId)"><i class="fas fa-trash-alt"></i></button>
+                                        <a class="btn tblActnBtn" href="~/DishCategories/ToggleDishCategories/{{cat.dishCategoryId}}"><i class="fas fa-toggle-on pt-2"></i></a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -210,6 +224,12 @@
     <script src="~/assets/js/table.min.js"></script>
     <script src="~/assets/js/pages/tables/jquery-datatable.js"></script>
     <script>
+        function getOrderTableSortOrder() {
+            return { SortOrder: [[0, "desc"]] };
+        }
+
+        window.RiaPizzaConfig = getOrderTableSortOrder();
+
         function showImage() {
             var file_data = $("#fileInput").prop("files")[0];
             $('#ImageTab').append('<img style="cursor:pointer" src="' + window.URL.createObjectURL(file_data) + '" alt="' + file_data.name + '" /> <i onclick="ClearFile()" class="fas fa-window-close centerBtn"></i>');
