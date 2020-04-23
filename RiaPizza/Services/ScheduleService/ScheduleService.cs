@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Hangfire;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using RiaPizza.Data;
 using RiaPizza.Models;
 using System;
@@ -16,9 +18,9 @@ namespace RiaPizza.Services.ScheduleService
             _context = context;
         }
 
-        public bool isShopOpen()
+        public async Task<bool> isShopOpen()
         {
-            var schedule = _context.ShopSchedule.FirstOrDefault();
+            var schedule = await _context.ShopSchedule.FirstOrDefaultAsync();
             return schedule.IsOpen;
         }
 
@@ -47,6 +49,12 @@ namespace RiaPizza.Services.ScheduleService
                 await _context.ShopSchedule.AddAsync(timings);
                 await _context.SaveChangesAsync();
             }
+
+            var openShopExpression = "0 "+ schedule.TimeFrom.Hours + " * * *";
+            var closeShopExpression = "0 " + schedule.TimeTo.Hours + " * * *";
+
+            RecurringJob.AddOrUpdate("OpenShop",() =>  OpenShop(), openShopExpression, TimeZoneInfo.Local);
+            RecurringJob.AddOrUpdate("CloseShop", () => CloseShop(), closeShopExpression, TimeZoneInfo.Local);
         }
 
         public async Task ToggleShop(string status)
@@ -66,6 +74,21 @@ namespace RiaPizza.Services.ScheduleService
         {
             var schedule = _context.ShopSchedule.FirstOrDefault();
             return schedule;
+        }
+
+        public async Task OpenShop()
+        {
+            var schedule = await _context.ShopSchedule.FirstOrDefaultAsync();
+            schedule.IsOpen = true;
+            _context.ShopSchedule.Update(schedule);
+            await _context.SaveChangesAsync();
+        }
+        public async Task CloseShop()
+        {
+            var schedule = await _context.ShopSchedule.FirstOrDefaultAsync();
+            schedule.IsOpen = false;
+            _context.ShopSchedule.Update(schedule);
+            await _context.SaveChangesAsync();
         }
     }
 }

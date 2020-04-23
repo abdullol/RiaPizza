@@ -1,96 +1,267 @@
-﻿
+﻿@model IEnumerable<RiaPizza.Data.ApplicationUser.AppUserAddress>
 @{
     ViewData["Title"] = "Addresses";
     Layout = "~/Views/Shared/_LayoutSite.cshtml";
 }
-<!-- Header -->
-<header id="header-s">
-    <div class="container">
-        <div class="row container-hs pt-5">
-            <div class="col-12 text-center text-white">
-                <h1 class="banner-hs font-weight-bold mb-3">Order takeaway in</h1>
-                <div class="input-group input-group-lg mx-auto">
-                    <i class="fas fa-map-marker-alt fa-1x pin p-3 align-self-center"></i>
-                    <input type="text"
-                           class="form-control"
-                           placeholder="Address, i.e. KirchstraBe 1" />
-                    <div class="input-group-prepend">
-                        <span class="btn btn-primary btn-show font-weight-bold">Show</span>
+@section Angular{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha256-KsRuvuRtUVvobe66OFtOQfjP8WA2SzYsmm4VPfMnxms=" crossorigin="anonymous"></script>
+    <script>
+        App.controller("AddressesCtrl", function ($scope, $http) {
+            function JsonCallParam(Controller, Action, Parameters) {
+                $.ajax({
+                    type: "POST",
+                    traditional: true,
+                    async: false,
+                    cache: false,
+                    url: '/' + Controller + '/' + Action,
+                    context: document.body,
+                    data: Parameters,
+                    success: function (json) {
+                        list = null;
+                        list = json;
+                    }
+                    ,
+                    error: function (xhr) {
+                        list = null;
+                    }
+                });
+            }
+            function JsonCall(Controller, Action) {
+                $.ajax({
+                    type: "POST",
+                    traditional: true,
+                    async: false,
+                    cache: false,
+                    url: '/' + Controller + '/' + Action,
+                    context: document.body,
+                    success: function (json) {
+                        list = null; list = json;
+                    },
+                    error: function (xhr) {
+                        list = null;
+                        //debugger;
+                    }
+                });
+            }
+
+            $scope.address = { appUserAddressId: 0, address: "", city: "", floor: "", postalCode: "" };
+            $scope.addresses = [];
+
+            $scope.getAllAddresses = function () {
+                $http.get("/MyAccount/GetAddresses").then(function (response) {
+                    $scope.addresses = response.data;
+                });
+            };
+
+            $scope.addModal = function () {
+                $scope.address = { appUserAddressId: 0, address: "", city: "", floor: "", postalCode: "" };
+                $('#addressModal').modal();
+            }
+
+            $scope.editModal = function (obj) {
+                angular.copy(obj, $scope.address);
+                $('#addressModal').modal();
+            }
+
+            $scope.addorUpdateAddress = function () {
+                var pram = { "address": JSON.stringify($scope.address) };
+                JsonCallParam("MyAccount", "AddOrUpdateAddress", pram);
+                $scope.getAllAddresses();
+                $('#addressModal').modal('hide');
+            };
+
+            $scope.deleteAddress = function (Id) {
+                swal({
+                    title: "Are you sure?",
+                    text: "Your Address will be deleted!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        JsonCallParam("MyAccount", "DeleteAddress", { id: Id });
+                        if (list === "Success") {
+                            $scope.getAllAddresses();
+                            $scope.$apply();
+                            swal("Address Deleted!", {
+                                icon: "success",
+                            });
+                        }
+                        else {
+                            swal("Error", "Please Try again later!", "error");
+                        }
+                    } 
+                });
+            }
+
+        });
+
+    </script>
+}
+<div ng-controller="AddressesCtrl" ng-init="getAllAddresses()">
+    <div id="addressModal"
+         class="modal"
+         tabindex="-1"
+         role="dialog">
+        <div class="modal-dialog modal-dialog-centered w-50 m-auto my-modal">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header border-0 text-white">
+                    <div class="row m-0">
+                        <div class="col-12 m-0">
+                            <h4 class="modal-title text-center">Add Address</h4>
+                        </div>
                     </div>
+                    <button type="button" class="close text-white" data-dismiss="modal">
+                        <i class="fas fa-times text-white"></i>
+                    </button>
+                </div>
+                <div class="modal-body align-items-center">
+                    <form ng-submit="addorUpdateAddress()" name="addressform" novalidate>
+                        <div class="row align-items-center justify-content-center">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="add-label">Address: *</label>
+                                    <input type="text" class="form-control" name="address" ng-model="address.address" required>
+                                    <span class="text-danger font-12" ng-show="addressform.address.$touched && addressform.address.$error.required">Address is required</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="add-label">Floor</label>
+                                    <input type="text" class="form-control" name="floor" ng-model="address.floor">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="add-label">Postcode: *</label>
+                                    <input type="text" class="form-control" name="postalCode" ng-model="address.postalCode" required>
+                                    <span class="text-danger font-12" ng-show="addressform.postalCode.$touched && addressform.postalCode.$error.required">Postal Code is required</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label class="add-label">City: *</label>
+                                    <input type="text" class="form-control" name="city" ng-model="address.city" required>
+                                    <span class="text-danger font-12" ng-show="addressform.city.$touched && addressform.city.$error.required">City is required</span>
+                                </div>
+                            </div>
+                            <div class="col-12 text-right">
+                                <button class="btn btn-primary" style="font-size: 15px;" ng-disabled="addressform.$invalid">Add address</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer p-1 border-0" style="background-color: #f36f37;">
                 </div>
             </div>
         </div>
     </div>
-</header>
-<!-- Header ends -->
-<!-- Small devices Nav -->
-<section class="small-nav d-lg-none d-block">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12 my-2">
-                <h1 class="side-h">MY ACCOUNT</h1>
+    <!-- Small devices Nav -->
+    <section class="small-nav d-lg-none d-block">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12 my-2">
+                    <h1 class="side-h">MY ACCOUNT</h1>
+                </div>
+                <div class="col-12">
+                    <ul class="acc">
+                        <li>
+                            <button class="acc_ctrl"><h2 style="letter-spacing: 0 !important;">navigation / addresses</h2></button>
+                            <div class="small-panel">
+                                <div class="acc_panel">
+                                    <a href="~/MyAccount/Orders" class="mb-1 mt-2 mr-4">Orders</a>
+                                    <a href="~/MyAccount/Addresses" class="mb-1 mr-4">Addresses</a>
+                                    <a href="~/MyAccount/PersonalData" class="mb-1 mr-4">Personal data</a>
+                                    <a href="~/MyAccount/ChangePassword" class="mr-2 mb-1 active-link1">Change password</a>
+                                    <a href="~/Auth/LogoutUser" class="mr-1">Logout</a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <div class="col-12">
-                <ul class="acc">
-                    <li>
-                        <button class="acc_ctrl"><h2 style="letter-spacing: 0 !important;">navigation / addresses</h2></button>
-                        <div class="small-panel">
-                            <div class="acc_panel">
-                                <a href="~/MyAccount/Orders" class="mb-1 mt-2 mr-4">Orders</a>
-                                <a href="~/MyAccount/Addresses" class="mb-1 mr-4">Addresses</a>
-                                <a href="~/MyAccount/PersonalData" class="mb-1 mr-4">Personal data</a>
-                                <a href="~/MyAccount/ChangePassword" class="mr-2 mb-1 active-link1">Change password</a>
-                                <a href="~/Auth/LogoutUser" class="mr-1">Logout</a>
+            <div class="divider"></div>
+            <div class="row">
+                <div class="col-12 card-height-100">
+                    <h2 class="small-h">Addresses</h2>
+                    <p ng-if="addresses.length === 0">Your address book is empty</p>
+                    <div class="row" ng-if="addresses.length > 0" ng-repeat="address in addresses">
+                        <div class="col-9 border-bottom pb-2 pt-2">
+                            <div class="col-12">
+                                <strong>Address: </strong> {{address.address}}
+                            </div>
+                            <div class="col-12">
+                                <strong>City: </strong> {{address.city}}
+                            </div>
+                            <div class="col-12">
+                                <strong>Postal Code: </strong> {{address.postalCode}}
+                            </div>
+                            <div class="col-12">
+                                <strong>Floor: </strong> {{address.floor}}
                             </div>
                         </div>
-                    </li>
-                </ul>
+                        <div class="col-3">
+                            <i class="fa fa-pencil-alt pr-2" ng-click="editModal(address)"></i>
+                            <i class="fa fa-trash-alt" ng-click="deleteAddress(address.appUserAddressId)"></i>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary ml-md-3" style="font-size: 15px;" ng-click="addModal()">
+                        Add address
+                    </button>
+                </div>
             </div>
         </div>
-        <div class="divider"></div>
-        <div class="row" style="height: 30vh;">
-            <div class="col-12">
-                <h2 class="small-h">Addresses</h2>
-                <p class="small-p">Your address book is empty</p>
-                <button class="btn btn-primary ml-md-3"
-                        style="font-size: 15px;"
-                        type="button"
-                        href="#address2Modal"
-                        role="button"
-                        data-toggle="modal">
-                    Add address
-                </button>
-            </div>
+    </section>
+    <!-- Small devices nav ends -->
+    <div class="start-container d-lg-block d-none">
+        <!-- Sidenav -->
+        <div class="sidebar d-md-block d-none">
+            <h1 class="side-h">MY ACCOUNT</h1>
+            <a href="~/MyAccount/Orders" class="mb-1 mt-2 mr-4">Orders</a>
+            <a href="~/MyAccount/Addresses" class="mb-2 mr-4 active-link">Addresses</a>
+            <a href="~/MyAccount/PersonalData" class="mb-2 mr-4">Personal data</a>
+            <a href="~/MyAccount/ChangePassword" class="mr-4 mb-2">Change password</a>
+            <a href="~/Auth/LogoutUser" class="mr-4">Logout</a>
         </div>
-    </div>
-</section>
-<!-- Small devices nav ends -->
+        <!-- Sidenav ends -->
+        <!-- Side section -->
+        <div class="main d-md-block d-none">
+            <h2>Addresses</h2>
+            <p ng-if="addresses.length === 0">Your address book is empty</p>
+            <div class="table-responsive p-2" ng-if="addresses.length > 0">
+                <table class="table table-striped">
+                    <tr>
+                        <th>Address</th>
+                        <th>City</th>
+                        <th>Postal Code</th>
+                        <th>Floor</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                    <tr ng-repeat="address in addresses">
+                        <td>{{address.address}}</td>
+                        <td>{{address.city}}</td>
+                        <td>{{address.postalCode}}</td>
+                        <td>{{address.floor}}</td>
+                        <td class="text-center">
+                            <button class="btn tblActnBtn" ng-click="editModal(address)"> <i class="fa fa-pencil-alt"></i></button>
+                            <button class="btn tblActnBtn" ng-click="deleteAddress(address.appUserAddressId)"> <i class="fa fa-trash-alt"></i></button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
 
-<div class="start-container d-lg-block d-none">
-    <!-- Sidenav -->
-    <div class="sidebar d-md-block d-none">
-        <h1 class="side-h">MY ACCOUNT</h1>
-        <a href="~/MyAccount/Orders" class="mb-1 mt-2 mr-4">Orders</a>
-        <a href="~/MyAccount/Addresses" class="mb-2 mr-4 active-link">Addresses</a>
-        <a href="~/MyAccount/PersonalData" class="mb-2 mr-4">Personal data</a>
-        <a href="~/MyAccount/ChangePassword" class="mr-4 mb-2">Change password</a>
-        <a href="~/Auth/LogoutUser" class="mr-4">Logout</a>
+            <!-- Address Modal Trigger -->
+            <button class="btn btn-primary ml-3" style="font-size: 15px;" ng-click="addModal()">
+                Add address
+            </button>
+            <!-- Address Modal Trigger ends -->
+        </div>
+        <!-- side section ends -->
     </div>
-    <!-- Sidenav ends -->
-    <!-- Side section -->
-    <div class="main d-md-block d-none">
-        <h2>Addresses</h2>
-        <p>Your address book is empty</p>
-        <!-- Address Modal Trigger -->
-        <button class="btn btn-primary ml-3"
-                style="font-size: 15px;"
-                type="button"
-                href="#address2Modal"
-                role="button"
-                data-toggle="modal">
-            Add address
-        </button>
-        <!-- Address Modal Trigger ends -->
-    </div>
-    <!-- side section ends -->
 </div>
+@section scripts{
+    
+}

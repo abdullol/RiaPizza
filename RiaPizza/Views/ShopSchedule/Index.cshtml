@@ -7,6 +7,10 @@
 @section css{
     <link href="../../assets/css/form.min.css" rel="stylesheet">
 }
+
+
+
+
 <div class="container-fluid">
     <div class="block-header">
         <div class="row">
@@ -27,52 +31,45 @@
             </div>
         </div>
     </div>
-    <div id="dateRange" style="display:block">
-        <div class="row">
-            <div class="col-md-12">
-                <form method="post" action="~/ShopSchedule/AddOrUpdate">
-                    <div class="row clearfix">
-                        <div class="col-lg-5 col-sm-5">
-                            <div class="form-group">
-                                <div class="form-line">
-                                    <input type="text" class="timepicker form-control" value="@Model.TimeFrom" name="TimeFrom" placeholder="Please choose a time from...">
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header">
+                    <h2>
+                        <strong>Shop Schedule</strong>
+                    </h2>
+                    <p class="pt-2">Note: Shop will be automatically open and close on the selected time</p>
+                </div>
+                <div class="body">
+                    <form method="post" action="~/ShopSchedule/AddOrUpdate">
+                        <div class="row clearfix">
+                            <div class="col-lg-6 col-sm-5">
+                                <div class="form-group">
+                                    <label>Shop opening time</label>
+                                    <div class="form-line">
+                                        <input type="text" class="timepicker form-control" value="@Model.TimeFrom" name="TimeFrom" placeholder="Please choose a time from...">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-5">
+                                <div class="form-group">
+                                    <label>Shop Closing time</label>
+                                    <div class="form-line">
+                                        <input type="text" class="timepicker form-control" value="@Model.TimeTo" name="TimeTo" placeholder="Please choose a time to...">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-sm-12" style="text-align:center">
+                                <div class="form-group">
+                                    <button class="btn btn-primary float-right" style="width: 119.5px;height: 49.75px;">Update Schedule!</button>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-5 col-sm-5">
-                            <div class="form-group">
-                                <div class="form-line">
-                                    <input type="text" class="timepicker form-control" value="@Model.TimeTo" name="TimeTo" placeholder="Please choose a time to...">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-sm-12" style="text-align:center">
-                            <div class="form-group">
-                                <div class="form-line">
-                                    <button class="btn btn-primary"  style="width: 119.5px;height: 49.75px;">Update Schedule!</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-
-    @*<div class="col-lg-3 col-sm-6">
-        <form action="~/ShopSchedule/Create" method="post" target="_blank" id="scheduleForm" style="cursor:pointer">
-            <div class="support-box text-center bg-teal">
-                <div class="text font-17 m-b-5"></div>
-                <div class="text font-17 m-b-5">Close/Open Shop</div>
-                <div class="switch">
-                    <label>
-                        <input type="checkbox" name="schedule" @(ViewBag.isOpen ? "on" : "") id="shopId" onchange="$('#scheduleForm').submit()">
-                        <span class="lever switch-col-white"></span>
-                    </label>
-                </div>
-            </div>
-        </form>
-    </div>*@
 </div>
 
 
