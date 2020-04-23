@@ -17,6 +17,8 @@ namespace RiaPizza.Models
         public string Remarks { get; set; }
         public float SubTotal { get; set; }
         public float Discount { get; set; }
+        public float Tip { get; set; }
+        public float DeliveryCharges { get; set; }
         public float TotalBill { get; set; }
         public string PaymentMethod { get; set; }
         public bool IsPaymentConfirmed { get; set; }

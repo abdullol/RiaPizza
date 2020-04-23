@@ -19,15 +19,17 @@
                 <br />
                 <b>Discount:</b> @Model.Discount
                 <br />
-                <b>Delivery Charges:</b> @((Model.TotalBill - Model.SubTotal) - Model.Discount)
+                <b>Delivery Charges:</b> @Model.DeliveryCharges
+                <br />
+                <b>Tip:</b> @Model.Tip
                 <br />
                 <b>Total Bill:</b> @Model.TotalBill
                 <br />
                 <b>Payment Method:</b>
                 @if (Model.IsPaymentConfirmed)
-                { @Model.PaymentMethod <span class='badge badge-success text-white'>Confirmed</span>}
-                else
-                { @Model.PaymentMethod <span class='badge badge-danger text-white'>Pending</span>}
+                {@Model.PaymentMethod <span class='badge badge-success text-white'>Confirmed</span>}
+            else
+            { @Model.PaymentMethod <span class='badge badge-danger text-white'>Pending</span>}
 
                 <br />
                 <b>Remarks:</b> @Model.Remarks

@@ -62,9 +62,9 @@
                                             </td>
                                             <td>
                                                 @if (item.IsExpired)
-                                                {<div class="badge col-green">Active</div> }
+                                                {<div class="badge col-red">Expired</div>}
                                                 else
-                                                { <div class="badge col-red">Expired</div>}
+                                                {<div class="badge col-green">Active</div>}
                                             </td>
                                             <td>@item.ValidityFrom.ToShortDateString()</td>
                                             <td>@item.ValidityTo.ToShortDateString()</td>
