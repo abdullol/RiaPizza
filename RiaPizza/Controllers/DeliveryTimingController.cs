@@ -28,7 +28,6 @@ namespace RiaPizza.Controllers
         public async Task<ActionResult> Index()
         {
             var getAllTiming = await  _Service.GetAllTiming();
-            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             return View(getAllTiming);
         }
 
@@ -41,7 +40,6 @@ namespace RiaPizza.Controllers
         [Authorize(Roles = "Manager,Admin")]
         public ActionResult Create()
         {
-            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             return View();
         }
 

@@ -24,10 +24,10 @@ namespace RiaPizza.Controllers
             _hostingEnvironment = hostingEnvironment;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var schedule = _scheduleService.GetSchedule();
-            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
+            var schedule = await _scheduleService.GetSchedule();
+            ViewBag.ShopLogo = schedule.ShopLogo;
             ViewBag.isOpen = true;
             return View(schedule);
         }
@@ -53,7 +53,7 @@ namespace RiaPizza.Controllers
 
         public async Task<JsonResult> GetShopStatus()
         {
-            var schedule = _scheduleService.GetSchedule();
+            var schedule = await _scheduleService.GetSchedule();
             return Json(schedule);
         }
 

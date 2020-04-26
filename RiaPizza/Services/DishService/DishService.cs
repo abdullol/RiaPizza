@@ -126,7 +126,7 @@ namespace RiaPizza.Services.DishService
         }
         public async Task<List<DishExtraType>> GetDishExtrasTypes(int id)
         {
-            var dishExtras = await _context.DishExtraTypes.Include(s => s.DishExtras).ThenInclude(s=>s.SizeToppingPrices).Where(s => s.DishId == id).ToListAsync();
+            var dishExtras = await _context.DishExtraTypes.Include(s => s.DishExtras).ThenInclude(s=>s.SizeToppingPrices).Where(s => s.DishId == id).OrderBy(s=>s.Order).ToListAsync();
             dishExtras.ForEach(s => s.DishExtras.ToList().ForEach(s => { s.DishExtraType = null; s.SizeToppingPrices.ToList().ForEach(a => a.DishExtra = null); }));
             return dishExtras;
         }
@@ -254,6 +254,25 @@ namespace RiaPizza.Services.DishService
 
             _context.UpdateRange(extraTypes);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateDishExtraTypes(int dishId, List<DishExtraType> dishExtraTypes)
+        {
+            foreach (var type in dishExtraTypes)
+            {
+                type.Status = true;
+                type.DishId = dishId;
+                
+                if(type.DishExtraTypeId == 0)
+                {
+                    await AddDishExtraType(type);
+                }
+                else
+                {
+                    _context.DishExtraTypes.Update(type);
+                    await _context.SaveChangesAsync();
+                }
+            }
         }
     }
 }

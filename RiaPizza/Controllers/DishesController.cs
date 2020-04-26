@@ -37,13 +37,11 @@ namespace RiaPizza.Controllers
             if (id == null || id == 0)
             {
                 var dishes = await _service.AllDishes();
-                ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
                 return View(dishes);
             }
             else
             {
                 var dishes = await _service.SearchWithCategory(Convert.ToInt32(id));
-                ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
                 return View(dishes);
             }
         }
@@ -51,7 +49,6 @@ namespace RiaPizza.Controllers
         [Authorize(Roles = "Manager,Admin")]
         public IActionResult Add()
         {
-            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             return View();
         }
 
@@ -295,7 +292,6 @@ namespace RiaPizza.Controllers
                 return RedirectToAction("Index", "Home", new { error = "Error" });
             }
             ViewBag.Categories = await _categoryService.AllDishCategories();
-            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             return View(area);
         }
 
@@ -329,28 +325,24 @@ namespace RiaPizza.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> DeleteDishExtra(int DishExtraId, int returnId)
+        public async Task DeleteDishExtra(int DishExtraId)
         {
             try
             {
                 await _service.DeleteDishExtra(DishExtraId);
-                return RedirectToAction("Edit", "Dishes", new { @id = returnId });
             }
             catch (Exception ex)
             {
-                return RedirectToAction("Edit", "Dishes", new { @id = returnId });
             }
         }
-        public async Task<IActionResult> DeleteDishExtraType(int DishExtraTypeId, int returnId)
+        public async Task DeleteDishExtraType(int DishExtraTypeId)
         {
             try
             {
                 await _service.DeleteDishExtraType(DishExtraTypeId);
-                return RedirectToAction("Edit", "Dishes", new { @id = returnId });
             }
             catch (Exception ex)
             {
-                return RedirectToAction("Edit", "Dishes", new { @id = returnId });
             }
         }
 
@@ -370,5 +362,18 @@ namespace RiaPizza.Controllers
             }
         }
 
+        public async Task UpdateDishExtraTypes(IFormCollection form)
+        {
+            try
+            {
+                var id = JsonConvert.DeserializeObject<int>(form["dishId"]);
+                var dishExtraTypes = JsonConvert.DeserializeObject<List<DishExtraType>>(form["dishExtraTypes"]);
+                await _service.UpdateDishExtraTypes(id, dishExtraTypes);
+
+            }
+            catch (Exception ex) { 
+
+            }
+        }
     }
 }

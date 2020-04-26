@@ -29,13 +29,11 @@ namespace RiaPizza.Controllers
         [Authorize(Roles = "Manager,Admin")]
         public IActionResult Index()
         {
-            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             return View();
         }
 
         public async Task<JsonResult> GetAllAreas()
         {
-            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             var allAreas = await _service.AllDeliveryAreas();
             return Json(allAreas);
         }

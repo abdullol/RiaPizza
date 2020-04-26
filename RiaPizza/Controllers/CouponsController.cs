@@ -26,14 +26,12 @@ namespace RiaPizza.Controllers
         // GET: Coupons
         public async Task<IActionResult> Index()
         {
-            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             var allCoupons = await _service.GetAllCoupons();
             return View(allCoupons);
         }
         [Authorize(Roles = "Manager,Admin")]
         public async Task<ActionResult> Create()
         {
-            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             return View();
         }
 

@@ -23,6 +23,7 @@ namespace RiaPizza.Services.DishService
         Task EditDishExtraType(DishExtraType editDishExtraType);
         Task EditDishExtra(DishExtra editDishExtra);
         Task AddDishExtraTypes(int dishId, List<DishExtraType> dishExtraTypes);
+        Task UpdateDishExtraTypes(int dishId, List<DishExtraType> dishExtraTypes);
         Task AddDishExtra(DishExtra extra);
         Task DeleteDish(int id);
         Task AddDishSize(DishSize size);

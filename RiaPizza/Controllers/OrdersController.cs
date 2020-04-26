@@ -57,7 +57,6 @@ namespace RiaPizza.Controllers
         public async Task<IActionResult> Index()
         {
             var orders = await _service.AllOrders();
-            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             return View(orders);
         }
 
@@ -102,7 +101,6 @@ namespace RiaPizza.Controllers
         [Authorize(Roles = "Manager,Admin")]
         public async Task<IActionResult> OrdersInProgress()
         {
-            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             var uncompletedOrders = await _service.InCompletedOrders();
             return View(uncompletedOrders);
         }
@@ -121,7 +119,6 @@ namespace RiaPizza.Controllers
             ViewBag.DishList = await _dishService.AllDishes();
             ViewBag.DishCatList = await _dishCatService.AllDishCategories();
             ViewBag.Users = await _userManager.Users.ToListAsync();
-            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             return View(order);
         }
 
@@ -305,10 +302,8 @@ namespace RiaPizza.Controllers
                 var orderItems = await _service.GetOrderItems(id);
                 ViewBag.Address = address;
                 ViewBag.OrderCode = await _service.GetOrderCode(id);
-                ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
                 return View(orderItems);
             }
-            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             return RedirectToAction("Index", "Home");
         }
 

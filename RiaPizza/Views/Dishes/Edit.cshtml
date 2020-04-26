@@ -68,60 +68,224 @@
             });
         }
 
-        $scope.editDishExta = {};
-        $scope.addDishExtra = {};
-        $scope.dishId = 0;
+        $scope.addDishExtraTypes = [];
+        $scope.dishSizes = [];
+        $scope.sizeToppingPrices = [];
 
-        $scope.AddDishExtra = function () {
-            JsonCallParam("Dishes", "AddorUpdateDishExtra", { 'extra': JSON.stringify($scope.addDishExtra), 'returnId': $scope.dishId });
-            if (list == "Success")
-                location.reload();
-            else
-                swal("Failed", "Please Try Later!", "error"); $('#addExtra').modal('hide');
+        $scope.getSizes = function () {
+            JsonCallParam("Dishes", "GetDishSizes", { id: Number($('#dishId').val()) });
+            $scope.dishSizes = list;
+            list.forEach(function (item) {
+                $scope.sizeToppingPrices.push({ dishExtraId: 0, dishSizeId: 0, price: 0, sizeName: item.size });
+            })
+            $scope.dishSizes.length > 0 ? $scope.multipleSizes = true : $scope.multipleSizes = false;
+
         }
-        $scope.getDishExtra = function (Id) {
-            JsonCallParam("Dishes", "GetDishExtra", { id: Id });
-            $scope.editDishExta = list;
+        $scope.getDishExtraTypes = function () {
+            JsonCallParam("Dishes", "GetDishesExtraTypes", { id: Number($('#dishId').val()) });
+            $scope.addDishExtraTypes = list;
+            $scope.addDishExtraTypes.sort((a, b) => (a.order > b.order) ? 1 : -1);
+            $scope.addDishExtraTypes.forEach(function (item) {
+                item.dishExtras.sort((a, b) => (a.order > b.order) ? 1 : -1);
+                item.dishExtras.forEach(function (extraItem) {
+                    var sizeToppings = $scope.dishSizes.filter(({ size: id1 }) => !extraItem.sizeToppingPrices.some(({ sizeName: id2 }) => id2 === id1));
 
-            JsonCallParam("Dishes", "GetDishSizes", { id: $scope.dishId });
-            var sizeToppings = list;
+                    for (var i = 0; i < sizeToppings.length; i++) {
+                        var toppingPrice = { sizeName: sizeToppings[i].size, dishSizeId: sizeToppings[i].dishSizeId, price: sizeToppings[i].price };
+                        extraItem.sizeToppingPrices.push(toppingPrice);
+                    }
+                })
+            })
 
-            var pricesList = [];
-            for (var i = 0; i < sizeToppings.length; i++) {
-                var toppingPrice = { sizeName: sizeToppings[i].size, dishSizeId: sizeToppings[i].dishSizeId, price: 0 };
-                let priceObj = $scope.editDishExta.sizeToppingPrices.find(s => s.dishSizeId == sizeToppings[i].dishSizeId);
-                if (priceObj != null)
-                    toppingPrice.price = priceObj.price;
-                pricesList.push(toppingPrice);
+
+            
+        }
+        $scope.pushDishExtraType = function () {
+            var length = $scope.addDishExtraTypes.length;
+            if (length != 0) {
+                if ($scope.addDishExtraTypes[length - 1].typeName === '')
+                    return;
             }
-            $scope.editDishExta.sizeToppingPrices = [];
-            $scope.editDishExta.sizeToppingPrices = pricesList;
-        }
-        $scope.EditDishExtra = function () {
-            JsonCallParam("Dishes", "AddorUpdateDishExtra", { 'extra': JSON.stringify($scope.editDishExta), 'returnId': $scope.dishId });
-            if (list == "Success")
-                location.reload();
-            else
-                swal("Failed", "Please Try Later!", "error"); $('#editExtra').modal('hide');
-        }
-        $scope.initializeDishExtra = function (extraTypeId) {
-            $scope.addDishExtra = { dishExtraTypeId: extraTypeId, extraName: '', allergies: '', extraPrice: 0, sizeToppingPrices: [] };
-
-            JsonCallParam("Dishes", "GetDishSizes", { id: $scope.dishId });
-            var sizeToppings = list;
-            for (var i = 0; i < sizeToppings.length; i++) {
-                var toppingPrice = { sizeName: sizeToppings[i].size, dishSizeId: sizeToppings[i].dishSizeId, price: 0 };
-                $scope.addDishExtra.sizeToppingPrices.push(toppingPrice);
+            let list = [];
+            for (var i = 0; i < $scope.sizeToppingPrices.length; i++) {
+                list.push({ dishExtraId: 0, dishSizeId: 0, price: 0, sizeName: $scope.sizeToppingPrices[i].sizeName });
             }
+            $scope.addDishExtraTypes.push({ dishExtraTypeId: 0, typeName: '', placeholder: "", chooseMultiple: true, dishExtras: [{ extraName: '', extraPrice: 0, sizeToppingPrices: list }] });
         }
-        $scope.setExtraTypeEditModalValues = function (id, name, placeholder, allowMultiple) {
-            $("#DishExtraTypeId").val(id);
-            $("#TypeName").val(name);
-            $("#Placeholder").val(placeholder);
-            if (allowMultiple == 'True')
-                $("#ChooseMultiple").val("true");
-            else
-                $("#ChooseMultiple").val("false");
+        $scope.pushDishExtra = function (i) {
+            var length = $scope.addDishExtraTypes[i].dishExtras.length;
+            if (length !== 0) {
+                if ($scope.addDishExtraTypes[i].dishExtras[length - 1].extraName === "") {
+                    return;
+                }
+            }
+            let list = [];
+            for (var j = 0; j < $scope.sizeToppingPrices.length; j++) {
+                list.push({ dishExtraId: 0, dishSizeId: 0, price: 0, sizeName: $scope.sizeToppingPrices[j].sizeName });
+            }
+            $scope.addDishExtraTypes[i].dishExtras.push({ dishExtraId: 0, extraName: '', extraPrice: 0, sizeToppingPrices: list });
+        }
+
+        $scope.removeExtraType = function (i) {
+            if ($scope.addDishExtraTypes[i].dishExtraTypeId !== 0) {
+                var url = "/Dishes/DeleteDishExtraType?DishExtraTypeId=" + $scope.addDishExtraTypes[i].dishExtraTypeId;
+                swal({
+                    title: "Are you sure?",
+                    text: "You want to delete the item",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, Delete it!",
+                    closeOnConfirm: false
+                }, function () {
+                    $.ajax({
+                        type: "GET",
+                        url: url,
+                        success: function () {
+                            swal("Delete!", "Your item deleted!", "success");
+                            $scope.addDishExtraTypes.splice(i, 1);
+                        },
+                        error: function (xhr) {
+                            swal("Error", "Please Try again later!", "error");
+                        }
+                    });
+
+                });
+            }
+            else {
+                $scope.addDishExtraTypes.splice(i, 1);
+            }
+
+        }
+        $scope.removeExtra = function (extratype, i) {
+            if ($scope.addDishExtraTypes[extratype].dishExtras[i].dishExtraId !== 0) {
+                var url = "/Dishes/DeleteDishExtra?DishExtraId=" + $scope.addDishExtraTypes[extratype].dishExtras[i].dishExtraId;
+                swal({
+                    title: "Are you sure?",
+                    text: "You want to delete the item",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, Delete it!",
+                    closeOnConfirm: false
+                }, function () {
+                    $.ajax({
+                        type: "GET",
+                        url: url,
+                        success: function () {
+                            $scope.addDishExtraTypes[extratype].dishExtras.splice(i, 1);
+                            swal("Delete!", "Your item deleted!", "success");
+                        },
+                        error: function (xhr) {
+                            swal("Error", "Please Try again later!", "error");
+                        }
+                    });
+
+                });
+            }
+            else {
+                $scope.addDishExtraTypes[extratype].dishExtras.splice(i, 1);
+            }
+
+        }
+
+        function confirm(url) {
+            swal({
+                title: "Are you sure?",
+                text: "You want to delete the item",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, Delete it!",
+                closeOnConfirm: false
+            }, function () {
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    success: function () {
+                        swal("Delete!", "Your item deleted!", "success");
+                    },
+                    error: function (xhr) {
+                        swal("Error", "Please Try again later!", "error");
+                    }
+                });
+
+            });
+        }
+
+        $scope.getSizes();
+        $scope.getDishExtraTypes();
+
+        $scope.copyDishExtraType = function (i) {
+            var extraType = angular.copy($scope.addDishExtraTypes[i]);
+            extraType.dishExtraTypeId = 0;
+
+            extraType.dishExtras.forEach(function (item) {
+                item.dishExtraId = 0
+                item.sizeToppingPrices.forEach(s => s.sizeToppingPriceId = 0);
+            });
+            $scope.addDishExtraTypes.push(extraType);
+        }
+        $scope.copyDishExtra = function (extraTypeIndex, extraIndex) {
+            var extra = angular.copy($scope.addDishExtraTypes[extraTypeIndex].dishExtras[extraIndex]);
+            extra.dishExtraId = 0;
+            $scope.addDishExtraTypes[extraTypeIndex].dishExtras.push(extra);
+        }
+
+        $scope.downwardExtra = function (extraType, i, direction) {
+            if (($scope.addDishExtraTypes[extraType].dishExtras.length - 1) === i) return;
+
+            let current = $scope.addDishExtraTypes[extraType].dishExtras[i];
+            let updated = $scope.addDishExtraTypes[extraType].dishExtras[i + 1];
+
+            $scope.addDishExtraTypes[extraType].dishExtras[i + 1] = current;
+            $scope.addDishExtraTypes[extraType].dishExtras[i] = updated;
+        }
+        $scope.upwardExtra = function (extraType, i) {
+            if (i === 0) return;
+
+            let current = $scope.addDishExtraTypes[extraType].dishExtras[i];
+            let updated = $scope.addDishExtraTypes[extraType].dishExtras[i - 1];
+
+            $scope.addDishExtraTypes[extraType].dishExtras[i - 1] = current;
+            $scope.addDishExtraTypes[extraType].dishExtras[i] = updated;
+        }
+
+        $scope.upward = function (i) {
+             if (i === 0) return;
+
+            let current = $scope.addDishExtraTypes[i];
+            let updated = $scope.addDishExtraTypes[i - 1];
+
+            $scope.addDishExtraTypes[i - 1] = current;
+            $scope.addDishExtraTypes[i] = updated;
+        }
+        $scope.downward = function (i) {
+            if (($scope.addDishExtraTypes.length - 1) === i) return;
+
+            let current = $scope.addDishExtraTypes[i];
+            let updated = $scope.addDishExtraTypes[i + 1];
+
+            $scope.addDishExtraTypes[i + 1] = current;
+            $scope.addDishExtraTypes[i] = updated;
+        }
+
+        $scope.saveAll = function () {
+            updateToppingsOrder();
+
+
+            var pram = { "dishId": JSON.stringify(Number($('#dishId').val())), "dishExtraTypes": JSON.stringify($scope.addDishExtraTypes) };
+            JsonCallParam("Dishes", "UpdateDishExtraTypes", pram);
+
+            window.location.reload();
+        }
+        function updateToppingsOrder() {
+            $scope.addDishExtraTypes.forEach(function (item, index) {
+                item.order = index + 1;
+                item.dishExtras.forEach(function (extraItem, extraIndex) {
+                    extraItem.order = extraIndex + 1;
+                })
+            });
         }
     }]);
 </script>
@@ -155,202 +319,7 @@
                         <strong>Edit</strong> Dish
                     </h2>
                 </div>
-                <div class="modal fade" id="editExtraType" role="dialog"
-                     aria-labelledby="formModal" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="formModal">Edit Extra Type</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <form method="post" action="~/Dishes/EditDishExtraType" id="editDishExtraTypeForm">
-                                    <input type="hidden" name="returnId" value="@Model.DishId" />
-                                    <input type="hidden" name="DishExtraTypeId" id="DishExtraTypeId" value="" />
-                                    <label>Type Name <span class="text-danger">*</span></label>
-                                    <div class="form-group">
-                                        <div class="form-line">
-                                            <input type="text" class="form-control" id="TypeName"
-                                                   placeholder="Enter Type Name" name="TypeName" required>
-                                        </div>
-                                    </div>
-                                    <label>Placeholder <span class="text-danger">*</span></label>
-                                    <div class="form-group">
-                                        <div class="form-line">
-                                            <input type="text" class="form-control" id="Placeholder"
-                                                   placeholder="Enter Placeholder" name="Placeholder" required>
-                                        </div>
-                                    </div>
-                                    <label>Topping Selector <span class="text-danger">*</span></label>
-                                    <div class="form-group">
-                                        <select class="form-control" id="ChooseMultiple" name="ChooseMultiple">
-                                            <option value="true">Checkbox</option>
-                                            <option value="false">Dropdown</option>
-                                        </select>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-info waves-effect" onclick="$('#editDishExtraTypeForm').submit()">Save</button>
-                                <button type="button" class="btn btn-danger waves-effect"
-                                        data-dismiss="modal">
-                                    Cancel
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal fade" id="editExtra" role="dialog"
-                     aria-labelledby="formModal" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="formModal">Edit Extra</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <form>
-                                    <input type="hidden" name="returnId" ng-init="dishId = @Model.DishId" />
 
-                                    <label>Name <span class="text-danger">*</span></label>
-                                    <div class="form-group">
-                                        <div class="form-line">
-                                            <input type="text" class="form-control" ng-model="editDishExta.extraName"
-                                                   placeholder="Enter Extra Name" name="ExtraName">
-                                        </div>
-                                    </div>
-                                    <label>Allergies</label>
-                                    <div class="form-group">
-                                        <div class="form-line">
-                                            <input type="text" class="form-control" ng-model="editDishExta.allergies"
-                                                   placeholder="Enter Allergies" name="Allergies">
-                                        </div>
-                                    </div>
-                                    <label>Price <span class="text-danger">*</span></label>
-                                    <div class="form-group" ng-if="editDishExta.sizeToppingPrices.length === 0">
-                                        <div class="form-line">
-                                            <input type="text" class="form-control" ng-model="editDishExta.extraPrice"
-                                                   placeholder="Enter Price" name="ExtraPrice">
-                                        </div>
-                                    </div>
-                                    <div class="form-group" ng-if="editDishExta.sizeToppingPrices.length > 0">
-                                        <div class="form-line">
-                                            <input type="number" class="form-control" ng-repeat="priceobj in editDishExta.sizeToppingPrices"
-                                                   placeholder="{{priceobj.sizeName}}" name="Price" ng-model="priceobj.price">
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-info waves-effect" ng-click="EditDishExtra()">Save</button>
-                                <button type="button" class="btn btn-danger waves-effect"
-                                        data-dismiss="modal">
-                                    Cancel
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal fade" id="addDishExtraType" role="dialog"
-                     aria-labelledby="formModal" aria-hidden="true">
-                    <div class="modal-dialog modal-lg" role="document">
-                        <div class="modal-content">
-                            <form method="post" action="~/Dishes/AddDishExtraType">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="formModal">Add Dish Topping Head</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-
-                                    <input type="hidden" name="returnId" value="@Model.DishId" />
-                                    <input type="hidden" name="DishId" value="@Model.DishId" />
-                                    <label>Type Name <span class="text-danger">*</span></label>
-                                    <div class="form-group">
-                                        <div class="form-line">
-                                            <input type="text" class="form-control"
-                                                   placeholder="Enter Extra Type Name" name="TypeName">
-                                        </div>
-                                    </div>
-                                    <label>Topping Selector <span class="text-danger">*</span></label>
-                                    <div class="form-group">
-                                        <div class="form-line">
-                                            <select class="form-control" name="ChooseMultiple">
-                                                <option value="True">Checkbox</option>
-                                                <option value="False">Dropdown</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="modal-footer">
-                                    <input type="submit" class="btn btn-info waves-effect" value="Submit" />
-                                    <button type="button" class="btn btn-danger waves-effect"
-                                            data-dismiss="modal">
-                                        Cancel
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal fade" id="addExtra" role="dialog"
-                     aria-labelledby="formModal" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="formModal">Add Extra</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <form method="post">
-                                    <input type="hidden" name="returnId" ng-init="dishId = @Model.DishId" />
-                                    <label>Name <span class="text-danger">*</span></label>
-                                    <div class="form-group">
-                                        <div class="form-line">
-                                            <input type="text" class="form-control" ng-model="addDishExtra.extraName"
-                                                   placeholder="Enter Extra Name" name="ExtraName">
-                                        </div>
-                                    </div>
-                                    <label>Allergies</label>
-                                    <div class="form-group">
-                                        <div class="form-line">
-                                            <input type="text" class="form-control" ng-model="addDishExtra.allergies"
-                                                   placeholder="Enter Allergies" name="Allergies">
-                                        </div>
-                                    </div>
-                                    <label>Price <span class="text-danger">*</span></label>
-                                    <div class="form-group" ng-if="addDishExtra.sizeToppingPrices.length === 0">
-                                        <div class="form-line">
-                                            <input type="text" class="form-control" ng-model="addDishExtra.extraPrice"
-                                                   placeholder="Enter Price" name="ExtraPrice">
-                                        </div>
-                                    </div>
-                                    <div class="form-group" ng-if="addDishExtra.sizeToppingPrices.length > 0">
-                                        <div class="form-line">
-                                            <input type="number" class="form-control" ng-repeat="priceobj in addDishExtra.sizeToppingPrices"
-                                                   placeholder="{{priceobj.sizeName}}" name="Price" ng-model="priceobj.price">
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-info waves-effect" ng-click="AddDishExtra()">Save</button>
-                                <button type="button" class="btn btn-danger waves-effect"
-                                        data-dismiss="modal">
-                                    Cancel
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div class="body" ng-init="">
                     <form action="~/Dishes/Edit" method="post" style="margin-bottom:15px">
                         <h2 class="card-inside-title">Dish Details</h2>
@@ -468,101 +437,117 @@
                     </div>
 
 
-                    <h2 class="card-inside-title">
-                        Dish Topping Details
-                        <button data-toggle="modal" data-target="#addDishExtraType" class="btn btn-primary" style="float:right"> Add Extra Type </button>
-                    </h2>
+                    <h3 class="card-inside-title">
+                        Dish Toppings
+                        <button type="button" class="btn btn-primary float-right"
+                                ng-click="pushDishExtraType()" @*ng-disabled="!haveToppings && extraTypeform.$invalid"*@>
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    </h3>
 
-                    <br />
-                    <div class="body table-responsive">
-                        <div class="pb-2">
-                            <table class="table" id="extra-types">
-                                @foreach (var extraType in Model.DishExtraTypes.OrderBy(s=>s.Order))
-                                {
-                                    <tr class="extra-type" data-id="@extraType.DishExtraTypeId">
-                                        <td colspan="4">
-                                            <table>
-                                                <thead>
-                                                    <tr>
-                                                        <th width="30%">Topping Heading</th>
-                                                        <th width="25%">Placeholder</th>
-                                                        <th width="25%">Topping Selector</th>
-                                                        <th width="20%" class="text-center">Action</th>
-                                                    </tr>
-                                                    <tr>
-                                                        <td width="30%">@extraType.TypeName</td>
-                                                        <td width="25%">@extraType.Placeholder</td>
-                                                        <td width="25%">
-                                                            @if (extraType.ChooseMultiple)
-                                                            {<span><i class="fas fa-check-square"></i> Checkbox</span> }
-                                                            else
-                                                            { <span><i class="fas fa-caret-square-down"></i> Dropdown</span>}
-                                                        </td>
-                                                        <td width="20%" class="text-center">
-                                                            <button onclick="deleteExtraType(@extraType.DishExtraTypeId, @Model.DishId)" class="btn tblActnBtn">
-                                                                <i class="material-icons">delete</i>
-                                                            </button>
-                                                            <button ng-click="setExtraTypeEditModalValues(@extraType.DishExtraTypeId,'@extraType.TypeName','@extraType.Placeholder','@extraType.ChooseMultiple')" data-toggle="modal" data-target="#editExtraType" class="btn tblActnBtn">
-                                                                <i class="material-icons">edit</i>
-                                                            </button>
-                                                            <button ng-click="initializeDishExtra(@extraType.DishExtraTypeId)" data-toggle="modal" data-target="#addExtra" class="btn tblActnBtn">
-                                                                <i class="material-icons">add</i>
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                </thead>
-                                            </table>
 
-                                            <table class="table table-striped width-per-90 m-auto">
-                                                <thead>
-                                                    <tr>
-                                                        <th width="20%">Name</th>
-                                                        <th width="30%">Allergies</th>
-                                                        <th width="40%">Topping Price</th>
-                                                        <th class="text-center" width="10%">Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody class="dish-extras-ordering">
-                                                    @foreach (var extra in extraType.DishExtras.OrderBy(s=>s.Order))
-                                                    {
-                                                        <tr data-id="@extra.DishExtraId">
-                                                            <td>@extra.ExtraName</td>
-                                                            <td>@extra.Allergies</td>
-                                                            <td>
-                                                                @if (Model.DishSizes.Count() == 0)
-                                                                {
-                                                                    @extra.ExtraPrice
-                                                                }
-                                                                else
-                                                                {
-                                                                    foreach (var price in extra.SizeToppingPrices)
-                                                                    {
-                                                                        <span>@price.SizeName: @price.Price</span>
-                                                                    }
-                                                                }
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <button onclick="deleteExtra(@extra.DishExtraId, @Model.DishId)" class="btn tblActnBtn">
-                                                                    <i class="material-icons">delete</i>
-                                                                </button>
-                                                                <button ng-click="getDishExtra(@extra.DishExtraId)" data-toggle="modal" data-target="#editExtra" class="btn tblActnBtn">
-                                                                    <i class="material-icons">edit</i>
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    }
-                                                </tbody>
-                                            </table>
+                    <div class="body table-responsive extra-type-table" ng-repeat="extraType in addDishExtraTypes" ng-init="extraTypeIndex=$index">
+
+                        <form name="extraTypeform">
+                            <table class="table table-striped">
+                                <tr>
+                                    <th width="30%">Topping Heading</th>
+                                    <th width="25%">Topping Place Holder</th>
+                                    <th width="25%">Topping Selector</th>
+                                    <th width="20%" class="text-center">Action</th>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" ng-class="{'border-danger': extraTypeform.typeName.$touched && extraTypeform.typeName.$error.required}"
+                                                   name="typeName" placeholder="Saucen" ng-model="extraType.typeName" required>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" ng-class="{'border-danger': extraTypeform.placeholder.$touched && extraTypeform.placeholder.$error.required}"
+                                                   name="placeholder" placeholder="Wählen Sie Ihre Saucen" ng-model="extraType.placeholder" required>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="switch">
+                                            <label>
+                                                Dropdown
+                                                <input type="checkbox" ng-model="extraType.chooseMultiple">
+                                                <span class="lever"></span>Checkbox
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <button class="btn tblActnBtn" ng-click="removeExtraType($index)"><i class="material-icons">delete</i></button>
+                                        <button class="btn tblActnBtn" ng-click="copyDishExtraType($index)"><i class="material-icons">content_copy</i></button>
+                                        <button class="btn tblActnBtn" ng-click="downward($index)"><i class="material-icons">keyboard_arrow_down</i></button>
+                                        <button class="btn tblActnBtn" ng-click="upward($index)"><i class="material-icons">keyboard_arrow_up</i></button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                        <div class="width-per-90 m-auto">
+
+                            <p class="font-bold">
+                                Dish Toppings
+                                <button type="button" ng-click="pushDishExtra($index)" class="btn tblActnBtn right">
+                                    <i class="material-icons">add</i>
+                                </button>
+                            </p>
+                            <form name="extraForm">
+                                <table class="table table-striped extras-table" ng-if="extraType.dishExtras.length > 0">
+                                    <tr>
+                                        <th width="20%">Name</th>
+                                        <th width="20%">Allergies</th>
+                                        <th width="40%">Topping Price</th>
+                                        <th class="text-center" width="20%">Action</th>
+                                    </tr>
+                                    <tr ng-repeat="extra in extraType.dishExtras" ng-init="extraIndex=$index">
+                                        <td>
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" ng-class="{'border-danger': extraForm.extraName.$touched && extraForm.extraName.$error.required}"
+                                                       name="extraName" placeholder="Mayonnaise" ng-model="extra.extraName" required>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" placeholder="Allergies" ng-model="extra.allergies" />
+                                            </div>
+                                        </td>
+                                        <td ng-if="!multipleSizes">
+                                            <div class="form-group">
+                                                <input type="number" class="form-control" placeholder="$$" ng-model="extra.extraPrice" min="0" required>
+                                            </div>
+                                        </td>
+                                        <td ng-if="multipleSizes">
+                                            <div class="form-group">
+                                                <div class="form-inline">
+                                                    <input ng-repeat="sizePrice in extra.sizeToppingPrices"
+                                                           type="number" min="0" class="form-control"
+                                                           placeholder="{{sizePrice.sizeName}}" ng-model="sizePrice.price"
+                                                           style="width:24%; margin-right:1%" />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
+                                            <button class="btn tblActnBtn" ng-click="removeExtra(extraTypeIndex, $index)"><i class="material-icons">delete</i></button>
+                                            <button class="btn tblActnBtn" ng-click="copyDishExtra(extraTypeIndex, extraIndex)"><i class="material-icons">content_copy</i></button>
+                                            <button class="btn tblActnBtn" ng-click="downwardExtra(extraTypeIndex, $index)"><i class="material-icons">keyboard_arrow_down</i></button>
+                                            <button class="btn tblActnBtn" ng-click="upwardExtra(extraTypeIndex, $index)"><i class="material-icons">keyboard_arrow_up</i></button>
                                         </td>
                                     </tr>
-                                }
-                            </table>
+                                </table>
+                            </form>
                         </div>
+
+                        <span class="font-bold float-right">{{$index+1}}</span>
                     </div>
 
                     <div>
-                        <button onclick="saveSequence(@Model.DishId)" class="btn btn-success float-right">Save Sequence</button>
+                        <button ng-click="saveAll()" class="btn btn-success float-right">Save</button>
                     </div>
+
                 </div>
             </div>
         </div>

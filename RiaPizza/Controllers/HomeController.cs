@@ -27,7 +27,6 @@ namespace RiaPizza.Controllers
             }
             var areas = await _areaService.AllDeliveryAreas();
 
-            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             return View(areas);
         }
 

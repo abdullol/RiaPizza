@@ -70,9 +70,9 @@ namespace RiaPizza.Services.ScheduleService
             await _context.SaveChangesAsync();
         }
 
-        public ShopSchedule GetSchedule()
+        public async Task<ShopSchedule> GetSchedule()
         {
-            var schedule = _context.ShopSchedule.FirstOrDefault();
+            var schedule = await _context.ShopSchedule.FirstOrDefaultAsync();
             return schedule;
         }
 

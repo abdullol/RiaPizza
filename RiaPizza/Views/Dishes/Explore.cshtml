@@ -648,6 +648,110 @@
                 $scope.ordertotalPrice.tip = Number(value) - 1;
             }
         }
+        $scope.scheduleTimeAlgo = function() {
+            var now = new Date();
+            var currentTime = now.getHours();
+            var timeList = [{ hourNo: 0, time: "00:00" },
+                { hourNo: 0, time: "00:15" },
+                { hourNo: 0, time: "00:30" },
+                { hourNo: 0, time: "00:45" },
+                { hourNo: 1, time: "01:00" },
+                { hourNo: 1, time: "01:15" },
+                { hourNo: 1, time: "01:30" },
+                { hourNo: 1, time: "01:45" },
+                { hourNo: 2, time: "02:00" },
+                { hourNo: 2, time: "02:15" },
+                { hourNo: 2, time: "02:30" },
+                { hourNo: 2, time: "02:45" },
+                { hourNo: 3, time: "03:00" },
+                { hourNo: 3, time: "03:15" },
+                { hourNo: 3, time: "03:30" },
+                { hourNo: 3, time: "03:45" },
+                { hourNo: 4, time: "04:00" },
+                { hourNo: 4, time: "04:15" },
+                { hourNo: 4, time: "04:30" },
+                { hourNo: 4, time: "04:45" },
+                { hourNo: 5, time: "05:00" },
+                { hourNo: 5, time: "05:15" },
+                { hourNo: 5, time: "05:30" },
+                { hourNo: 5, time: "05:45" },
+                { hourNo: 6, time: "06:00" },
+                { hourNo: 6, time: "06:15" },
+                { hourNo: 6, time: "06:30" },
+                { hourNo: 6, time: "06:45" },
+                { hourNo: 7, time: "07:00" },
+                { hourNo: 7, time: "07:15" },
+                { hourNo: 7, time: "07:30" },
+                { hourNo: 7, time: "07:45" },
+                { hourNo: 8, time: "08:00" },
+                { hourNo: 8, time: "08:15" },
+                { hourNo: 8, time: "08:30" },
+                { hourNo: 8, time: "08:45" },
+                { hourNo: 9, time: "09:00" },
+                { hourNo: 9, time: "09:15" },
+                { hourNo: 9, time: "09:30" },
+                { hourNo: 9, time: "09:45" },
+                { hourNo: 10, time: "10:00" },
+                { hourNo: 10, time: "10:15" },
+                { hourNo: 10, time: "10:30" },
+                { hourNo: 10, time: "10:45" },
+                { hourNo: 11, time: "11:00" },
+                { hourNo: 11, time: "11:15" },
+                { hourNo: 11, time: "11:30" },
+                { hourNo: 11, time: "11:45" },
+                { hourNo: 12, time: "12:00" },
+                { hourNo: 12, time: "12:15" },
+                { hourNo: 12, time: "12:30" },
+                { hourNo: 12, time: "12:45" },
+                { hourNo: 13, time: "13:00" },
+                { hourNo: 13, time: "13:15" },
+                { hourNo: 13, time: "13:30" },
+                { hourNo: 13, time: "13:45" },
+                { hourNo: 14, time: "14:00" },
+                { hourNo: 14, time: "14:15" },
+                { hourNo: 14, time: "14:30" },
+                { hourNo: 14, time: "14:45" },
+                { hourNo: 15, time: "15:00" },
+                { hourNo: 15, time: "15:15" },
+                { hourNo: 15, time: "15:30" },
+                { hourNo: 15, time: "15:45" },
+                { hourNo: 16, time: "16:00" },
+                { hourNo: 16, time: "16:15" },
+                { hourNo: 16, time: "16:30" },
+                { hourNo: 16, time: "16:45" },
+                { hourNo: 17, time: "17:00" },
+                { hourNo: 17, time: "17:15" },
+                { hourNo: 17, time: "17:30" },
+                { hourNo: 17, time: "17:45" },
+                { hourNo: 18, time: "18:00" },
+                { hourNo: 18, time: "18:15" },
+                { hourNo: 18, time: "18:30" },
+                { hourNo: 18, time: "18:45" },
+                { hourNo: 19, time: "19:00" },
+                { hourNo: 19, time: "19:15" },
+                { hourNo: 19, time: "19:30" },
+                { hourNo: 19, time: "19:45" },
+                { hourNo: 20, time: "20:00" },
+                { hourNo: 20, time: "20:15" },
+                { hourNo: 20, time: "20:30" },
+                { hourNo: 20, time: "20:45" },
+                { hourNo: 21, time: "21:00" },
+                { hourNo: 21, time: "21:15" },
+                { hourNo: 21, time: "21:30" },
+                { hourNo: 21, time: "21:45" },
+                { hourNo: 22, time: "22:00" },
+                { hourNo: 22, time: "22:15" },
+                { hourNo: 22, time: "22:30" },
+                { hourNo: 22, time: "22:45" },
+                { hourNo: 23, time: "23:00" },
+                { hourNo: 23, time: "23:15" },
+                { hourNo: 23, time: "23:30" },
+                { hourNo: 23, time: "23:45" }];
+            JsonCall("ShopSchedule", "GetShopStatus");
+            var maxTime = list.timeTo.hours;
+            maxTime === 0 ? maxTime = 24 : maxTime = list.timeTo.hours;
+            $scope.scheduleHours = timeList.filter(s => s.hourNo > currentTime && s.hourNo <= maxTime);
+        }
 
         function showNotification(text) {
             $.notify({
@@ -1298,23 +1402,13 @@
                     <div class="col-12">
                         <div class="divider"></div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6" ng-init="scheduleTimeAlgo()">
                         <div class="form-group mb-0 pl-2 mt-3">
                             <label class="label">Please choose a delivery time</label>
                             <select class="form-control address-option" ng-model="order.recievingTime" name="recievingTime" required>
                                 <option hidden value="">-select delivery time-</option>
                                 <option>As soon as possible</option>
-                                <option>00:30</option>
-                                <option>00:45</option>
-                                <option>01:00</option>
-                                <option>01:15</option>
-                                <option>01:30</option>
-                                <option>01:45</option>
-                                <option>02:00</option>
-                                <option>02:15</option>
-                                <option>02:30</option>
-                                <option>02:45</option>
-                                <option>03:00</option>
+                                <option ng-repeat="time in scheduleHours">{{time.time}}</option>
                             </select>
                             <p class="text-danger pt-4" ng-show="checkoutForm.recievingTime.$touched && checkoutForm.recievingTime.$error.required">* Please select recieving time.</p>
                         </div>

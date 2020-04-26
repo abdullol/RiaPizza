@@ -32,7 +32,6 @@ namespace RiaPizza.Controllers
         [Authorize(Roles = "Manager,Admin")]
         public IActionResult Index()
         {
-            ViewBag.ShopLogo = _scheduleService.GetSchedule().ShopLogo;
             return View();
         }
         
