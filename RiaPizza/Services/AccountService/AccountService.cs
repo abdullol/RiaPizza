@@ -21,6 +21,13 @@ namespace RiaPizza.Services.AccountService
             await _context.SaveChangesAsync();
         }
 
+        public async Task DeleteAddress(int id)
+        {
+            var address = await _context.AppUserAddresses.FindAsync(id);
+            _context.Remove(address);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<List<AppUserAddress>> GetAddresses(int id)
         {
             var addresses = await _context.AppUserAddresses.Where(s => s.UserId == id).ToListAsync();
@@ -31,6 +38,19 @@ namespace RiaPizza.Services.AccountService
         {
             var addresses = await _context.AppUserAddresses.Where(s => s.UserId == id && s.PostalCode == code).ToListAsync();
             return addresses;
+        }
+
+        public async Task UpdateAddress(AppUserAddress address)
+        {
+            var userAddress = await _context.AppUserAddresses.FindAsync(address.AppUserAddressId);
+            userAddress.Address = address.Address;
+            userAddress.City = address.City;
+            userAddress.Floor = address.Floor;
+            userAddress.PostalCode = address.PostalCode;
+
+            _context.Update(userAddress);
+            await _context.SaveChangesAsync();
+
         }
     }
 }

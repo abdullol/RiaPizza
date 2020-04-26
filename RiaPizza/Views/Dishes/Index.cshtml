@@ -213,6 +213,12 @@
     <script src="~/assets/js/table.min.js"></script>
     <script src="~/assets/js/pages/tables/jquery-datatable.js"></script>
     <script>
+        function getOrderTableSortOrder() {
+            return { SortOrder: [[0, "desc"]] };
+        }
+
+        window.RiaPizzaConfig = getOrderTableSortOrder();
+
 
         var list = [];
         function addIntoListDelete(id) {

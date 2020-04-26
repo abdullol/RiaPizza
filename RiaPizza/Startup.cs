@@ -22,6 +22,8 @@ using RiaPizza.Services.NotifyOrder;
 using RiaPizza.Services.OrderService;
 using RiaPizza.Services.RenderViewService;
 using RiaPizza.Services.ScheduleService;
+using Hangfire;
+using Hangfire.SqlServer;
 
 namespace RiaPizza
 {
@@ -64,7 +66,10 @@ namespace RiaPizza
             services.AddTransient<IDeliveryTimingService, DeliveryTimingService>();
             services.AddTransient<ICouponService, CouponService>();
 
-            //services.AddMvc(s=>s.EnableEndpointRouting = false);
+
+            services.AddHangfire(s => s.UseSqlServerStorage(
+                    Configuration.GetConnectionString("DefaultConnection")));
+            services.AddHangfireServer();
             services.AddSignalR();
             services.AddMemoryCache();
         }
@@ -89,7 +94,8 @@ namespace RiaPizza
 
             app.UseAuthentication();
             app.UseAuthorization();
-
+            
+            app.UseHangfireServer();
             
             app.UseEndpoints(endpoints =>
             {

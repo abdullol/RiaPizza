@@ -25,6 +25,7 @@
     <link href="~/client-assets/custom/preloader.css" rel="stylesheet" />
     <link href="~/client-assets/custom/layout.css" rel="stylesheet" />
     <!-- Custom CSS -->
+    @RenderSection("css", required: false)
 
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!--Angular Scripts-->
@@ -37,7 +38,7 @@
         var App = angular.module('RiaPizza', ['ngSanitize', 'ngRoute']);
     </script>
     <script src="~/Angular/Controllers/AuthCtrl.js"></script>
-    @RenderSection("css", required: false)
+    @RenderSection("Angular", required: false)
 </head>
 
 <body ng-app="RiaPizza">

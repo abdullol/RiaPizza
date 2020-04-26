@@ -10,7 +10,7 @@ namespace RiaPizza.Services.ScheduleService
     public interface IScheduleService
     {
         Task AddorUpdate(ShopSchedule timings);
-        bool isShopOpen();
+        Task<bool> isShopOpen();
         Task DeleteSchedule();
         Task ToggleShop(string status);
         ShopSchedule GetSchedule();

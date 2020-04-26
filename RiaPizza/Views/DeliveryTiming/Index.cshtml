@@ -21,52 +21,51 @@
             </div>
         </div>
     </div>
-    <div class="body">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="row">
+        <div class="col-12">
             <div class="card">
-
                 <div class="body">
+                    <h2 class="card-inside-title">Delivery Timings</h2>
+                    <a class="btn btn-success" href="~/DeliveryTiming/Create/" style="margin-left:90%">Create</a>
+                    <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                        <thead>
+                            <tr>
+                                <th>Day</th>
+                                <th>Timings</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td style="width:40%">@item.Day</td>
+                                    <td style="width:40%">@item.Timings</td>
+                                    <td>
+                                        <a class="btn btn-success" href="~/DeliveryTiming/Edit/@item.Id"><i class="fas fa-pencil-alt"></i></a>
 
-                   
-                    <div class="row clearfix">
-                        
-                        <div class="col-lg-12">
-                            <h2 class="card-inside-title">Delivery Timings</h2>
-                            <a class="btn btn-success" href="~/DeliveryTiming/Create/" style="margin-left:90%">create</a>
-                            @*<a class="" asp-action="Create" style="margin-left:88%" value="Create">Create</a>*@
-                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
-                                <thead>
-                                    <tr>
-                                        <th>Day</th>
-                                        <th>Timings</th>
-                                        <th>Action</th>
-                                    </tr>
-
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in Model)
-                                    {
-                                        <tr>
-                                            <td style="width:40%">@item.Day</td>
-                                            <td style="width:40%">@item.Timings</td>
-                                            <td>
-                                                <a class="btn btn-success" href="~/DeliveryTiming/Edit/@item.Id"><i class="fas fa-pencil-alt"></i></a>
-
-                                                <a class="btn btn-danger" href="~/DeliveryTiming/Delete/@item.Id"><i class="fas fa-trash-alt"></i></a>
-                                            </td>
-                                        </tr>
-
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
+                                        <a class="btn btn-danger" href="~/DeliveryTiming/Delete/@item.Id"><i class="fas fa-trash-alt"></i></a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-
-
     </div>
 </div>
 
+@section scripts{
+
+    <script src="~/assets/js/table.min.js"></script>
+    <script src="~/assets/js/pages/tables/jquery-datatable.js"></script>
+    <script>
+        function getOrderTableSortOrder() {
+            return { SortOrder: [[0, "desc"]] };
+        }
+
+        window.RiaPizzaConfig = getOrderTableSortOrder();
+
+    </script>
+}
