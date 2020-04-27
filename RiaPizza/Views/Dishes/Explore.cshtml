@@ -750,7 +750,7 @@
             JsonCall("ShopSchedule", "GetShopStatus");
             var maxTime = list.timeTo.hours;
             maxTime === 0 ? maxTime = 24 : maxTime = list.timeTo.hours;
-            $scope.scheduleHours = timeList.filter(s => s.hourNo > currentTime && s.hourNo <= maxTime);
+            $scope.scheduleHours = timeList.filter(s => s.hourNo > currentTime && s.hourNo < maxTime);
         }
 
         function showNotification(text) {
