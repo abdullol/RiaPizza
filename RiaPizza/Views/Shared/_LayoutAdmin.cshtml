@@ -111,10 +111,10 @@
                 <ul class="list">
                     <li class="sidebar-user-panel active">
                         @*<div class="user-panel">
-                                <div class=" image">
-                                    <img src="~/assets/images/usrbig.jpg" class="img-circle user-img-circle" alt="User Image" />
-                                </div>
-                            </div>*@
+                <div class=" image">
+                    <img src="~/assets/images/usrbig.jpg" class="img-circle user-img-circle" alt="User Image" />
+                </div>
+            </div>*@
                         <div class="profile-usertitle mt-3">
                             <div class="sidebar-userpic-name"> @User.Identity.Name </div>
                             <div class="profile-usertitle-job ">
@@ -216,7 +216,7 @@
                     }
                     <li>
                         <a href="#" onClick="return false;" class="menu-toggle">
-                            <i class="fab fa-first-order"></i>
+                            <i class="fas fa-clock"></i>
                             <span>Delivery Timing</span>
                         </a>
                         <ul class="ml-menu">
@@ -230,7 +230,7 @@
                     </li>
                     <li>
                         <a href="#" onClick="return false;" class="menu-toggle">
-                            <i class="fab fa-first-order"></i>
+                            <i class="fas fa-tags"></i>
                             <span>Coupons</span>
                         </a>
                         <ul class="ml-menu">
@@ -241,6 +241,12 @@
                                 <a href="~/Coupons/Create">Add</a>
                             </li>
                         </ul>
+                    </li>
+                    <li>
+                        <a href="~/Customize">
+                            <i class="fas fa-cog"></i>
+                            <span>Customize Theme</span>
+                        </a>
                     </li>
                 </ul>
             </div>

@@ -24,6 +24,7 @@ using RiaPizza.Services.RenderViewService;
 using RiaPizza.Services.ScheduleService;
 using Hangfire;
 using Hangfire.SqlServer;
+using RiaPizza.Services.ThemeCustomization;
 
 namespace RiaPizza
 {
@@ -65,6 +66,7 @@ namespace RiaPizza
             services.AddTransient<IScheduleService, ScheduleService>();
             services.AddTransient<IDeliveryTimingService, DeliveryTimingService>();
             services.AddTransient<ICouponService, CouponService>();
+            services.AddTransient<ICustomizeThemeService, CustomizeThemeService>();
 
 
             services.AddHangfire(s => s.UseSqlServerStorage(

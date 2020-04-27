@@ -40,6 +40,21 @@
             background: transparent !important;
             clip-path: none !important;
         }
+       
+        .img-top{
+                padding-top:80px;
+            }
+        @@media only screen and (max-width: 360px) {
+            #header {
+                height: 70vh;
+                background: url(/client-assets/res/img/mob-header.jpg);
+                border: 0;
+                background-size: cover;
+                background-position: center;
+            }
+        }
+    
+
     </style>
 
 }
@@ -49,7 +64,7 @@
 <header id="header">
     <div class="bg-img-overlay">
         <div class="container">
-            <div class="row py-4">
+            <div class="row img-top">
                 <div class="col-12 text-center text-white">
                     <h1 class="display-3 banner-h font-weight-bold">
                         Time to
@@ -61,7 +76,7 @@
                             <input name="areaname" id="area-search" type="text" class="form-control" autoComplete="off">
 
                             <div class="input-group-prepend">
-                                <button class="btn btn-disabled btn-show font-weight-bold text-white" style="background:#DE0019">Show</button>
+                                <button class="btn btn-disabled btn-show font-weight-bold text-white" style="background: #DE0019">Show</button>
                             </div>
                         </div>
                         <ul class="suggestion-list">

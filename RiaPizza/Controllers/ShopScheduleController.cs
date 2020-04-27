@@ -27,7 +27,6 @@ namespace RiaPizza.Controllers
         public async Task<IActionResult> Index()
         {
             var schedule = await _scheduleService.GetSchedule();
-            ViewBag.ShopLogo = schedule.ShopLogo;
             ViewBag.isOpen = true;
             return View(schedule);
         }
@@ -57,27 +56,5 @@ namespace RiaPizza.Controllers
             return Json(schedule);
         }
 
-        public async Task<ContentResult> LogoUpdate()
-        {
-            var category = new ShopSchedule();
-            var file = Request.Form.Files[0];
-            string UniqueFilename;
-            if (file != null)
-            {
-                string UploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "Uploads");
-
-                if (!Directory.Exists(UploadFolder))
-                {
-                    Directory.CreateDirectory(UploadFolder);
-                }
-
-                UniqueFilename = Guid.NewGuid().ToString() + "_" + file.FileName;
-                string filePath = Path.Combine(UploadFolder, UniqueFilename);
-                file.CopyTo(new FileStream(filePath, FileMode.Create));
-                category.ShopLogo = UniqueFilename;
-                await _scheduleService.AddorUpdate(category);
-            }
-            return Content("Success");
-        }
     }
 }
