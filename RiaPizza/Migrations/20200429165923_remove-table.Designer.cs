@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RiaPizza.Data;
 
 namespace RiaPizza.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200429165923_remove-table")]
+    partial class removetable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -336,35 +338,6 @@ namespace RiaPizza.Migrations
                     b.HasKey("DeliveryAreaId");
 
                     b.ToTable("DeliveryAreas");
-                });
-
-            modelBuilder.Entity("RiaPizza.Models.DeliveryTiming", b =>
-                {
-                    b.Property<int>("DeliveryTimingId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Day")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("DayOfWeek")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ShopScheduleId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TimeFrom")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TimeTo")
-                        .HasColumnType("int");
-
-                    b.HasKey("DeliveryTimingId");
-
-                    b.HasIndex("ShopScheduleId");
-
-                    b.ToTable("DeliveryTimings");
                 });
 
             modelBuilder.Entity("RiaPizza.Models.Dish", b =>
@@ -817,15 +790,6 @@ namespace RiaPizza.Migrations
                     b.HasOne("RiaPizza.Data.ApplicationUser.AppUser", "User")
                         .WithMany("UserRoles")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("RiaPizza.Models.DeliveryTiming", b =>
-                {
-                    b.HasOne("RiaPizza.Models.ShopSchedule", "ShopSchedule")
-                        .WithMany("DeliveryTimings")
-                        .HasForeignKey("ShopScheduleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

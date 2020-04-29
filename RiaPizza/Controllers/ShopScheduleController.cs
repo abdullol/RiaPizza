@@ -15,34 +15,32 @@ namespace RiaPizza.Controllers
     public class ShopScheduleController : Controller
     {
         private readonly IScheduleService _scheduleService;
-        private readonly IHostingEnvironment _hostingEnvironment;
 
-        public ShopScheduleController(IScheduleService service,
-            IHostingEnvironment hostingEnvironment)
+        public ShopScheduleController(IScheduleService service)
         {
             _scheduleService = service;
-            _hostingEnvironment = hostingEnvironment;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var schedule = await _scheduleService.GetSchedule();
-            ViewBag.isOpen = true;
-            return View(schedule);
+            return View();
         }
         [HttpPost]
-        public async Task<IActionResult> AddOrUpdate(ShopSchedule timings, string schedule)
+        public async Task<IActionResult> AddOrUpdate()
         {
-            await _scheduleService.AddorUpdate(timings);
+            ShopSchedule schedule = JsonConvert.DeserializeObject<ShopSchedule>(Request.Form["shopSchedule"]);
+            await _scheduleService.AddorUpdate(schedule);
             
             return RedirectToAction("Index");
         }
+
         [HttpPost]
-        public async Task<IActionResult> DeleteSchedule()
+        public async Task<JsonResult> GetSchedule()
         {
-            await _scheduleService.DeleteSchedule();
-            return RedirectToAction("Index");
+            var schedule = await _scheduleService.GetSchedule();
+            return Json(schedule);
         }
+
         [HttpPost]
         public async Task<IActionResult> ToggleShop(string status)
         {
@@ -52,7 +50,7 @@ namespace RiaPizza.Controllers
 
         public async Task<JsonResult> GetShopStatus()
         {
-            var schedule = await _scheduleService.GetSchedule();
+            var schedule = await _scheduleService.GetShopStatus();
             return Json(schedule);
         }
 

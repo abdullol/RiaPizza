@@ -15,7 +15,6 @@ using RiaPizza.Data.ApplicationUser;
 using RiaPizza.Services.AccountService;
 using RiaPizza.Services.CouponService;
 using RiaPizza.Services.DeliveryAreaService;
-using RiaPizza.Services.DeliveryTimingService;
 using RiaPizza.Services.DishCategoryService;
 using RiaPizza.Services.DishService;
 using RiaPizza.Services.NotifyOrder;
@@ -64,7 +63,6 @@ namespace RiaPizza
             services.AddTransient<IAccountService, AccountService>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IScheduleService, ScheduleService>();
-            services.AddTransient<IDeliveryTimingService, DeliveryTimingService>();
             services.AddTransient<ICouponService, CouponService>();
             services.AddTransient<ICustomizeThemeService, CustomizeThemeService>();
 
@@ -97,7 +95,7 @@ namespace RiaPizza
             app.UseAuthentication();
             app.UseAuthorization();
             
-            app.UseHangfireServer();
+            app.UseHangfireDashboard();
             
             app.UseEndpoints(endpoints =>
             {

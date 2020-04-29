@@ -26,6 +26,12 @@ namespace RiaPizza.Controllers
             return View(theme);
         }
 
+        public async Task<JsonResult> GetLogo()
+        {
+            var theme = await _customizeThemeService.GetThemeElements();
+            return Json(theme.Logo);
+        }
+
         [HttpPost]
         public async Task<IActionResult> LogoUpdate(IFormFile file, string origin)
         {

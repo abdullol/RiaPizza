@@ -7,9 +7,65 @@
 @section css{
     <link href="../../assets/css/form.min.css" rel="stylesheet">
 }
+@section Angular{
 
 
+    <script src="~/Angular/Utility/Jsoncalls.js"></script>
+    <script>
+        App.controller("ScheduleCtrl", function ($scope, $http) {
 
+            $scope.timeList = [{ time: "12:00 AM", hour: 0 },
+                { time: "01:00 AM", hour: 1 },
+                { time: "02:00 AM", hour: 2 },
+                { time: "03:00 AM", hour: 3 },
+                { time: "04:00 AM", hour: 4 },
+                { time: "05:00 AM", hour: 5 },
+                { time: "06:00 AM", hour: 6 },
+                { time: "07:00 AM", hour: 7 },
+                { time: "08:00 AM", hour: 8 },
+                { time: "09:00 AM", hour: 9 },
+                { time: "10:00 AM", hour: 10 },
+                { time: "11:00 AM", hour: 11 },
+                { time: "12:00 PM", hour: 12 },
+                { time: "01:00 PM", hour: 13 },
+                { time: "02:00 PM", hour: 14 },
+                { time: "03:00 PM", hour: 1 },
+                { time: "04:00 PM", hour: 16 },
+                { time: "05:00 PM", hour: 17 },
+                { time: "06:00 PM", hour: 18 },
+                { time: "07:00 PM", hour: 19 },
+                { time: "08:00 PM", hour: 20 },
+                { time: "09:00 PM", hour: 21 },
+                { time: "10:00 PM", hour: 22 },
+                { time: "11:00 PM", hour: 23 }];
+
+            $scope.getSchedule = function () {
+                JsonCall("ShopSchedule", "GetSchedule");
+                $scope.schedule = list;
+                if (list.deliveryTimings.length === 0) {
+                    $scope.schedule = {
+                        isOpen: true,
+                        deliveryTimings: [
+                            { dayOfWeek: 1, day: "Monday", timeFrom: 0, timeTo:0 },
+                            { dayOfWeek: 2, day: "Tuesday", timeFrom: 0, timeTo: 0},
+                            { dayOfWeek: 3, day: "Wednesday", timeFrom: 0, timeTo: 0 },
+                            { dayOfWeek: 4, day: "Thursday", timeFrom:0, timeTo: 0 },
+                            { dayOfWeek: 5, day: "Friday", timeFrom: 0, timeTo: 0 },
+                            { dayOfWeek: 6, day: "Saturday", timeFrom: 0, timeTo: 0},
+                            { dayOfWeek: 0, day: "Sunday", timeFrom: 0, timeTo: 0 },
+                        ]
+                    };
+                }
+            }
+
+            $scope.saveSchedule = function () {
+                JsonCallParam("ShopSchedule", "AddOrUpdate", { 'shopSchedule': JSON.stringify($scope.schedule) });
+                $scope.getSchedule();
+                swal("Added", "Delivery Area Added!", "success");
+            }
+        });
+    </script>
+}
 
 <div class="container-fluid">
     <div class="block-header">
@@ -31,7 +87,7 @@
             </div>
         </div>
     </div>
-    <div class="row clearfix">
+    <div class="row clearfix" ng-controller="ScheduleCtrl">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
                 <div class="header">
@@ -41,29 +97,44 @@
                     <p class="pt-2">Note: Shop will be automatically open and close on the selected time</p>
                 </div>
                 <div class="body">
-                    <form method="post" action="~/ShopSchedule/AddOrUpdate">
-                        <div class="row clearfix">
-                            <div class="col-lg-6 col-sm-5">
-                                <div class="form-group">
-                                    <label>Shop opening time</label>
-                                    <div class="form-line">
-                                        <input type="text" class="timepicker form-control" value="@Model.TimeFrom" name="TimeFrom" placeholder="Please choose a time from...">
-                                    </div>
+                    <form ng-submit="saveSchedule()" name="scheduleform" ng-init="getSchedule()">
+                        <div class="row clearfix heading">
+                            <div class="col-lg-2 col-sm-12">
+                                <label class="font-bold">Day</label>
+                            </div>
+                            <div class="col-lg-5 col-sm-12">
+                                <label class="font-bold">Shop opening time</label>
+                            </div>
+                            <div class="col-lg-5 col-sm-12">
+                                <label class="font-bold">Day</label>
+                            </div>
+                        </div>
+                        <div class="row clearfix border-top" ng-repeat="timing in schedule.deliveryTimings">
+                            <div class="col-lg-2 col-sm-12 pt-3">
+                                <div class="form-group mb-0">
+                                    {{timing.day}}
                                 </div>
                             </div>
-                            <div class="col-lg-6 col-sm-5">
-                                <div class="form-group">
-                                    <label>Shop Closing time</label>
-                                    <div class="form-line">
-                                        <input type="text" class="timepicker form-control" value="@Model.TimeTo" name="TimeTo" placeholder="Please choose a time to...">
-                                    </div>
+                            <div class="col-lg-5 col-sm-12 pt-3">
+                                <div class="form-group mb-0">
+                                    <select class="form-control" ng-model="timing.timeFrom" required
+                                            ng-class="{'border-danger': scheduleform.TimeFrom.$touched && scheduleform.TimeFrom.$error.required}"
+                                            ng-options="time.hour as time.time for time in timeList">
+                                    </select>
                                 </div>
                             </div>
-                            <div class="col-lg-12 col-sm-12" style="text-align:center">
-                                <div class="form-group">
-                                    <button class="btn btn-primary float-right" style="width: 119.5px;height: 49.75px;">Update Schedule!</button>
+                            <div class="col-lg-5 col-sm-12 pt-3">
+                                <div class="form-group mb-0">
+                                    <select class="form-control" ng-model="timing.timeTo" required
+                                            ng-class="{'border-danger': scheduleform.timeTo.$touched && scheduleform.timeTo.$error.required}"
+                                            ng-options="time.hour as time.time for time in timeList">
+                                    </select>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="form-group text-right">
+                            <button class="btn btn-primary float-right" style="width: 119.5px;height: 49.75px;">Update Schedule!</button>
                         </div>
                     </form>
                 </div>
@@ -74,9 +145,6 @@
 
 
 @section scripts{
-    <script src="~/assets/js/table.min.js"></script>
-    <script src="~/assets/js/pages/tables/jquery-datatable.js"></script>
     <script src="~/assets/js/form.min.js"></script>
     <script src="~/assets/js/pages/forms/basic-form-elements.js"></script>
-
 }

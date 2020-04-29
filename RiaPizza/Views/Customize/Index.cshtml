@@ -7,7 +7,7 @@
     <style>
         .centerBtn {
             position: absolute;
-            top: 50%;
+            top: 55%;
             left: 50%;
             transform: translate(-50%, -50%);
             cursor: pointer;
@@ -38,6 +38,10 @@
 
         #fileInput{
             display:none
+        }
+        .img-wrapper img{
+            width:400px;
+            height:400px;
         }
     </style>
 }
@@ -71,23 +75,49 @@
                     </h2>
                 </div>
                 <div class="body">
+
+                    <div class="modal fade" id="editLogoModal" role="dialog"
+                         aria-labelledby="formModal" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="formModal"> Edit Logo </h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form class="pt-5" action="~/Customize/LogoUpdate" method="post" enctype="multipart/form-data">
+
+                                    <div class="form-group">
+                                        <input type="hidden" name="origin" class="origin" />
+                                        <input type="file" name="file" id="fileInput" oninput="showImage()" required>
+                                        <div id="ImageTab" class="center"> </div>
+                                        <img id="selectImageBtn" class="icon-colored pointer center"
+                                             onclick="$('#fileInput').click()" src='~/assets/images/pick.png'>
+                                    </div>
+                                    <input type="submit" name="submit" class="btn btn-success float-right" value="Submit" />
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal modal fade">
+                        <div class="modal-body">
+                            
+                        </div>
+                    </div>
                     <div>
 
                         <h6>Shop Logo</h6>
-                        @if (Model.Logo != null)
-                        {
-                            <img src="@Model.Logo" class="pointer" style="height:200px; width:250px; margin:auto" /> <i onclick="$('#fileInput').click()" class="fas fa-window-close centerBtn"></i>
-                        }
-                        <form action="~/Customize/LogoUpdate" method="post" enctype="multipart/form-data">
-                            <div class="form-group">
-                                <input type="hidden" name="origin" class="origin" />
-                                <input type="file" name="file" id="fileInput" oninput="showImage()" required>
-                                <div id="ImageTab" class="center"> </div>
-                                <img id="selectImageBtn" class="icon-colored pointer center"
-                                     onclick="$('#fileInput').click()" src='~/assets/images/pick.png'>
-                            </div>
-                            <input type="submit" name="submit" class="btn btn-success float-right" value="Submit" />
-                        </form>
+                        <div class="img-wrapper text-center">
+                            @if (Model.Logo != null)
+                            {
+                                <img src="@Model.Logo" class="pointer" /> <i data-toggle="modal" data-target="#editLogoModal" class="fas fa-pencil-alt centerBtn"></i>
+                            }
+                            else
+                            {
+                                <img src='~/assets/images/pick.png' class="pointer" /> <i data-toggle="modal" data-target="#editLogoModal" class="fas fa-pencil-alt centerBtn"></i>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>

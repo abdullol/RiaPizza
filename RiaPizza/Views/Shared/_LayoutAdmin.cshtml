@@ -5,8 +5,6 @@
 @inject UserManager<AppUser> UserManager
 <!DOCTYPE html>
 <html lang="en">
-
-<!-- Mirrored from www.radixtouch.in/templates/admin/lorax/source/light/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 09 Jan 2020 16:17:28 GMT -->
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
@@ -28,16 +26,17 @@
     <script>
         var App = angular.module('RiaPizza', ['ngFileUpload']);
     </script>
+    @RenderSection("Angular", required: false)
     @RenderSection("css", required: false)
+
 </head>
 <body class="light" ng-app="RiaPizza">
     <!-- Page Loader -->
     <div class="page-loader-wrapper">
         <div class="loader">
-            <div class="m-t-30">
-                @*<img class="loading-img-spin" src="~/assets/images/logo.png" width="20" height="20" alt="admin">*@
+            <div>
+                <img src="~/assets/images/preloader.gif" alt="logo" />
             </div>
-            <p>Please wait...</p>
         </div>
     </div>
     <!-- #END# Page Loader -->
@@ -52,7 +51,7 @@
                    aria-expanded="false"></a>
                 <a href="#" onClick="return false;" class="bars"></a>
                 <a class="navbar-brand" href="~/Dashboard/Index">
-                    <img style="width:70%" src="~/Uploads/@ViewBag.ShopLogo" alt="" />
+                    <img style="width:70%" id="main-logo" alt="Ria Pizza" />
                 </a>
             </div>
             <div class="collapse navbar-collapse" id="navbar-collapse">
@@ -110,11 +109,6 @@
             <div class="menu">
                 <ul class="list">
                     <li class="sidebar-user-panel active">
-                        @*<div class="user-panel">
-                <div class=" image">
-                    <img src="~/assets/images/usrbig.jpg" class="img-circle user-img-circle" alt="User Image" />
-                </div>
-            </div>*@
                         <div class="profile-usertitle mt-3">
                             <div class="sidebar-userpic-name"> @User.Identity.Name </div>
                             <div class="profile-usertitle-job ">
@@ -216,20 +210,6 @@
                     }
                     <li>
                         <a href="#" onClick="return false;" class="menu-toggle">
-                            <i class="fas fa-clock"></i>
-                            <span>Delivery Timing</span>
-                        </a>
-                        <ul class="ml-menu">
-                            <li>
-                                <a href="~/DeliveryTiming/Index">All DeliveryTiming </a>
-                            </li>
-                            <li>
-                                <a href="~/DeliveryTiming/Create">Add</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#" onClick="return false;" class="menu-toggle">
                             <i class="fas fa-tags"></i>
                             <span>Coupons</span>
                         </a>
@@ -310,6 +290,7 @@
     </section>
     <script src="~/assets/js/app.min.js"></script>
     <script src="~/assets/js/admin.js"></script>
+    <script src="~/custom-js/shoplogo.js"></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

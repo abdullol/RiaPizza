@@ -13,6 +13,7 @@ namespace RiaPizza.Services.ScheduleService
         Task<bool> isShopOpen();
         Task DeleteSchedule();
         Task ToggleShop(string status);
+        Task<ShopSchedule> GetShopStatus();
         Task<ShopSchedule> GetSchedule();
     }
 }
