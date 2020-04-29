@@ -95,7 +95,7 @@
         $scope.cartItem = { dishId: 0, dishName: "", quantity: 0, dishPrice: 0, priceWithExtras: 0, totalPrice: 0, remarks: "", toppings: [], dishSize: {} };
         $scope.cart = [];
         $scope.ordertotalPrice = { subtotal: 0, totalPrice: 0, tax: 0, deliveryCharges: 0, tip: 0 };
-        $scope.deliveryTimings = [];
+        $scope.schedule = [];
         $scope.dishSizeIdSelectedDish = "0";
         $scope.coupon = { code: '' };
         $scope.showDiscount = false;
@@ -154,7 +154,7 @@
             }
         }, '#paypal-button');
 
-        $scope.shopschedule = { isOpen: false, deliveryTimings:[] };
+        $scope.shopschedule = { isOpen: false, deliveryTimings: [] };
         //End Ordering Attributes
 
         $rootScope.$on("LoadUserData", function (e, args) {
@@ -532,8 +532,8 @@
         //End Choose Dishes Methods
 
         $scope.getDeliveryTiming = function () {
-            JsonCall("DeliveryTiming", "GetDeliveryTimes");
-            $scope.deliveryTimings = list;
+            JsonCall("ShopSchedule", "GetSchedule");
+            $scope.schedule = list;
         }
         $scope.validateCoupon = function () {
             JsonCallParam("Coupons", "ValidateCoupon", { code: $scope.coupon.code });
@@ -1024,18 +1024,20 @@
                                         <h5>Delivery times</h5>
                                     </div>
                                 </div>
-                                <div class="row my-3 p-3" style="background-color: #f8f5f2;">
-                                    <div class="col-6">
-                                        <p class="mb-2" ng-repeat="timing in deliveryTimings"
-                                           style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            {{timing.day}}
-                                        </p>
-                                    </div>
-                                    <div class="col-6 text-right" ng-repeat="timing in deliveryTimings">
-                                        <p class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            {{timing.timings}}
-                                        </p>
+                                <div class="my-3 p-3" style="background-color: #f8f5f2;">
+                                    <div class="row" ng-repeat="timing in schedule.deliveryTimings">
+                                        <div class="col-6">
+                                            <p class="mb-2"
+                                               style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
+                                                {{timing.day}}
+                                            </p>
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            <p class="mb-2"
+                                               style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
+                                                {{timing.timeFrom}}:00 - {{timing.timeTo}}:00
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row mt-4 align-items-center">
