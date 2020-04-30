@@ -6,21 +6,10 @@ connection.on("notifyOrder", function (order) {
     var notsound = document.getElementById("NotSound");
     notsound.play();
 
-    $.notify({
-        message: 'You recieved an order: ' + order.orderCode
-    },
-    {
-        type: 'bg-teal',
-        allow_dismiss: true,
-        newest_on_top: true,
-        timer: 1000,
-        placement: {
-            from: "bottom",
-            align: "right"
-        },
-        template: '<div data-notify="container" class="bootstrap-notify-container alert alert-dismissible {0} ' + (true ? "p-r-35" : "") + '" role="alert">' +
-            '<button type="button" aria-hidden="true" class="close" data-notify="dismiss">×</button>' +
-            '<span data-notify="message">{2}</span>'
+    swal({
+        title: "New Order!",
+        text: 'You recieved an order: ' + order.orderCode,
+        imageUrl: "/assets/images/order.png"
     });
 
     $('.ordersList').prepend(

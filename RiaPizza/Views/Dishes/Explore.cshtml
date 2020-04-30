@@ -843,7 +843,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row pt-4 pb-0" style="border-bottom: 1px solid #eee;">
+            <div class="row pt-4 pb-0" style="border-bottom: 1px solid #eee;" ng-init="requiredOrderValue = @Model.MinOrderCharges">
                 <div class="col-6 text-left mt-2 mb-0" style="margin-left: -20px;">
                     <p style="font-size: 13px;">Sub-total</p>
                 </div>
@@ -868,12 +868,23 @@
                 <div class="col-6" style="margin-top: -20px;">
                     <p class="font-weight-bold text-right" style="margin-right: -30px;  font-size: 13px;">{{ordertotalPrice.totalPrice | number : 2}} €</p>
                 </div>
+                <div class="col-8" style="margin-left: -20px;"
+                     ng-if="ordertotalPrice.totalPrice < requiredOrderValue">
+                    <p class="font-weight-bold text-left text-success" style="font-size: 13px;">Amount needed to reach the minimum order value</p>
+                </div>
+                <div class="col-4">
+                    <p class="font-weight-bold text-right text-success"
+                       style="margin-right: -30px;  font-size: 13px;"
+                       ng-if="ordertotalPrice.totalPrice < requiredOrderValue">
+                        {{requiredOrderValue - ordertotalPrice.totalPrice | number : 2}} €
+                    </p>
+                </div>
             </div>
             <div class="row p-0">
                 <div class="col-12 p-0 text-center">
-                    <p ng-if="ordertotalPrice.totalPrice < @Model.MinOrderCharges" class="text-muted my-3" style=" font-size: 13px; color: #7d7d7d;">Unfortunately We only delivers from a minimum order value of € @Model.MinOrderCharges (excl. Delivery costs)</p>
-                    <p ng-if="ordertotalPrice.totalPrice > @Model.MinOrderCharges" class="text-muted my-3" style=" font-size: 13px; color: #7d7d7d;">You have reached the minimum order amount of @Model.MinOrderCharges € to checkout</p>
-                    <a id="orderBtn" ng-disabled="cart.length === 0" ng-click="proceedOrder()" ng-if="ordertotalPrice.totalPrice > @Model.MinOrderCharges" role="button" class="btn btn-block py-3 mx-auto text-center bg-primary"
+                    <p ng-if="ordertotalPrice.totalPrice < requiredOrderValue" class="text-muted my-3" style=" font-size: 13px; color: #7d7d7d;">Unfortunately We only delivers from a minimum order value of € {{requiredOrderValue | number : 2}} (excl. Delivery costs)</p>
+                    <p ng-if="ordertotalPrice.totalPrice >= requiredOrderValue" class="text-muted my-3" style=" font-size: 13px; color: #7d7d7d;">You have reached the minimum order amount of {{requiredOrderValue | number : 2}} € to checkout</p>
+                    <a id="orderBtn" ng-disabled="cart.length === 0" ng-click="proceedOrder()" ng-if="ordertotalPrice.totalPrice >= requiredOrderValue" role="button" class="btn btn-block py-3 mx-auto text-center bg-primary"
                        style="color: #fff; width:95%">Order</a>
                 </div>
             </div>
@@ -959,6 +970,12 @@
                         <div class="col-6 text-right mt-2">
                             <p style="margin-right: -30px;font-size: 13px;" ng-init="postalCode = @Model.PostalCode">{{ordertotalPrice.subtotal | number : 2}} €</p>
                         </div>
+                        <div class="col-6 text-left mt-2 mb-0" style="margin-left: -20px;" ng-if="showDiscount">
+                            <p style="font-size: 13px;">Discount</p>
+                        </div>
+                        <div class="col-6 text-right mt-2" ng-if="showDiscount">
+                            <p style="margin-right: -30px;font-size: 13px;">- {{discount | number : 2}} €</p>
+                        </div>
                         <div class="col-6 text-left mb-2" style="margin-left: -20px;">
                             <p style="font-size: 13px;">Delivery costs</p>
                         </div>
@@ -971,11 +988,22 @@
                         <div class="col-6" style="margin-top: -20px;">
                             <p class="font-weight-bold text-right" style="margin-right: -30px;  font-size: 13px;">{{ordertotalPrice.totalPrice | number : 2}} €</p>
                         </div>
+                        <div class="col-6" style="margin-left: -20px;"
+                             ng-if="ordertotalPrice.totalPrice < requiredOrderValue">
+                            <p class="font-weight-bold text-left text-success" style="font-size: 13px;">Amount needed to reach the minimum order value</p>
+                        </div>
+                        <div class="col-6">
+                            <p class="font-weight-bold text-right text-success"
+                               style="margin-right: -30px;  font-size: 13px;"
+                               ng-if="ordertotalPrice.totalPrice < requiredOrderValue">
+                                {{requiredOrderValue - ordertotalPrice.totalPrice | number : 2}} €
+                            </p>
+                        </div>
                     </div>
                     <div class="row p-0">
                         <div class="col-12 p-0 text-center">
-                            <p ng-if="ordertotalPrice.totalPrice < @Model.MinOrderCharges" class="text-muted my-3" style=" font-size: 13px; color: #7d7d7d;">Unfortunately We only delivers from a minimum order value of € @Model.MinOrderCharges (excl. Delivery costs)</p>
-                            <p ng-if="ordertotalPrice.totalPrice > @Model.MinOrderCharges" class="text-muted my-3" style=" font-size: 13px; color: #7d7d7d;">You have reached the minimum order amount of @Model.MinOrderCharges € to checkout</p>
+                            <p ng-if="ordertotalPrice.totalPrice < @Model.MinOrderCharges" class="text-muted my-3" style=" font-size: 13px; color: #7d7d7d;">Unfortunately We only delivers from a minimum order value of € {{requiredOrderValue | number : 2}} (excl. Delivery costs)</p>
+                            <p ng-if="ordertotalPrice.totalPrice > @Model.MinOrderCharges" class="text-muted my-3" style=" font-size: 13px; color: #7d7d7d;">You have reached the minimum order amount of {{requiredOrderValue | number : 2}}  € to checkout</p>
                             <a id="orderBtn" ng-disabled="cart.length === 0" ng-click="proceedOrder()" ng-if="ordertotalPrice.totalPrice > @Model.MinOrderCharges" role="button" class="btn btn-block py-3 mx-auto text-center bg-primary"
                                style="color: #fff; width:95%" data-dismiss="modal" onclick="$('#cart-modal').modal('hide');">Order</a>
                         </div>
@@ -1251,7 +1279,7 @@
                                                                    value="{{extra.extraName}}"
                                                                    ng-checked="toppings.indexOf(extra.extraName) > -1"
                                                                    ng-click="toggleToppings(extra.extraName, extratype.typeName, extra.extraPrice, extra.sizeToppingPrices)">
-                                                            <label class="custom-control-label pointer" for="{{extra.dishExtraId}}_{{extraIndex}}" style="font-size: 12px;">
+                                                            <label class="custom-control-label pointer pt-1" for="{{extra.dishExtraId}}_{{extraIndex}}" style="font-size: 12px;">
                                                                 {{extra.extraName}}
                                                                 {{dish.dishSizes.length > 0 ? filterToppingSizePrice(dishSizeIdSelectedDish, extra.sizeToppingPrices) : showToppingPrice(extra.extraPrice) }}
                                                             </label>
