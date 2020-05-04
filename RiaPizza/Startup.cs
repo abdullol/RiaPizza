@@ -24,6 +24,7 @@ using RiaPizza.Services.RenderViewService;
 using RiaPizza.Services.ScheduleService;
 using Hangfire;
 using Hangfire.SqlServer;
+using Microsoft.AspNetCore.Identity;
 
 namespace RiaPizza
 {
@@ -75,7 +76,7 @@ namespace RiaPizza
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -94,9 +95,9 @@ namespace RiaPizza
 
             app.UseAuthentication();
             app.UseAuthorization();
-            
+
             app.UseHangfireServer();
-            
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -104,6 +105,50 @@ namespace RiaPizza
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapHub<NotifyHub>("/NotifyHub");
             });
+
+            CreateRoles(serviceProvider);
+
+        }
+
+
+        private void CreateRoles(IServiceProvider serviceProvider)
+        {
+
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<AppRole>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
+            Task<IdentityResult> roleResult;
+            string name = "demo";
+
+            //Check that there is an Administrator role and create if not
+            Task<bool> hasAdminRole = roleManager.RoleExistsAsync("Admin");
+            hasAdminRole.Wait();
+
+            //if (!hasAdminRole.Result)
+            //{
+            //    roleResult = roleManager.CreateAsync(new AppRole("Admin"));
+            //    roleResult.Wait();
+            //}
+
+            //Check if the user exists and create it if not
+            Task<AppUser> testUser = userManager.FindByNameAsync(name);
+            testUser.Wait();
+
+            if (testUser.Result == null)
+            {
+                AppUser administrator = new AppUser();
+                administrator.Email = name + "@gmail.com";
+                administrator.UserName = name;
+
+                //giving username and password
+                Task<IdentityResult> newUser = userManager.CreateAsync(administrator, "1234Demo..");
+                newUser.Wait();
+
+                if (newUser.Result.Succeeded)
+                {
+                    Task<IdentityResult> newUserRole = userManager.AddToRoleAsync(administrator, "Admin");
+                    newUserRole.Wait();
+                }
+            }
         }
     }
 }

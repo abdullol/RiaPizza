@@ -74,7 +74,7 @@
 	 #header .bg-img-overlay {
 		 height: 52vh;
 		 border: 0 !important;
-		 background: #f37f36;
+		 background: red;
 		 clip-path: polygon(0 0, 100% 0, 100% 48%, 0 60%);
 	}
 	 #header .bg-img-overlay .banner-h {

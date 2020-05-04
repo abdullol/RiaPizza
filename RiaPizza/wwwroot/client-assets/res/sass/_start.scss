@@ -168,7 +168,7 @@
 
 .sidebar a:hover {
   background: #eeeeee;
-  color: #f36f37 !important;
+  color: red !important;
   border-radius: 2px;
 }
 
@@ -220,7 +220,7 @@
       font-weight: 600;
       display: block;
       &:hover {
-        color: #f36f37;
+        color: red;
         background-color: #f1f0f0;
       }
     }
