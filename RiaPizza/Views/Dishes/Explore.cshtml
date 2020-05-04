@@ -95,7 +95,7 @@
         $scope.cartItem = { dishId: 0, dishName: "", quantity: 0, dishPrice: 0, priceWithExtras: 0, totalPrice: 0, remarks: "", toppings: [], dishSize: {} };
         $scope.cart = [];
         $scope.ordertotalPrice = { subtotal: 0, totalPrice: 0, tax: 0, deliveryCharges: 0, tip: 0 };
-        $scope.deliveryTimings = [];
+        $scope.schedule = [];
         $scope.dishSizeIdSelectedDish = "0";
         $scope.coupon = { code: '' };
         $scope.showDiscount = false;
@@ -154,7 +154,7 @@
             }
         }, '#paypal-button');
 
-        $scope.shopschedule = { timeFrom: '', timeTo: '', isOpen: false };
+        $scope.shopschedule = { isOpen: false, deliveryTimings: [] };
         //End Ordering Attributes
 
         $rootScope.$on("LoadUserData", function (e, args) {
@@ -532,8 +532,8 @@
         //End Choose Dishes Methods
 
         $scope.getDeliveryTiming = function () {
-            JsonCall("DeliveryTiming", "GetDeliveryTimes");
-            $scope.deliveryTimings = list;
+            JsonCall("ShopSchedule", "GetSchedule");
+            $scope.schedule = list;
         }
         $scope.validateCoupon = function () {
             JsonCallParam("Coupons", "ValidateCoupon", { code: $scope.coupon.code });
@@ -652,101 +652,101 @@
             var now = new Date();
             var currentTime = now.getHours();
             var timeList = [{ hourNo: 0, time: "00:00" },
-            { hourNo: 0, time: "00:15" },
-            { hourNo: 0, time: "00:30" },
-            { hourNo: 0, time: "00:45" },
-            { hourNo: 1, time: "01:00" },
-            { hourNo: 1, time: "01:15" },
-            { hourNo: 1, time: "01:30" },
-            { hourNo: 1, time: "01:45" },
-            { hourNo: 2, time: "02:00" },
-            { hourNo: 2, time: "02:15" },
-            { hourNo: 2, time: "02:30" },
-            { hourNo: 2, time: "02:45" },
-            { hourNo: 3, time: "03:00" },
-            { hourNo: 3, time: "03:15" },
-            { hourNo: 3, time: "03:30" },
-            { hourNo: 3, time: "03:45" },
-            { hourNo: 4, time: "04:00" },
-            { hourNo: 4, time: "04:15" },
-            { hourNo: 4, time: "04:30" },
-            { hourNo: 4, time: "04:45" },
-            { hourNo: 5, time: "05:00" },
-            { hourNo: 5, time: "05:15" },
-            { hourNo: 5, time: "05:30" },
-            { hourNo: 5, time: "05:45" },
-            { hourNo: 6, time: "06:00" },
-            { hourNo: 6, time: "06:15" },
-            { hourNo: 6, time: "06:30" },
-            { hourNo: 6, time: "06:45" },
-            { hourNo: 7, time: "07:00" },
-            { hourNo: 7, time: "07:15" },
-            { hourNo: 7, time: "07:30" },
-            { hourNo: 7, time: "07:45" },
-            { hourNo: 8, time: "08:00" },
-            { hourNo: 8, time: "08:15" },
-            { hourNo: 8, time: "08:30" },
-            { hourNo: 8, time: "08:45" },
-            { hourNo: 9, time: "09:00" },
-            { hourNo: 9, time: "09:15" },
-            { hourNo: 9, time: "09:30" },
-            { hourNo: 9, time: "09:45" },
-            { hourNo: 10, time: "10:00" },
-            { hourNo: 10, time: "10:15" },
-            { hourNo: 10, time: "10:30" },
-            { hourNo: 10, time: "10:45" },
-            { hourNo: 11, time: "11:00" },
-            { hourNo: 11, time: "11:15" },
-            { hourNo: 11, time: "11:30" },
-            { hourNo: 11, time: "11:45" },
-            { hourNo: 12, time: "12:00" },
-            { hourNo: 12, time: "12:15" },
-            { hourNo: 12, time: "12:30" },
-            { hourNo: 12, time: "12:45" },
-            { hourNo: 13, time: "13:00" },
-            { hourNo: 13, time: "13:15" },
-            { hourNo: 13, time: "13:30" },
-            { hourNo: 13, time: "13:45" },
-            { hourNo: 14, time: "14:00" },
-            { hourNo: 14, time: "14:15" },
-            { hourNo: 14, time: "14:30" },
-            { hourNo: 14, time: "14:45" },
-            { hourNo: 15, time: "15:00" },
-            { hourNo: 15, time: "15:15" },
-            { hourNo: 15, time: "15:30" },
-            { hourNo: 15, time: "15:45" },
-            { hourNo: 16, time: "16:00" },
-            { hourNo: 16, time: "16:15" },
-            { hourNo: 16, time: "16:30" },
-            { hourNo: 16, time: "16:45" },
-            { hourNo: 17, time: "17:00" },
-            { hourNo: 17, time: "17:15" },
-            { hourNo: 17, time: "17:30" },
-            { hourNo: 17, time: "17:45" },
-            { hourNo: 18, time: "18:00" },
-            { hourNo: 18, time: "18:15" },
-            { hourNo: 18, time: "18:30" },
-            { hourNo: 18, time: "18:45" },
-            { hourNo: 19, time: "19:00" },
-            { hourNo: 19, time: "19:15" },
-            { hourNo: 19, time: "19:30" },
-            { hourNo: 19, time: "19:45" },
-            { hourNo: 20, time: "20:00" },
-            { hourNo: 20, time: "20:15" },
-            { hourNo: 20, time: "20:30" },
-            { hourNo: 20, time: "20:45" },
-            { hourNo: 21, time: "21:00" },
-            { hourNo: 21, time: "21:15" },
-            { hourNo: 21, time: "21:30" },
-            { hourNo: 21, time: "21:45" },
-            { hourNo: 22, time: "22:00" },
-            { hourNo: 22, time: "22:15" },
-            { hourNo: 22, time: "22:30" },
-            { hourNo: 22, time: "22:45" },
-            { hourNo: 23, time: "23:00" },
-            { hourNo: 23, time: "23:15" },
-            { hourNo: 23, time: "23:30" },
-            { hourNo: 23, time: "23:45" }];
+                { hourNo: 0, time: "00:15" },
+                { hourNo: 0, time: "00:30" },
+                { hourNo: 0, time: "00:45" },
+                { hourNo: 1, time: "01:00" },
+                { hourNo: 1, time: "01:15" },
+                { hourNo: 1, time: "01:30" },
+                { hourNo: 1, time: "01:45" },
+                { hourNo: 2, time: "02:00" },
+                { hourNo: 2, time: "02:15" },
+                { hourNo: 2, time: "02:30" },
+                { hourNo: 2, time: "02:45" },
+                { hourNo: 3, time: "03:00" },
+                { hourNo: 3, time: "03:15" },
+                { hourNo: 3, time: "03:30" },
+                { hourNo: 3, time: "03:45" },
+                { hourNo: 4, time: "04:00" },
+                { hourNo: 4, time: "04:15" },
+                { hourNo: 4, time: "04:30" },
+                { hourNo: 4, time: "04:45" },
+                { hourNo: 5, time: "05:00" },
+                { hourNo: 5, time: "05:15" },
+                { hourNo: 5, time: "05:30" },
+                { hourNo: 5, time: "05:45" },
+                { hourNo: 6, time: "06:00" },
+                { hourNo: 6, time: "06:15" },
+                { hourNo: 6, time: "06:30" },
+                { hourNo: 6, time: "06:45" },
+                { hourNo: 7, time: "07:00" },
+                { hourNo: 7, time: "07:15" },
+                { hourNo: 7, time: "07:30" },
+                { hourNo: 7, time: "07:45" },
+                { hourNo: 8, time: "08:00" },
+                { hourNo: 8, time: "08:15" },
+                { hourNo: 8, time: "08:30" },
+                { hourNo: 8, time: "08:45" },
+                { hourNo: 9, time: "09:00" },
+                { hourNo: 9, time: "09:15" },
+                { hourNo: 9, time: "09:30" },
+                { hourNo: 9, time: "09:45" },
+                { hourNo: 10, time: "10:00" },
+                { hourNo: 10, time: "10:15" },
+                { hourNo: 10, time: "10:30" },
+                { hourNo: 10, time: "10:45" },
+                { hourNo: 11, time: "11:00" },
+                { hourNo: 11, time: "11:15" },
+                { hourNo: 11, time: "11:30" },
+                { hourNo: 11, time: "11:45" },
+                { hourNo: 12, time: "12:00" },
+                { hourNo: 12, time: "12:15" },
+                { hourNo: 12, time: "12:30" },
+                { hourNo: 12, time: "12:45" },
+                { hourNo: 13, time: "13:00" },
+                { hourNo: 13, time: "13:15" },
+                { hourNo: 13, time: "13:30" },
+                { hourNo: 13, time: "13:45" },
+                { hourNo: 14, time: "14:00" },
+                { hourNo: 14, time: "14:15" },
+                { hourNo: 14, time: "14:30" },
+                { hourNo: 14, time: "14:45" },
+                { hourNo: 15, time: "15:00" },
+                { hourNo: 15, time: "15:15" },
+                { hourNo: 15, time: "15:30" },
+                { hourNo: 15, time: "15:45" },
+                { hourNo: 16, time: "16:00" },
+                { hourNo: 16, time: "16:15" },
+                { hourNo: 16, time: "16:30" },
+                { hourNo: 16, time: "16:45" },
+                { hourNo: 17, time: "17:00" },
+                { hourNo: 17, time: "17:15" },
+                { hourNo: 17, time: "17:30" },
+                { hourNo: 17, time: "17:45" },
+                { hourNo: 18, time: "18:00" },
+                { hourNo: 18, time: "18:15" },
+                { hourNo: 18, time: "18:30" },
+                { hourNo: 18, time: "18:45" },
+                { hourNo: 19, time: "19:00" },
+                { hourNo: 19, time: "19:15" },
+                { hourNo: 19, time: "19:30" },
+                { hourNo: 19, time: "19:45" },
+                { hourNo: 20, time: "20:00" },
+                { hourNo: 20, time: "20:15" },
+                { hourNo: 20, time: "20:30" },
+                { hourNo: 20, time: "20:45" },
+                { hourNo: 21, time: "21:00" },
+                { hourNo: 21, time: "21:15" },
+                { hourNo: 21, time: "21:30" },
+                { hourNo: 21, time: "21:45" },
+                { hourNo: 22, time: "22:00" },
+                { hourNo: 22, time: "22:15" },
+                { hourNo: 22, time: "22:30" },
+                { hourNo: 22, time: "22:45" },
+                { hourNo: 23, time: "23:00" },
+                { hourNo: 23, time: "23:15" },
+                { hourNo: 23, time: "23:30" },
+                { hourNo: 23, time: "23:45" }];
             JsonCall("ShopSchedule", "GetShopStatus");
             var maxTime = list.timeTo.hours;
             maxTime === 0 ? maxTime = 24 : maxTime = list.timeTo.hours;
@@ -844,7 +844,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row pt-4 pb-0" style="border-bottom: 1px solid #eee;">
+            <div class="row pt-4 pb-0" style="border-bottom: 1px solid #eee;" ng-init="requiredOrderValue = @Model.MinOrderCharges">
                 <div class="col-6 text-left mt-2 mb-0" style="margin-left: -20px;">
                     <p style="font-size: 13px;">Sub-total</p>
                 </div>
@@ -869,13 +869,24 @@
                 <div class="col-6" style="margin-top: -20px;">
                     <p class="font-weight-bold text-right" style="margin-right: -30px;  font-size: 13px; padding-top: 4px">{{ordertotalPrice.totalPrice | number : 2}} €</p>
                 </div>
+                <div class="col-8" style="margin-left: -20px;"
+                     ng-if="ordertotalPrice.totalPrice < requiredOrderValue">
+                    <p class="font-weight-bold text-left text-success" style="font-size: 13px;">Amount needed to reach the minimum order value</p>
+                </div>
+                <div class="col-4">
+                    <p class="font-weight-bold text-right text-success"
+                       style="margin-right: -30px;  font-size: 13px;"
+                       ng-if="ordertotalPrice.totalPrice < requiredOrderValue">
+                        {{requiredOrderValue - ordertotalPrice.totalPrice | number : 2}} €
+                    </p>
+                </div>
             </div>
             <div class="row p-0">
                 <div class="col-12 p-0 text-center">
                     <p ng-if="ordertotalPrice.totalPrice < @Model.MinOrderCharges" class="text-muted my-3" style=" font-size: 13px; color: #7d7d7d;">Unfortunately We only delivers from a minimum order value of € @Model.MinOrderCharges (excl. Delivery costs)</p>
                     <p ng-if="ordertotalPrice.totalPrice > @Model.MinOrderCharges" class="text-muted my-3" style=" font-size: 13px; color: #7d7d7d;">You have reached the minimum order amount of @Model.MinOrderCharges € to checkout</p>
-                    <a id="orderBtn" ng-disabled="cart.length === 0" ng-click="proceedOrder()" ng-if="ordertotalPrice.totalPrice > @Model.MinOrderCharges" role="button" class="btn btn-block py-3 mx-auto text-center"
-                       style="color: #fff; width:95%; background-color: red">Order</a>
+                    <a id="orderBtn" ng-disabled="cart.length === 0" ng-click="proceedOrder()" ng-if="ordertotalPrice.totalPrice > @Model.MinOrderCharges" role="button" class="btn btn-block py-3 mx-auto text-center bg-primary"
+                       style="color: #fff; width:95%">Order</a>
                 </div>
             </div>
         </div>
@@ -962,6 +973,12 @@
                         <div class="col-6 text-right mt-2">
                             <p style="margin-right: -30px;font-size: 13px;" ng-init="postalCode = @Model.PostalCode">{{ordertotalPrice.subtotal | number : 2}} €</p>
                         </div>
+                        <div class="col-6 text-left mt-2 mb-0" style="margin-left: -20px;" ng-if="showDiscount">
+                            <p style="font-size: 13px;">Discount</p>
+                        </div>
+                        <div class="col-6 text-right mt-2" ng-if="showDiscount">
+                            <p style="margin-right: -30px;font-size: 13px;">- {{discount | number : 2}} €</p>
+                        </div>
                         <div class="col-6 text-left mb-2" style="margin-left: -20px;">
                             <p style="font-size: 13px;">Delivery costs</p>
                         </div>
@@ -974,13 +991,24 @@
                         <div class="col-6" style="margin-top: -20px;">
                             <p class="font-weight-bold text-right" style="margin-right: -30px;  font-size: 13px;">{{ordertotalPrice.totalPrice | number : 2}} €</p>
                         </div>
+                        <div class="col-6" style="margin-left: -20px;"
+                             ng-if="ordertotalPrice.totalPrice < requiredOrderValue">
+                            <p class="font-weight-bold text-left text-success" style="font-size: 13px;">Amount needed to reach the minimum order value</p>
+                        </div>
+                        <div class="col-6">
+                            <p class="font-weight-bold text-right text-success"
+                               style="margin-right: -30px;  font-size: 13px;"
+                               ng-if="ordertotalPrice.totalPrice < requiredOrderValue">
+                                {{requiredOrderValue - ordertotalPrice.totalPrice | number : 2}} €
+                            </p>
+                        </div>
                     </div>
                     <div class="row p-0">
                         <div class="col-12 p-0 text-center">
                             <p ng-if="ordertotalPrice.totalPrice < @Model.MinOrderCharges" class="text-muted my-3" style=" font-size: 13px; color: #7d7d7d;">Unfortunately We only delivers from a minimum order value of € @Model.MinOrderCharges (excl. Delivery costs)</p>
                             <p ng-if="ordertotalPrice.totalPrice > @Model.MinOrderCharges" class="text-muted my-3" style=" font-size: 13px; color: #7d7d7d;">You have reached the minimum order amount of @Model.MinOrderCharges € to checkout</p>
-                            <a id="orderBtn" ng-disabled="cart.length === 0" ng-click="proceedOrder()" ng-if="ordertotalPrice.totalPrice > @Model.MinOrderCharges" role="button" class="btn btn-block py-3 mx-auto text-center"
-                               style="color: #fff; width:95%;  background-color: red" data-dismiss="modal" onclick="$('#cart-modal').modal('hide');">Order</a>
+                            <a id="orderBtn" ng-disabled="cart.length === 0" ng-click="proceedOrder()" ng-if="ordertotalPrice.totalPrice > @Model.MinOrderCharges" role="button" class="btn btn-block py-3 mx-auto text-center bg-primary"
+                               style="color: #fff; width:95%" data-dismiss="modal" onclick="$('#cart-modal').modal('hide');">Order</a>
                         </div>
                     </div>
                 </div>
@@ -1027,18 +1055,20 @@
                                         <h5>Delivery times</h5>
                                     </div>
                                 </div>
-                                <div class="row my-3 p-3" style="background-color: #f8f5f2;">
-                                    <div class="col-6">
-                                        <p class="mb-2" ng-repeat="timing in deliveryTimings"
-                                           style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            {{timing.day}}
-                                        </p>
-                                    </div>
-                                    <div class="col-6 text-right" ng-repeat="timing in deliveryTimings">
-                                        <p class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
-                                            {{timing.timings}}
-                                        </p>
+                                <div class="my-3 p-3" style="background-color: #f8f5f2;">
+                                    <div class="row" ng-repeat="timing in schedule.deliveryTimings">
+                                        <div class="col-6">
+                                            <p class="mb-2"
+                                               style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
+                                                {{timing.day}}
+                                            </p>
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            <p class="mb-2"
+                                               style="font-size: 14px; font-weight: 400; color:rgb(102, 102, 102);">
+                                                {{timing.timeFrom}}:00 - {{timing.timeTo}}:00
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row mt-4 align-items-center">
@@ -1237,7 +1267,7 @@
                                                                    value="{{extra.extraName}}"
                                                                    ng-checked="toppings.indexOf(extra.extraName) > -1"
                                                                    ng-click="toggleToppings(extra.extraName, extratype.typeName, extra.extraPrice, extra.sizeToppingPrices)">
-                                                            <label class="custom-control-label pointer pt-1" for="{{extra.dishExtraId}}_{{extraIndex}}" style="font-size: 12px;padding-top: 0px;margin-bottom: 0px;padding-bottom: 4px;">
+                                                            <label class="custom-control-label pointer" for="{{extra.dishExtraId}}_{{extraIndex}}" style="font-size: 12px;">
                                                                 {{extra.extraName}}
                                                                 {{dish.dishSizes.length > 0 ? filterToppingSizePrice(dishSizeIdSelectedDish, extra.sizeToppingPrices) : showToppingPrice(extra.extraPrice) }}
                                                             </label>

@@ -36,9 +36,7 @@ namespace RiaPizza.Services.ScheduleService
             var schedule = _context.ShopSchedule.FirstOrDefault();
             if(schedule != null)
             {
-                schedule.TimeFrom = timings.TimeFrom;
-                schedule.TimeTo = timings.TimeTo;
-                schedule.ShopLogo = timings.ShopLogo;
+                schedule.DeliveryTimings = timings.DeliveryTimings;
 
                 _context.ShopSchedule.Update(schedule);
                 await _context.SaveChangesAsync();
@@ -50,11 +48,20 @@ namespace RiaPizza.Services.ScheduleService
                 await _context.SaveChangesAsync();
             }
 
-            var openShopExpression = "0 "+ schedule.TimeFrom.Hours + " * * *";
-            var closeShopExpression = "0 " + schedule.TimeTo.Hours + " * * *";
+            HangfireService(schedule.DeliveryTimings);
 
-            RecurringJob.AddOrUpdate("OpenShop",() =>  OpenShop(), openShopExpression, TimeZoneInfo.Local);
-            RecurringJob.AddOrUpdate("CloseShop", () => CloseShop(), closeShopExpression, TimeZoneInfo.Local);
+        }
+
+        private void HangfireService(IEnumerable<DeliveryTiming> timings)
+        {
+            foreach (var timing in timings)
+            {
+                var openShopExpression = "0 " + timing.TimeFrom + " * * " + (int)timing.DayOfWeek;
+                var closeShopExpression = "0 " + timing.TimeTo + " * * " + (int)timing.DayOfWeek;
+
+                RecurringJob.AddOrUpdate(timing.Day + "-Open", () => OpenShop(), openShopExpression, TimeZoneInfo.Local);
+                RecurringJob.AddOrUpdate(timing.Day + "-Close", () => CloseShop(), closeShopExpression, TimeZoneInfo.Local);
+            }
         }
 
         public async Task ToggleShop(string status)
@@ -70,10 +77,17 @@ namespace RiaPizza.Services.ScheduleService
             await _context.SaveChangesAsync();
         }
 
-        public async Task<ShopSchedule> GetSchedule()
+        public async Task<ShopSchedule> GetShopStatus()
         {
-            var schedule = await _context.ShopSchedule.FirstOrDefaultAsync();
-            return schedule;
+            try
+            {
+                var schedule = await _context.ShopSchedule.Include(s=>s.DeliveryTimings).FirstOrDefaultAsync();
+                schedule.DeliveryTimings = schedule.DeliveryTimings.Where(s => s.DayOfWeek == DateTime.Now.DayOfWeek).ToList();
+                schedule.DeliveryTimings.ToArray()[0].ShopSchedule = null;
+
+                return schedule;
+            }
+            catch(Exception ex) { return null; }
         }
 
         public async Task OpenShop()
@@ -89,6 +103,13 @@ namespace RiaPizza.Services.ScheduleService
             schedule.IsOpen = false;
             _context.ShopSchedule.Update(schedule);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<ShopSchedule> GetSchedule()
+        {
+            var schedule = await _context.ShopSchedule.Include(s => s.DeliveryTimings).FirstOrDefaultAsync();
+            schedule.DeliveryTimings.ToList().ForEach(s => s.ShopSchedule = null);
+            return schedule;
         }
     }
 }

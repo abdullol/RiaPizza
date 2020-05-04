@@ -12,6 +12,10 @@
     <style>
         .support-box {
             min-height: 90px !important;
+            background:#353c48;
+        }
+        .support-box:hover {
+            background:#DE0019;
         }
     </style>
 }
@@ -44,9 +48,9 @@
     </div>
     <div class="row">
         <div class="col-lg-3 col-sm-6">
-            <form action="~/Orders/SearchTodayOrders" onclick="$(this).submit()" target="_blank" style="cursor:pointer">
+            <form action="~/Orders/SearchTodayOrders" onclick="$(this).submit()" target="_blank" style="cursor: pointer">
                 <input type="hidden" name="filter" value="TodayOrders" />
-                <div class="support-box text-center bg-green">
+                <div class="support-box text-center">
                     <div class="text font-17 m-b-5">Today Orders</div>
                     <h3 class="m-b-10">
                         @ViewBag.TodayOrdersCount
@@ -57,7 +61,7 @@
         <div class="col-lg-3 col-sm-6">
             <form action="~/Orders/SearchTodayOrders" onclick="$(this).submit()" target="_blank" style="cursor:pointer">
                 <input type="hidden" name="filter" value="Pending" />
-                <div class="support-box text-center bg-orange">
+                <div class="support-box text-center">
                     <div class="text font-17 m-b-5">Pending Orders</div>
                     <h3 class="m-b-10">
                         @ViewBag.PendingOrdersCount
@@ -68,7 +72,7 @@
         <div class="col-lg-3 col-sm-6">
             <form action="~/Orders/SearchTodayOrders" onclick="$(this).submit()" target="_blank" style="cursor:pointer">
                 <input type="hidden" name="filter" value="Delivered" />
-                <div class="support-box text-center bg-cyan">
+                <div class="support-box text-center">
                     <div class="text font-17 m-b-5">Delivered Orders</div>
                     <h3 class="m-b-10">
                         @ViewBag.TodayDeliveredCount
@@ -79,24 +83,11 @@
         <div class="col-lg-3 col-sm-6">
             <form action="~/Orders/SearchTodayOrders" onclick="$(this).submit()" target="_blank" style="cursor:pointer">
                 <input type="hidden" name="filter" value="TodaySale" />
-                <div class="support-box text-center bg-teal">
+                <div class="support-box text-center">
                     <div class="text font-17 m-b-5">Today Sales</div>
                     <h3 class="m-b-10">
                         @ViewBag.TodaySales €
                     </h3>
-                </div>
-            </form>
-        </div>
-        <div class="col-lg-3 col-sm-6">
-            <form style="cursor: pointer">
-                <input type="hidden" name="imageurl" value="UploadLogo" />
-                <div class="support-box text-center bg-teal">
-                    <div class="text font-17 m-b-5">Upload Logo</div>
-                    <input style="display:none" type="file" id="fileInput" oninput="showImage()">
-                    <div id="ImageTab" class="center">
-                    </div>
-                    <img style="width:40px;margin-left: 20px; margin-right:20px" id="selectImageBtn" class="icon-colored pointer" onclick="$('#fileInput').click()" src="~/assets/images/details_open.png" title="add_image.svg">
-                    <button type="button" class="btn btn-info waves-effect" ng-click="ShopLogoUpdate()">Save</button>
                 </div>
             </form>
         </div>

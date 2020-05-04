@@ -1,0 +1,159 @@
+﻿@model RiaPizza.Models.CustomizeTheme
+@{
+    ViewData["Title"] = "Theme Customization";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+@section css{
+    <style>
+        .centerBtn {
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            background-color: #555;
+            color: white;
+            font-size: 30px;
+            padding: 12px 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 50px;
+            opacity: 0.6;
+        }
+
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 50%;
+        }
+
+        #selectImageBtn{
+            height:100px;
+            width:120px;
+        }
+        .pointer{
+            cursor:pointer;
+        }
+
+        #fileInput{
+            display:none
+        }
+        .img-wrapper img{
+            width:400px;
+            height:400px;
+        }
+    </style>
+}
+<div class="container-fluid">
+    <div class="block-header">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="breadcrumb breadcrumb-style ">
+                    <li class="breadcrumb-item">
+                        <h4 class="page-title">Theme Customization</h4>
+                    </li>
+                    <li class="breadcrumb-item bcrumb-1">
+                        <a href="~/Home/Index">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item bcrumb-2">
+                        <a href="#" onClick="return false;">Theme Customization</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Basic Examples -->
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header">
+                    <h2>
+                        <strong>Theme items</strong>
+                    </h2>
+                </div>
+                <div class="body">
+
+                    <div class="modal fade" id="editLogoModal" role="dialog"
+                         aria-labelledby="formModal" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="formModal"> Edit Logo </h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form class="pt-5" action="~/Customize/LogoUpdate" method="post" enctype="multipart/form-data">
+
+                                    <div class="form-group">
+                                        <input type="hidden" name="origin" class="origin" />
+                                        <input type="file" name="file" id="fileInput" oninput="showImage()" required>
+                                        <div id="ImageTab" class="center"> </div>
+                                        <img id="selectImageBtn" class="icon-colored pointer center"
+                                             onclick="$('#fileInput').click()" src='~/assets/images/pick.png'>
+                                    </div>
+                                    <input type="submit" name="submit" class="btn btn-success float-right" value="Submit" />
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal modal fade">
+                        <div class="modal-body">
+                            
+                        </div>
+                    </div>
+                    <div>
+
+                        <h6>Shop Logo</h6>
+                        <div class="img-wrapper text-center">
+                            @if (Model.Logo != null)
+                            {
+                                <img src="@Model.Logo" class="pointer" /> <i data-toggle="modal" data-target="#editLogoModal" class="fas fa-pencil-alt centerBtn"></i>
+                            }
+                            else
+                            {
+                                <img src='~/assets/images/pick.png' class="pointer" /> <i data-toggle="modal" data-target="#editLogoModal" class="fas fa-pencil-alt centerBtn"></i>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script>
+        $(function () {
+            $(".origin").val(window.location.origin);
+        })
+        function showImage() {
+            var file_data = $("#fileInput").prop("files")[0];
+            $('#ImageTab').append('<img style="cursor:pointer" src="' + window.URL.createObjectURL(file_data) + '" alt="' + file_data.name + '" /> <i onclick="ClearFile()" class="fas fa-window-close centerBtn"></i>');
+            $('#selectImageBtn').hide();
+        }
+
+        function ClearFile() {
+            $('#fileInput').val('');
+            $('#ImageTab').empty();
+            $('#selectImageBtn').show();
+        }
+
+        function showImageEdit() {
+            var file_data = $("#fileInputEdit").prop("files")[0];
+            $('#ImageTabEdit').append('<img style="cursor:pointer" src="' + window.URL.createObjectURL(file_data) + '" alt="' + file_data.name + '" /> <i onclick="ClearFileEdit()" class="fas fa-window-close centerBtn"></i>');
+            $('#selectImageBtnEdit').hide();
+        }
+
+        function ClearFileEdit() {
+            $('#fileInputEdit').val('');
+            $('#ImageTabEdit').empty();
+            $('#selectImageBtnEdit').show();
+        }
+
+    </script>
+
+}

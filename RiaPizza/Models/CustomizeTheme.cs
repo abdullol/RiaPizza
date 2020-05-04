@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace RiaPizza.Models
 {
-    public class ShopSchedule
+    public class CustomizeTheme
     {
         [Key]
-        public int ShopScheduleId { get; set; }
-        public bool IsOpen { get; set; }
-
-        public IEnumerable<DeliveryTiming> DeliveryTimings { get; set; }
+        public int Id { get; set; }
+        public string Logo { get; set; }
     }
 }

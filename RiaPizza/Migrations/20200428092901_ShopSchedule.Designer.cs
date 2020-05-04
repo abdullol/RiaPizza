@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RiaPizza.Data;
 
 namespace RiaPizza.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200428092901_ShopSchedule")]
+    partial class ShopSchedule
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -354,11 +356,11 @@ namespace RiaPizza.Migrations
                     b.Property<int>("ShopScheduleId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TimeFrom")
-                        .HasColumnType("int");
+                    b.Property<TimeSpan>("TimeFrom")
+                        .HasColumnType("time");
 
-                    b.Property<int>("TimeTo")
-                        .HasColumnType("int");
+                    b.Property<TimeSpan>("TimeTo")
+                        .HasColumnType("time");
 
                     b.HasKey("DeliveryTimingId");
 

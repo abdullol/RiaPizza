@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RiaPizza.Data;
 
 namespace RiaPizza.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200427111942_customizetheme")]
+    partial class customizetheme
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -340,7 +342,7 @@ namespace RiaPizza.Migrations
 
             modelBuilder.Entity("RiaPizza.Models.DeliveryTiming", b =>
                 {
-                    b.Property<int>("DeliveryTimingId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -348,21 +350,10 @@ namespace RiaPizza.Migrations
                     b.Property<string>("Day")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DayOfWeek")
-                        .HasColumnType("int");
+                    b.Property<string>("Timings")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ShopScheduleId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TimeFrom")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TimeTo")
-                        .HasColumnType("int");
-
-                    b.HasKey("DeliveryTimingId");
-
-                    b.HasIndex("ShopScheduleId");
+                    b.HasKey("Id");
 
                     b.ToTable("DeliveryTimings");
                 });
@@ -722,7 +713,7 @@ namespace RiaPizza.Migrations
 
             modelBuilder.Entity("RiaPizza.Models.ShopSchedule", b =>
                 {
-                    b.Property<int>("ShopScheduleId")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -730,7 +721,13 @@ namespace RiaPizza.Migrations
                     b.Property<bool>("IsOpen")
                         .HasColumnType("bit");
 
-                    b.HasKey("ShopScheduleId");
+                    b.Property<TimeSpan>("TimeFrom")
+                        .HasColumnType("time");
+
+                    b.Property<TimeSpan>("TimeTo")
+                        .HasColumnType("time");
+
+                    b.HasKey("ID");
 
                     b.ToTable("ShopSchedule");
                 });
@@ -817,15 +814,6 @@ namespace RiaPizza.Migrations
                     b.HasOne("RiaPizza.Data.ApplicationUser.AppUser", "User")
                         .WithMany("UserRoles")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("RiaPizza.Models.DeliveryTiming", b =>
-                {
-                    b.HasOne("RiaPizza.Models.ShopSchedule", "ShopSchedule")
-                        .WithMany("DeliveryTimings")
-                        .HasForeignKey("ShopScheduleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
