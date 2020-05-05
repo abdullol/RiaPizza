@@ -34,7 +34,7 @@ namespace RiaPizza.Services.ScheduleService
         public async Task AddorUpdate(ShopSchedule timings)
         {
             var schedule = _context.ShopSchedule.FirstOrDefault();
-            if(schedule != null)
+            if (schedule != null)
             {
                 schedule.DeliveryTimings = timings.DeliveryTimings;
 
@@ -81,13 +81,13 @@ namespace RiaPizza.Services.ScheduleService
         {
             try
             {
-                var schedule = await _context.ShopSchedule.Include(s=>s.DeliveryTimings).FirstOrDefaultAsync();
+                var schedule = await _context.ShopSchedule.Include(s => s.DeliveryTimings).FirstOrDefaultAsync();
                 schedule.DeliveryTimings = schedule.DeliveryTimings.Where(s => s.DayOfWeek == DateTime.Now.DayOfWeek).ToList();
                 schedule.DeliveryTimings.ToArray()[0].ShopSchedule = null;
 
                 return schedule;
             }
-            catch(Exception ex) { return null; }
+            catch (Exception ex) { return null; }
         }
 
         public async Task OpenShop()

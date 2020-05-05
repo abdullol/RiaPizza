@@ -10,8 +10,8 @@ using RiaPizza.Data;
 namespace RiaPizza.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200429170121_delivery-timing-table-readded")]
-    partial class deliverytimingtablereadded
+    [Migration("20200502150723_rcovr migration")]
+    partial class rcovrmigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
