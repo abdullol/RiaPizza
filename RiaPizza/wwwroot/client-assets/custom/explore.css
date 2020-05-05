@@ -91,7 +91,7 @@
     display: block !important;
     padding: 2px 15px 10px 0 !important;
     font-size: 15px;
-    color: #1574F5 !important;
+    color: red !important;
 }
 
 .groups {
@@ -120,7 +120,7 @@
     border-radius: 50%;
     line-height: 1em;
     color: white;
-    background: rgba(255,0,0,.85);
+    background: blue;
     text-align: center;
     min-width: 1em;
 }

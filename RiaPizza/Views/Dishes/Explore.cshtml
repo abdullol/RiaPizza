@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="~/client-assets/custom/explore.css" />
     <style>
         .topping-info {
-            color: #1574F5;
+            color: red;
             float: right
         }
 
@@ -600,9 +600,9 @@
         function cartButtonEffect() {
             var time = 700;
             setTimeout(function () {
-                $('#cart-btn-mob').removeClass("bg-warning").addClass("bg-primary");
+                $('#cart-btn-mob').removeClass("bg-danger").addClass("bg-danger");
             }, time);
-            $('#cart-btn-mob').removeClass("bg-primary").addClass("bg-warning");
+            $('#cart-btn-mob').removeClass("bg-danger").addClass("bg-danger");
 
         }
 
@@ -648,108 +648,109 @@
                 $scope.ordertotalPrice.tip = Number(value) - 1;
             }
         }
-        $scope.scheduleTimeAlgo = function() {
+        $scope.scheduleTimeAlgo = function () {
             var now = new Date();
             var currentTime = now.getHours();
-            var timeList = [{ hourNo: 0, time: "12:00 AM" },
-                { hourNo: 0, time: "12:15 AM" },
-                { hourNo: 0, time: "12:30 AM" },
-                { hourNo: 0, time: "12:45 AM" },
-                { hourNo: 1, time: "01:00 AM" },
-                { hourNo: 1, time: "01:15 AM"},
-                { hourNo: 1, time: "01:30 AM"},
-                { hourNo: 1, time: "01:45 AM"},
-                { hourNo: 2, time: "02:00 AM"},
-                { hourNo: 2, time: "02:15 AM"},
-                { hourNo: 2, time: "02:30 AM"},
-                { hourNo: 2, time: "02:45 AM"},
-                { hourNo: 3, time: "03:00 AM"},
-                { hourNo: 3, time: "03:15 AM"},
-                { hourNo: 3, time: "03:30 AM"},
-                { hourNo: 3, time: "03:45 AM"},
-                { hourNo: 4, time: "04:00 AM"},
-                { hourNo: 4, time: "04:15 AM"},
-                { hourNo: 4, time: "04:30 AM"},
-                { hourNo: 4, time: "04:45 AM"},
-                { hourNo: 5, time: "05:00 AM"},
-                { hourNo: 5, time: "05:15 AM"},
-                { hourNo: 5, time: "05:30 AM"},
-                { hourNo: 5, time: "05:45 AM"},
-                { hourNo: 6, time: "06:00 AM"},
-                { hourNo: 6, time: "06:15 AM"},
-                { hourNo: 6, time: "06:30 AM"},
-                { hourNo: 6, time: "06:45 AM"},
-                { hourNo: 7, time: "07:00 AM"},
-                { hourNo: 7, time: "07:15 AM"},
-                { hourNo: 7, time: "07:30 AM"},
-                { hourNo: 7, time: "07:45 AM"},
-                { hourNo: 8, time: "08:00 AM"},
-                { hourNo: 8, time: "08:15 AM"},
-                { hourNo: 8, time: "08:30 AM"},
-                { hourNo: 8, time: "08:45 AM"},
-                { hourNo: 9, time: "09:00 AM"},
-                { hourNo: 9, time: "09:15 AM"},
-                { hourNo: 9, time: "09:30 AM"},
-                { hourNo: 9, time: "09:45 AM"},
-                { hourNo: 10, time: "10:00 AM"},
-                { hourNo: 10, time: "10:15 AM"},
-                { hourNo: 10, time: "10:30 AM"},
-                { hourNo: 10, time: "10:45 AM"},
-                { hourNo: 11, time: "11:00 AM"},
-                { hourNo: 11, time: "11:15 AM"},
-                { hourNo: 11, time: "11:30 AM"},
-                { hourNo: 11, time: "11:45 AM"},
-                { hourNo: 12, time: "12:00 PM"},
-                { hourNo: 12, time: "12:15 PM"},
-                { hourNo: 12, time: "12:30 PM"},
-                { hourNo: 12, time: "12:45 PM"},
-                { hourNo: 13, time: "01:00 PM"},
-                { hourNo: 13, time: "01:15 PM"},
-                { hourNo: 13, time: "01:30 PM"},
-                { hourNo: 13, time: "01:45 PM"},
-                { hourNo: 14, time: "02:00 PM"},
-                { hourNo: 14, time: "02:15 PM"},
-                { hourNo: 14, time: "02:30 PM"},
-                { hourNo: 14, time: "02:45 PM"},
-                { hourNo: 15, time: "03:00 PM"},
-                { hourNo: 15, time: "03:15 PM"},
-                { hourNo: 15, time: "03:30 PM"},
-                { hourNo: 15, time: "03:45 PM"},
-                { hourNo: 16, time: "04:00 PM"},
-                { hourNo: 16, time: "04:15 PM"},
-                { hourNo: 16, time: "04:30 PM"},
-                { hourNo: 16, time: "04:45 PM"},
-                { hourNo: 17, time: "05:00 PM"},
-                { hourNo: 17, time: "05:15 PM"},
-                { hourNo: 17, time: "05:30 PM"},
-                { hourNo: 17, time: "05:45 PM"},
-                { hourNo: 18, time: "06:00 PM"},
-                { hourNo: 18, time: "06:15 PM"},
-                { hourNo: 18, time: "06:30 PM"},
-                { hourNo: 18, time: "06:45 PM"},
-                { hourNo: 19, time: "07:00 PM"},
-                { hourNo: 19, time: "07:15 PM"},
-                { hourNo: 19, time: "07:30 PM"},
-                { hourNo: 19, time: "07:45 PM"},
-                { hourNo: 20, time: "08:00 PM"},
-                { hourNo: 20, time: "08:15 PM"},
-                { hourNo: 20, time: "08:30 PM"},
-                { hourNo: 20, time: "08:45 PM"},
-                { hourNo: 21, time: "09:00 PM"},
-                { hourNo: 21, time: "09:15 PM"},
-                { hourNo: 21, time: "09:30 PM"},
-                { hourNo: 21, time: "09:45 PM"},
-                { hourNo: 22, time: "10:00 PM"},
-                { hourNo: 22, time: "10:15 PM"},
-                { hourNo: 22, time: "10:30 PM"},
-                { hourNo: 22, time: "10:45 PM"},
-                { hourNo: 23, time: "11:00 PM"},
-                { hourNo: 23, time: "11:15 PM"},
-                { hourNo: 23, time: "11:30 PM"},
-                { hourNo: 23, time: "11:45 PM"}];
-            var maxTime = $scope.shopschedule.deliveryTimings[0].timeTo;
-            maxTime === 0 ? maxTime = 24 : maxTime = $scope.shopschedule.deliveryTimings[0].timeTo;
-            $scope.scheduleHours = timeList.filter(s => s.hourNo > currentTime && s.hourNo < maxTime);
+            var timeList = [{ hourNo: 0, time: "00:00" },
+                { hourNo: 0, time: "00:15" },
+                { hourNo: 0, time: "00:30" },
+                { hourNo: 0, time: "00:45" },
+                { hourNo: 1, time: "01:00" },
+                { hourNo: 1, time: "01:15" },
+                { hourNo: 1, time: "01:30" },
+                { hourNo: 1, time: "01:45" },
+                { hourNo: 2, time: "02:00" },
+                { hourNo: 2, time: "02:15" },
+                { hourNo: 2, time: "02:30" },
+                { hourNo: 2, time: "02:45" },
+                { hourNo: 3, time: "03:00" },
+                { hourNo: 3, time: "03:15" },
+                { hourNo: 3, time: "03:30" },
+                { hourNo: 3, time: "03:45" },
+                { hourNo: 4, time: "04:00" },
+                { hourNo: 4, time: "04:15" },
+                { hourNo: 4, time: "04:30" },
+                { hourNo: 4, time: "04:45" },
+                { hourNo: 5, time: "05:00" },
+                { hourNo: 5, time: "05:15" },
+                { hourNo: 5, time: "05:30" },
+                { hourNo: 5, time: "05:45" },
+                { hourNo: 6, time: "06:00" },
+                { hourNo: 6, time: "06:15" },
+                { hourNo: 6, time: "06:30" },
+                { hourNo: 6, time: "06:45" },
+                { hourNo: 7, time: "07:00" },
+                { hourNo: 7, time: "07:15" },
+                { hourNo: 7, time: "07:30" },
+                { hourNo: 7, time: "07:45" },
+                { hourNo: 8, time: "08:00" },
+                { hourNo: 8, time: "08:15" },
+                { hourNo: 8, time: "08:30" },
+                { hourNo: 8, time: "08:45" },
+                { hourNo: 9, time: "09:00" },
+                { hourNo: 9, time: "09:15" },
+                { hourNo: 9, time: "09:30" },
+                { hourNo: 9, time: "09:45" },
+                { hourNo: 10, time: "10:00" },
+                { hourNo: 10, time: "10:15" },
+                { hourNo: 10, time: "10:30" },
+                { hourNo: 10, time: "10:45" },
+                { hourNo: 11, time: "11:00" },
+                { hourNo: 11, time: "11:15" },
+                { hourNo: 11, time: "11:30" },
+                { hourNo: 11, time: "11:45" },
+                { hourNo: 12, time: "12:00" },
+                { hourNo: 12, time: "12:15" },
+                { hourNo: 12, time: "12:30" },
+                { hourNo: 12, time: "12:45" },
+                { hourNo: 13, time: "13:00" },
+                { hourNo: 13, time: "13:15" },
+                { hourNo: 13, time: "13:30" },
+                { hourNo: 13, time: "13:45" },
+                { hourNo: 14, time: "14:00" },
+                { hourNo: 14, time: "14:15" },
+                { hourNo: 14, time: "14:30" },
+                { hourNo: 14, time: "14:45" },
+                { hourNo: 15, time: "15:00" },
+                { hourNo: 15, time: "15:15" },
+                { hourNo: 15, time: "15:30" },
+                { hourNo: 15, time: "15:45" },
+                { hourNo: 16, time: "16:00" },
+                { hourNo: 16, time: "16:15" },
+                { hourNo: 16, time: "16:30" },
+                { hourNo: 16, time: "16:45" },
+                { hourNo: 17, time: "17:00" },
+                { hourNo: 17, time: "17:15" },
+                { hourNo: 17, time: "17:30" },
+                { hourNo: 17, time: "17:45" },
+                { hourNo: 18, time: "18:00" },
+                { hourNo: 18, time: "18:15" },
+                { hourNo: 18, time: "18:30" },
+                { hourNo: 18, time: "18:45" },
+                { hourNo: 19, time: "19:00" },
+                { hourNo: 19, time: "19:15" },
+                { hourNo: 19, time: "19:30" },
+                { hourNo: 19, time: "19:45" },
+                { hourNo: 20, time: "20:00" },
+                { hourNo: 20, time: "20:15" },
+                { hourNo: 20, time: "20:30" },
+                { hourNo: 20, time: "20:45" },
+                { hourNo: 21, time: "21:00" },
+                { hourNo: 21, time: "21:15" },
+                { hourNo: 21, time: "21:30" },
+                { hourNo: 21, time: "21:45" },
+                { hourNo: 22, time: "22:00" },
+                { hourNo: 22, time: "22:15" },
+                { hourNo: 22, time: "22:30" },
+                { hourNo: 22, time: "22:45" },
+                { hourNo: 23, time: "23:00" },
+                { hourNo: 23, time: "23:15" },
+                { hourNo: 23, time: "23:30" },
+                { hourNo: 23, time: "23:45" }];
+            JsonCall("ShopSchedule", "GetShopStatus");
+            var maxTime = list.timeTo.hours;
+            maxTime === 0 ? maxTime = 24 : maxTime = list.timeTo.hours;
+            $scope.scheduleHours = timeList.filter(s => s.hourNo > currentTime && s.hourNo <= maxTime);
         }
 
         function showNotification(text) {
@@ -813,13 +814,13 @@
                             <span style="font-size: 12px; color: #000; margin-right: 30px;">{{item.dishName}}</span>
                         </div>
                         <div class="col-3" style="padding:0">
-                            <button class="cartIncreasBtn" ng-click="decreaseQty($index)">-</button>
-                            <button class="cartIncreasBtn" ng-click="increaseQty($index)">+</button>
+                            <button class="cartIncreasBtn" style="width: 28px; height: 26px"  ng-click="decreaseQty($index)" >-</button>
+                            <button class="cartIncreasBtn" style="width: 28px; height: 26px"  ng-click="increaseQty($index)">+</button>
                         </div>
                         <div class="col-4" style="padding:0">
-                            <a role="button" ng-click="showRemarkBar($index)" class="btn" style="padding: 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-pencil-alt"></i></a>
+                            <a role="button" ng-click="showRemarkBar($index)" class="btn" style="padding: 0 10px; font-size: 13px; color: red"><i class="fas fa-pencil-alt"></i></a>
                             <span style="font-size: 12px; color: #000;">{{item.totalPrice | number : 2}}€</span>
-                            <a role="button" ng-click="removeItem($index)" class="btn" style="padding: 0 0 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-trash-alt"></i></a>
+                            <a role="button" ng-click="removeItem($index)" class="btn" style="padding: 0 0 0 10px; font-size: 13px; color: red"><i class="fas fa-trash-alt"></i></a>
                         </div>
                     </div>
                     <p class="cartToppings">
@@ -857,16 +858,16 @@
                     <p style="margin-right: -30px;font-size: 13px;">- {{discount | number : 2}} €</p>
                 </div>
                 <div class="col-6 text-left mb-2" style="margin-left: -20px;">
-                    <p style="font-size: 13px;">Delivery costs</p>
+                    <p style="font-size: 13px; padding-top: 0px">Delivery costs</p>
                 </div>
                 <div class="col-6 text-right">
-                    <p style="margin-right: -30px; font-size: 13px;" ng-init="ordertotalPrice.deliveryCharges = @Model.DeliveryCharges">{{ordertotalPrice.deliveryCharges | number : 2}}</p>
+                    <p style="margin-right: -30px; font-size: 13px;  padding-top: 0px" ng-init="ordertotalPrice.deliveryCharges = @Model.DeliveryCharges">{{ordertotalPrice.deliveryCharges | number : 2}}</p>
                 </div>
                 <div class="col-6" style="margin-top: -20px; margin-left: -20px;">
-                    <p class="font-weight-bold text-left" style="font-size: 13px;">Total</p>
+                    <p class="font-weight-bold text-left" style="font-size: 13px; padding-top: 13px">Total</p>
                 </div>
                 <div class="col-6" style="margin-top: -20px;">
-                    <p class="font-weight-bold text-right" style="margin-right: -30px;  font-size: 13px;">{{ordertotalPrice.totalPrice | number : 2}} €</p>
+                    <p class="font-weight-bold text-right" style="margin-right: -30px;  font-size: 13px; padding-top: 4px">{{ordertotalPrice.totalPrice | number : 2}} €</p>
                 </div>
                 <div class="col-8" style="margin-left: -20px;"
                      ng-if="ordertotalPrice.totalPrice < requiredOrderValue">
@@ -882,23 +883,23 @@
             </div>
             <div class="row p-0">
                 <div class="col-12 p-0 text-center">
-                    <p ng-if="ordertotalPrice.totalPrice < requiredOrderValue" class="text-muted my-3" style=" font-size: 13px; color: #7d7d7d;">Unfortunately We only delivers from a minimum order value of € {{requiredOrderValue | number : 2}} (excl. Delivery costs)</p>
-                    <p ng-if="ordertotalPrice.totalPrice >= requiredOrderValue" class="text-muted my-3" style=" font-size: 13px; color: #7d7d7d;">You have reached the minimum order amount of {{requiredOrderValue | number : 2}} € to checkout</p>
-                    <a id="orderBtn" ng-disabled="cart.length === 0" ng-click="proceedOrder()" ng-if="ordertotalPrice.totalPrice >= requiredOrderValue" role="button" class="btn btn-block py-3 mx-auto text-center bg-primary"
-                       style="color: #fff; width:95%">Order</a>
+                    <p ng-if="ordertotalPrice.totalPrice < @Model.MinOrderCharges" class="text-muted my-3" style=" font-size: 13px; color: #7d7d7d;">Unfortunately We only delivers from a minimum order value of € @Model.MinOrderCharges (excl. Delivery costs)</p>
+                    <p ng-if="ordertotalPrice.totalPrice > @Model.MinOrderCharges" class="text-muted my-3" style=" font-size: 13px; color: #7d7d7d;">You have reached the minimum order amount of @Model.MinOrderCharges € to checkout</p>
+                    <a id="orderBtn" ng-disabled="cart.length === 0" ng-click="proceedOrder()" ng-if="ordertotalPrice.totalPrice > @Model.MinOrderCharges" role="button" class="btn btn-block py-3 mx-auto text-center"
+                       style="color: #fff; width:95%; background-color: red">Order</a>
                 </div>
             </div>
         </div>
     </div>
     <!-- Sidebar ends -->
     <div class="cart-btn-section" ng-if="cart.length > 0">
-        <div id="cart-btn-mob" onclick="$('#cart-modal').modal(); $('.cart-btn-section').hide()" class="rounded-0 btn btn-block text-center bg-primary text-white">
+        <div id="cart-btn-mob" onclick="$('#cart-modal').modal(); $('.cart-btn-section').hide()" class="rounded-0 btn btn-block text-center text-white" style="border-bottom-width: 0px;border-right-width: 0px;border-left-width: 0px;border-top-width: 0px; background-color: red; color: white">
             <div style="float:left; width:25%">
-                <span class="p1 fa-stack fa-2x has-badge" data-count="{{cart.length}}">
+                <span class="p1 fa-stack fa-2x has-badge" data-count="{{cart.length}}" style="margin-top: 10px">
                     <i id="cart-icon-mob" class="p3 fa fa-shopping-cart fa-stack-1x xfa-inverse" data-count="4b"></i>
                 </span>
             </div>
-            <div class="text-center" style="float:none; width:50%; padding: 10px; margin-left: 25%; font-weight:bold">
+            <div class="text-center" style="float:none; width:50%; padding: 10px; margin-left: 25%; font-weight:bold;margin-top: 10px;">
                 Cart ({{ordertotalPrice.totalPrice}} €)
             </div>
             <div style="float:right; width:25%"></div>
@@ -915,11 +916,13 @@
                             <h6 class="modal-title">Basket</h6>
                         </div>
                     </div>
-                    <button type="button" class="close" data-dismiss="modal" onclick="$('.cart-btn-section').show()">
-                        <i class="fas fa-times"></i>
-                    </button>
                 </div>
                 <div class="modal-body" ng-init="loadCart()">
+                    <div style="margin-bottom: 10px">
+                        <button type="button" class="close" data-dismiss="modal" onclick="$('.cart-btn-section').show()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
                     <div class="row pt-4 pb-2" style="border-bottom: 1px solid #eee">
                         <div ng-if="cart.length === 0">
                             <i class="fas fa-shopping-cart" style="font-size:-webkit-xxx-large; margin: auto; padding: 5% 0 0 40%;"></i>
@@ -934,13 +937,13 @@
                                     <span style="padding-left:10px">{{item.dishName}}</span>
                                 </div>
                                 <div class="col-2" style="font-size:12px">
-                                    <button class="cartIncreasBtn" style="width:24px; height:23px;" ng-click="decreaseQty($index)">-</button>
-                                    <button class="cartIncreasBtn" style="width:24px; height:23px;" ng-click="increaseQty($index)">+</button>
+                                    <button class="cartIncreasBtn" style="width: 28px; height: 26px" ng-click="decreaseQty($index)">-</button>
+                                    <button class="cartIncreasBtn" style="width:24px; height:26px;" ng-click="increaseQty($index)">+</button>
                                 </div>
                                 <div class="col-4">
-                                    <a role="button" ng-click="showRemarkBar($index)" class="btn" style="padding: 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-pencil-alt"></i></a>
+                                    <a role="button" ng-click="showRemarkBar($index)" class="btn" style="padding: 0 10px; font-size: 13px; color: red;"><i class="fas fa-pencil-alt"></i></a>
                                     <span style="font-size: 12px; color: #000;">{{item.totalPrice | number : 2}}€</span>
-                                    <a class="btn" ng-click="removeItem($index)" style="padding: 0 0 0 10px; font-size: 13px; color: #17f;"><i class="fas fa-trash-alt"></i></a>
+                                    <a class="btn" ng-click="removeItem($index)" style="padding: 0 0 0 10px; font-size: 13px; color: red;"><i class="fas fa-trash-alt"></i></a>
                                 </div>
                             </div>
                             <p class="cartToppings">
@@ -983,7 +986,7 @@
                             <p style="margin-right: -30px; font-size: 13px;" ng-init="ordertotalPrice.deliveryCharges = @Model.DeliveryCharges">{{ordertotalPrice.deliveryCharges | number : 2}}</p>
                         </div>
                         <div class="col-6" style="margin-top: -20px; margin-left: -20px;">
-                            <p class="font-weight-bold text-left" style="font-size: 13px;">Total</p>
+                            <p class="font-weight-bold text-left pt-4" style="font-size: 13px;padding-top: 13px;">Total</p>
                         </div>
                         <div class="col-6" style="margin-top: -20px;">
                             <p class="font-weight-bold text-right" style="margin-right: -30px;  font-size: 13px;">{{ordertotalPrice.totalPrice | number : 2}} €</p>
@@ -1002,10 +1005,10 @@
                     </div>
                     <div class="row p-0">
                         <div class="col-12 p-0 text-center">
-                            <p ng-if="ordertotalPrice.totalPrice < @Model.MinOrderCharges" class="text-muted my-3" style=" font-size: 13px; color: #7d7d7d;">Unfortunately We only delivers from a minimum order value of € {{requiredOrderValue | number : 2}} (excl. Delivery costs)</p>
-                            <p ng-if="ordertotalPrice.totalPrice > @Model.MinOrderCharges" class="text-muted my-3" style=" font-size: 13px; color: #7d7d7d;">You have reached the minimum order amount of {{requiredOrderValue | number : 2}}  € to checkout</p>
-                            <a id="orderBtn" ng-disabled="cart.length === 0" ng-click="proceedOrder()" ng-if="ordertotalPrice.totalPrice > @Model.MinOrderCharges" role="button" class="btn btn-block py-3 mx-auto text-center bg-primary"
-                               style="color: #fff; width:95%" data-dismiss="modal" onclick="$('#cart-modal').modal('hide');">Order</a>
+                            <p ng-if="ordertotalPrice.totalPrice < @Model.MinOrderCharges" class="text-muted my-3" style=" font-size: 13px; color: #7d7d7d;">Unfortunately We only delivers from a minimum order value of € @Model.MinOrderCharges (excl. Delivery costs)</p>
+                            <p ng-if="ordertotalPrice.totalPrice > @Model.MinOrderCharges" class="text-muted my-3" style=" font-size: 13px; color: #7d7d7d;">You have reached the minimum order amount of @Model.MinOrderCharges € to checkout</p>
+                            <a id="orderBtn" ng-disabled="cart.length === 0" ng-click="proceedOrder()" ng-if="ordertotalPrice.totalPrice > @Model.MinOrderCharges" role="button" class="btn btn-block py-3 mx-auto text-center"
+                               style="color: #fff; width:95%; background-color: red" data-dismiss="modal" onclick="$('#cart-modal').modal('hide');">Order</a>
                         </div>
                     </div>
                 </div>
@@ -1139,19 +1142,11 @@
                                         </p>
                                         <p class="mb-2"
                                            style="font-size: 14px; font-weight: 400; color: rgb(102, 102, 102)">
-                                            Email: info@lieferando.de
-                                        </p>
-                                        <p class="mb-5"
-                                           style="font-size: 14px; font-weight: 400; color: rgb(102, 102, 102)">
-                                            Fax: 4970329544330
+                                            Email: info@digicon-valley.com
                                         </p>
                                         <p class="mb-2"
                                            style="font-size: 14px; font-weight: 400; color: rgb(102, 102, 102)">
                                             Platform of the EU-Commission for online dispute resolution:
-                                        </p>
-                                        <p class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; color: rgb(102, 102, 102)">
-                                            https://ec.europa.eu/consumers/odr.
                                         </p>
                                     </div>
                                 </div>
@@ -1179,22 +1174,12 @@
         </div>
         <!-- Modal Ends-->
         <!-- Header -->
-        <header class="pizza-header" style="margin-right: 0 !important"></header>
+        <header class="pizza-header" style="margin-right: 0 !important; height: 300px"></header>
         <!-- Header ends -->
         <!-- Restaurant Description -->
-        <section class="item my-0">
+        <section class="item my-0" style="padding-bottom: 0px;padding-top: 0px;">
             <div class="container hotel-container">
 
-                <div class="row align-items-center mb-3">
-                    <ul class="list-unstyled text-right ml-auto">
-                        <li class="d-inline-block">
-                            <button ng-click="getDeliveryTiming()" type="button" href="#infoModal" role="button" class="border"
-                                    data-toggle="modal" id="info">
-                                <i class="fas fa-info fa-md info align-self-center"></i>
-                            </button>
-                        </li>
-                    </ul>
-                </div>
             </div>
         </section>
         <!-- Restaurant Description ends -->
@@ -1227,9 +1212,12 @@
                     <div class="row mx-md-2 mx-0 mt-3 dish-head {{dishCategory.categoryName}}" data-categoryhead="{{dishCategory.categoryName}}">
                         <div class="col-12 ml-5 py-3 mb-4 mx-auto dish-col" style="background:url(/Uploads/{{dishCategory.image}});">
                             <h5>{{dishCategory.categoryName}} </h5>
+
                             <!--<p>{{dishCategory.description}}</p> -->
                         </div>
+
                     </div>
+                    
                     <div class="row mx-md-2 mx-0 px-0 dishes" data-category="{{dishCategory.categoryName}}" ng-repeat="dish in dishCategory.dishes" ng-init="dishIndex = $index">
                         <div class="col-12 ml-5 py-1 pl-0 pr-0 mx-auto">
                             <div class="panel-group" id="accordion_{{dish.dishId}}" role="tablist" aria-multiselectable="true">
@@ -1239,16 +1227,16 @@
                                             <div class="col-9">
                                                 <h5 class="panel-title row" style="padding-right:8px;font-weight:600;font-size:18px;">
                                                     {{dish.dishName}} &nbsp;
-                                                    <i class="fas fa-info-circle product-info-btn" onclick="event.preventDefault()" ng-click="showDishDesc(dish.allergies, 'dish')"> </i>
+                                                    <i class="fas fa-info-circle product-info-btn bg-red" onclick="event.preventDefault()"  ng-click="showDishDesc(dish.allergies, 'dish')"> </i>
                                                 </h5>
                                             </div>
                                             <div class="col-3 text-right w-25">
-                                                <i id="dish-expand-icon-{{dish.dishId}}" class="fas fa-plus border p-3 dish-expand-icon" style="color: #1474F5"></i>
+                                                <i id="dish-expand-icon-{{dish.dishId}}" class="fas fa-plus border p-3 dish-expand-icon" style="color: red"></i>
                                             </div>
                                         </div>
                                         <span class="dish-desc" ng-bind-html="dish.description"></span>
-                                        <p style="font-style: italic;font-size: 12px;color: #666;" ng-if="dish.subName">{{dish.subName}}</p>
-                                        <h4 style="color:#ff8000;font-weight:600;font-size:18px;">{{dish.basePrice | number : 2 }} €</h4>
+                                        <p style="font-style: italic;font-size: 12px;color: #666;padding-right: 0px;padding-top: 0px;" ng-if="dish.subName">{{dish.subName}}</p>
+                                        <h4 style="color:red;font-weight:600;font-size:18px;">{{dish.basePrice | number : 2 }} €</h4>
                                     </div>
                                     <div id="collapse_{{dish.dishId}}" class="panel-collapse collapse in" role="tabpanel"
                                          aria-labelledby="heading_{{dish.dishId}}">
@@ -1279,16 +1267,16 @@
                                                                    value="{{extra.extraName}}"
                                                                    ng-checked="toppings.indexOf(extra.extraName) > -1"
                                                                    ng-click="toggleToppings(extra.extraName, extratype.typeName, extra.extraPrice, extra.sizeToppingPrices)">
-                                                            <label class="custom-control-label pointer pt-1" for="{{extra.dishExtraId}}_{{extraIndex}}" style="font-size: 12px;">
+                                                            <label class="custom-control-label pointer" for="{{extra.dishExtraId}}_{{extraIndex}}" style="font-size: 12px;">
                                                                 {{extra.extraName}}
                                                                 {{dish.dishSizes.length > 0 ? filterToppingSizePrice(dishSizeIdSelectedDish, extra.sizeToppingPrices) : showToppingPrice(extra.extraPrice) }}
                                                             </label>
                                                             <i role="button" class="fas fa-info-circle topping-info pointer" ng-click="showDishDesc(extra.allergies, 'toppings')"></i>
                                                         </div>
-                                                        <button ng-click="showMoreExtras(extratype.dishExtraTypeId)" id="more-btn-{{extratype.dishExtraTypeId}}" ng-if="extratype.dishExtras.length > 3" class="more-btn">
+                                                        <button  style="color: red" ng-click="showMoreExtras(extratype.dishExtraTypeId)" id="more-btn-{{extratype.dishExtraTypeId}}" ng-if="extratype.dishExtras.length > 3" class="more-btn">
                                                             <i class="fas fa-angle-down mr-3 text-dark"></i>Show More
                                                         </button>
-                                                        <button ng-click="hideMoreExtras(extratype.dishExtraTypeId)" id="less-btn-{{extratype.dishExtraTypeId}}" ng-init="hideListinit(extratype.dishExtraTypeId)" class="less-btn hide">
+                                                        <button style="color: red" ng-click="hideMoreExtras(extratype.dishExtraTypeId)" id="less-btn-{{extratype.dishExtraTypeId}}" ng-init="hideListinit(extratype.dishExtraTypeId)" class="less-btn hide">
                                                             <i class="fas fa-angle-up mr-3 text-dark"></i>Show Less
                                                         </button>
                                                     </div>
@@ -1299,7 +1287,7 @@
                                                         <select ng-disabled="dish.dishSizes.length > 0 && dishSizeIdSelectedDish==='0'" class="custom-select mt-2 pointer topping-dropdown"
                                                                 ng-model="temp" id="inputGroupSelect-{{extratype.dishExtraTypeId}}"
                                                                 ng-change="selectToppingDropdown(extratype.dishExtraTypeId, extratype.dishExtras, extratype.typeName)">
-                                                            <option style="font-size:14px;" hidden value="Select Value">{{extratype.placeholder}}</option>
+                                                            <option style="font-size:14px;" hidden value="0">{{extratype.placeholder}}</option>
                                                             <option style="font-size:14px;" ng-repeat="extra in extratype.dishExtras | orderBy : 'order'" value="{{extra}}">
                                                                 {{extra.extraName}}
                                                                 {{dish.dishSizes.length > 0 ? filterToppingSizePrice(dishSizeIdSelectedDish, extra.sizeToppingPrices) : showToppingPrice(extra.extraPrice) }}
@@ -1313,12 +1301,12 @@
                                                     <div class="text-right" style="width:40%; float:left">
                                                         <form method='POST' action='#' class="d-inline-block">
                                                             <input type='button' value='-' class='qtminus btn' ng-click="addQty(dish.dishId,'less')" />
-                                                            <input id="qty-{{dish.dishId}}" type='text' name='quantity' class='qtvalue btn' disabled />
+                                                            <input id="qty-{{dish.dishId}}" type='text' style="color: red" name='quantity' class='qtvalue btn' disabled />
                                                             <input type='button' value='+' class='qtplus btn' ng-click="addQty(dish.dishId,'add')" />
                                                         </form>
                                                     </div>
                                                     <div class="text-left" style="width:60%; float:right">
-                                                        <button ng-disabled="dish.dishSizes.length > 0 && dishSizeIdSelectedDish==='0'" class="btn btn-primary order-btn" ng-click="addToCart(dish)" id="totalPrice-{{dishIndex}}">{{cartItem.totalPrice | number : 2}} €</button>
+                                                        <button ng-disabled="dish.dishSizes.length > 0 && dishSizeIdSelectedDish==='0'" class="order-btn" style="background-color: red; color: white" ng-click="addToCart(dish)" id="totalPrice-{{dishIndex}}">{{cartItem.totalPrice | number : 2}} €</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1487,7 +1475,7 @@
                                         <div class="input-group mb-3">
                                             <input type="text" class="form-control" ng-model="coupon.code" placeholder="Voucher code">
                                             <div class="input-group-append">
-                                                <button onclick="event.preventDefault()" ng-click="validateCoupon()" class="btn-primary" id="basic-addon2">check</button>
+                                                <button onclick="event.preventDefault()" ng-click="validateCoupon()"  id="basic-addon2" style="background-color: red">check</button>
                                             </div>
                                         </div>
                                     </div>
@@ -1541,7 +1529,7 @@
                     <div class="col-md-6 mb-4 text-center">
                         <p id="showpaypalbtn-guide" class="hide text-info" style="font-size:18px">Please Click on Paypal to process payment online!</p>
                         <div id="paypal-button"></div>
-                        <button id="cashbtn" type="submit" class="btn btn-primary btn-block py-2 rounded-0 font-weight-bold"> Order & Pay ({{ordertotalPrice.totalPrice + ordertotalPrice.tip | number : 2}} €) </button>
+                        <button style="background-color: red; color: white" id="cashbtn" type="submit" class="btn-block py-2 rounded-0 font-weight-bold"> Order & Pay ({{ordertotalPrice.totalPrice + ordertotalPrice.tip | number : 2}} €) </button>
                     </div>
                     <div class="col-12">
                         <p style="font-size: 12px; color: rgb(207, 202, 196); margin-bottom: 0; padding-left: 0;">By clicking on ORDER AND PAY you agree with the contents of the shopping cart, the data you filled out, our <a href="#">privacy statement</a> and <a href="#">terms of use</a></p>

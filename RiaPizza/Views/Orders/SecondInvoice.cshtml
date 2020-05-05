@@ -17,8 +17,9 @@
     <!-- You can choose a theme from css/styles instead of get all themes -->
     <link href="~/assets/css/styles/all-themes.css" rel="stylesheet" />
     <title>Invoice</title>
-    <style type="text/css">
-        tr.roww {
+    <style type="text/css" media="print">
+
+        /*tr.roww {
             height: 100px;
             border: 2px solid;
             border-left: 0 !important;
@@ -55,265 +56,354 @@
             display: block;
             width: 50%;
             margin-left: 25%;
-            margin-right: 30%;
+            margin-right: 25%;
+        }*/
+
+        body {
+            margin: 0;
+            background: #CCCCCC;
         }
+
+        div.portrait, div.landscape {
+            margin: 10px auto;
+            padding: 10mm;
+            border: solid 1px black;
+            overflow: hidden;
+            page-break-after: auto;
+            background: white;
+        }
+
+        div.portrait {
+            width: 190mm;
+            height: 276mm;
+        }
+
+        div.landscape {
+            width: 276mm;
+            height: 190mm;
+        }
+
+        @@media print {
+            body {
+                background: none;
+                -ms-zoom: 1.665;
+            }
+
+            div.portrait, div.landscape {
+                margin: 0;
+                padding: 0;
+                border: none;
+                background: none;
+                width: 576mm;
+            }
+
+            div.landscape {
+                width: 100%;
+                transform: rotate(270deg) translate(-370mm) scale(1.6);
+                transform-origin: 0 0;
+            }
+
+            /*table {
+                page-break-inside: auto;
+            }
+
+            tr {
+                page-break-inside: avoid;
+                page-break-after: auto
+            }
+
+            thead {
+                display: table-header-group
+            }
+
+            tfoot {
+                display: table-footer-group
+            }*/
+
+            /*.pagebreak {
+                clear: both;
+                page-break-before: always;
+            }*/
     </style>
 
 </head>
 <body class="light">
 
     <div class="container-fluid">
-        <div class="row clearfix" style="margin-left: ;">
-            <div class="invoiceBody">
-                <div class="card" id="invoiceBody">
-                    <div class="body">
-                        <div class="col-md-12">
-                            <div class="row">
+        <div class="row clearfix">
+            <div class="card">
+                <div class="body">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="white-box col-md-6" style="height: 184px;">
+                                <div class="center" style="padding-top:20px;margin-left: 70px;margin-right: 37px;text-align: center;">
+                                    <div class="row" style="text-decoration:underline; width: 400px;">
+                                        <i class="fas fa-arrows-alt" style="margin-right: 13px"></i>
+                                        <h4 style="text-decoration: underline; font-weight: bold; padding-bottom: 5px;">Pizza Venedig Home Service</h4>
+                                        <i class="fas fa-arrows-alt" style="margin-left: 13px"></i>
+                                    </div>
+                                    <p style="font-weight: bold;font-size: 8px;text-align: center;margin-left: 37px;width: 190px;"><b>Horber Str, 22, 71083 Herrenberg</b></p>
 
-                                <div class="white-box col-md-6">
-                                    <div class="center" style="padding-top:20px; padding-bottom: 20px">
-                                        <h6 style="text-decoration: underline">Pizza Venedig Help Service</h6>
-                                        <p style="font-weight: bold; font-size: 8px">Herber 122-2131-4232-3232 Herbernereg</p>
-                                        <p style="font-weight: bold; font-size: 8px">Herber 122-2131-4232-3232 Herbernereg</p>
-                                    </div>
-                                    <div class="demo-google-material-icon center" style="margin-left:105px; padding-top:20px; padding-bottom: 20px">
-                                        <i class="material-icons" style="width: 30px; font-size: 17px">star_rate</i>
-                                        <i class="material-icons" style="width: 30px; font-size: 17px">star_rate</i>
-                                        <i class="material-icons" style="width: 30px; font-size: 17px">star_rate</i>
-                                        <i class="material-icons" style="width: 30px; font-size: 17px">star_rate</i>
-                                        <i class="material-icons" style="width: 30px; font-size: 17px">star_rate</i>
-                                    </div>
-                                    <hr>
-                                    <div class="row">
-                                        <div class="col-md-12 row">
-                                            <div class="pull-left col-md-6">
-                                                <address>
-                                                    <p class="font-bold">BILL FROM :</p>
-                                                    <p>checking one</p>
-                                                    <p>checking two</p>
-                                                    <p>checking three</p>
-                                                </address>
-                                            </div><br><br>
-                                            <div class="pull-right col-md-6 text-right">
-                                                <address>
-                                                    <p class="addr-font-h3 font-bold">BILL TO :</p>
-                                                    <p>checking one</p>
-                                                    <p>12: 12: 2020</p>
-                                                    <p style="font-weight:bold">Lieferando  SOFORT</p>
-                                                </address>
-                                            </div>
+                                    <p style="font-weight: bold; font-size: 12px; width: 230px"><i class="fas fa-phone-square" style="margin-right: 15px; font-size: 15px; "></i>07032 - 22 111 - 07032 - 28 655</p>
+
+                                </div>
+                                <div class="demo-google-material-icon center" style="width: 413px">
+                                    <i class="material-icons" style="width: 30px; font-size: 17px">star_rate</i>
+                                    <i class="material-icons" style="width: 30px; font-size: 17px">star_rate</i>
+                                    <i class="material-icons" style="width: 30px; font-size: 17px">star_rate</i>
+                                    <i class="material-icons" style="width: 30px; font-size: 17px">star_rate</i>
+                                    <i class="material-icons" style="width: 30px; font-size: 17px">star_rate</i>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-12 row" style="height: 180px;">
+                                        <div class="pull-left col-md-6" style="margin-bottom: 0px;">
+                                            <address>
+                                                <p class="font-bold">
+                                                    <b>
+                                                        @Model.OrderBy.Name <br>
+                                                        @Model.OrderDeliveryAddress.Address<br>
+                                                    </b>
+                                                </p>
+                                            </address>
+                                        </div><br><br>
+                                        <div class="pull-right col-md-6 text-right" style="margin-bottom: 0px;">
+                                            <address>
+                                                <p class="addr-font-h3 font-bold">Order no: @Model.OrderCode</p>
+                                                <p>Offer: Normal</p>
+                                                <p>Date @DateTime.UtcNow.ToString("MM/dd/yyyy") @DateTime.Now.ToString("HH:mm")</p>
+                                                <p><b>Delivery time: Right now</b></p>
+                                            </address>
                                         </div>
+                                    </div>
+                                    <h2 class="col-md-12" style="text-align:center">Lieferung</h2>
+                                    <div style="page-break-before:always" class="col-md-12">
+                                        <div class="">
+                                            <table>
+                                                <tr>
+                                                    <th style="font-size:13px">Amount </th>
+                                                    <th style="font-size: 13px">Product</th>
+                                                    <th style="font-size:13px">Extra</th>
+                                                    <th style="font-size:13px">Price</th>
+                                                    <th style="font-size:13px">Total</th>
+                                                </tr>
+                                                <tbody style="border-top: 2px solid; border-bottom: 2px solid">
 
-                                        <h2 class="col-md-12" style="text-align:center">LIEFERANDO</h2>
-                                        <div class="col-md-12">
-                                            <div class="">
-                                                <table>
-                                                    <tr>
-                                                        <th style="font-size:10px">Menge</th>
-                                                        <th style="font-size:10px">Art-Nr</th>
-                                                        <th style="font-size:10px">Bezwnchge</th>
-                                                        <th style="font-size:10px">Zuneange</th>
-                                                        <th style="font-size:10px">Preicis</th>
-                                                        <th style="font-size:10px">Summe</th>
-                                                    </tr>
-                                                    <tbody>
-                                                        <tr class="roww" style="">
-                                                            <td>
-                                                                <p>one</p>
-                                                                <p>one</p>
-                                                                <p>one</p>
-                                                            </td>
-                                                            <td>
-                                                                <p>one</p>
-                                                                <p>one</p>
-                                                                <p>one</p>
-                                                            </td>
-                                                            <td>
-                                                                <p>one</p>
-                                                                <p>one</p>
-                                                                <p>one</p>
-                                                            </td>
-                                                            <td>
-                                                                <p>one</p>
-                                                                <p>one</p>
-                                                                <p>one</p>
-                                                            </td>
-                                                            <td>
-                                                                <p>one</p>
-                                                                <p>one</p>
-                                                                <p>one</p>
-                                                            </td>
-                                                            <td>
-                                                                <p>one</p>
-                                                                <p>one</p>
-                                                                <p>one</p>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                                <table>
-                                                    <thead>
-                                                        <tr class="" style="border-bottom: none;">
-                                                            <th width="14%">ANZAHIL</th>
-                                                            <td width="14%">ANZAHIL</td>
-                                                            <th width="14%">ANZAHIL</th>
-                                                            <td width="14%">ANZAHIL</td>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
+                                                    @foreach (var item in Model.OrderItems)
+                                                    {
                                                         <tr>
-                                                            <th>QSESRQ</th>
-                                                            <td>QSESRQ</td>
-                                                            <th>QSESRQ</th>
-                                                            <td>QSESRQ</td>
+                                                            @if (item.Quantity != null)
+                                                            {
+                                                                <td>
+                                                                    <p>@item.Quantity</p>
+                                                                </td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td>
+                                                                    <p>Nothing</p>
+                                                                </td>
+                                                            }
+                                                            @if (item.Dish.DishName != null)
+                                                            {
+                                                                <td>
+                                                                    <p>@item.Dish.DishName</p>
+                                                                </td>
+                                                            }
+
+                                                            @if (item.Extras != null)
+                                                            {
+                                                                <td>
+                                                                    <p>@item.Extras</p>
+                                                                </td>
+                                                            }
+
+                                                            @if (item.DishPriceWithAddOnes != null)
+                                                            {
+                                                                <td>
+                                                                    <p>@item.DishPriceWithAddOnes</p>
+                                                                </td>
+                                                            }
+
+                                                            @if (item.TotalPrice != null)
+                                                            {
+                                                                <td>
+                                                                    <p>@item.TotalPrice</p>
+                                                                </td>
+                                                            }
                                                         </tr>
-                                                    </tbody>
-                                                </table>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    <a width="14%">Incl. Tax. (7%): @Model.Discount €</a>
+                                                    <a width="14%">Incl. Tax. (19%): @Model.Discount €</a>
+                                                </div>
+                                                <div class="col-2">
+
+                                                </div>
+                                                <div class="col-5">
+                                                    <a width="14%">Subtotal (€): @Model.SubTotal</a>
+                                                    <a width="14%">Total Sum (€): @Model.TotalBill</a>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-12">
-                                            <p style="font-weight:bold; font-size: 10px; text-align: center">hello we are chec king the printing pting of the hello yellow</p>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <p style="font-size: 10px; text-align: center">
+                                            <b style="font-weight: bold">Order on www.venedigpizza.com to avail 10% discount</b>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="white-box col-md-6">
+                                <div class="col-md-12 row" style="height: 150px;">
+                                    <div class="col-md-6 mb-0">
+                                        <div class="row" style="height: 50px">
+                                            <div class="col-md-5">
+                                                <p style="font-weight:bold; font-size: 13px; padding-right: 5px">Driver:</p>
+                                            </div>
+                                            <div class="col-md-7" style="width:auto">
+                                                <hr />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6" style="padding-right: 0px;">
+                                                <p style="font-weight:bold; font-size: 13px;">Customer:</p>
+                                            </div>
+                                            <div class="col-md-5" style="padding-left: 0px;padding-right: 0px;">
+                                                <p style="font-size: 13px">
+                                                    @Model.OrderBy.Name <br>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <p style="font-weight:bold; font-size: 13px; padding-right: 5px">Order No:</p>
+                                            <p style="font-size: 13px">@Model.OrderCode</p>
+                                        </div>
+                                        <div class="row">
+                                            <p style="font-weight:bold; font-size: 13px; padding-right: 5px">Date:</p>
+                                            <p style="font-size: 13px">@DateTime.Now</p>
+                                        </div>
+                                        <div class="row">
+                                            <p style="font-weight:bold; font-size: 13px; padding-right: 5px">Time:</p>
+                                            <p style="font-size: 13px">@DateTime.Now.ToString("HH:mm")</p>
+                                        </div>
+                                        <div class="row">
+                                            <p style="font-weight: bold">Delivery time: RIGHT NOW</p>
+                                        </div>
+                                        <div class="row">
+                                            <p style="font-weight:bold; font-size: 13px; padding-right: 5px">Total:</p>
+                                            <p style="font-size: 13px">@Model.TotalBill €</p>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="white-box col-md-6">
-                                    <div class="col-md-12 row">
-                                        <div class="col-md-6">
-                                            <div class="row">
-                                                <div class="col-md-5">
-                                                    <p style="font-weight:bold; font-size: 10px; padding-right: 5px">Hello World:</p>
-                                                </div>
-                                                <div class="col-md-5">
-                                                    <p style="font-size: 10px">hello checking the order</p>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-5">
-                                                    <p style="font-weight:bold; font-size: 10px; padding-right: 5px">Hello World:</p>
-                                                </div>
-                                                <div class="col-md-5">
-                                                    <p style="font-size: 10px">hello checking the order</p>
-                                                </div>
-                                            </div>
+
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-12 row" style="height: 165px;">
+                                        <div class="pull-left col-md-4" style="margin-bottom: 0px;">
+                                            <address>
+                                                <p style="font-size: 13px">
+                                                    @Model.OrderBy.Name <br>
+                                                    @Model.OrderDeliveryAddress.Address<br>
+                                                </p>
+                                            </address>
+                                        </div><br><br>
+                                        <div class="col-md-4" style="margin-bottom: 0px;">
+                                            <address>
+                                                <p style="font-weight: bold"><b>Delivery time: RIGHT NOW</b></p>
+                                            </address>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="row">
-                                                <p style="font-weight:bold; font-size: 10px; padding-right: 5px">Best No:</p>
-                                                <p style="font-size: 10px">5</p>
-                                            </div>
-                                            <div class="row">
-                                                <p style="font-weight:bold; font-size: 10px; padding-right: 5px">datum:</p>
-                                                <p style="font-size: 10px">12:4:2020</p>
-                                            </div>
-                                            <div class="row">
-                                                <p style="font-weight:bold; font-size: 10px; padding-right: 5px">Unocfot:</p>
-                                                <p style="font-size: 10px">71:9:2020</p>
-                                            </div>
-                                            <div class="row">
-                                                <p style="font-weight:bold; font-size: 10px; padding-right: 5px">LOFERANDO:</p>
-                                                <p style="font-size: 10px">FORFOTZE</p>
-                                            </div>
+                                        <div class="pull-right col-md-4 text-right" style="margin-bottom: 0px;">
+                                            <address>
+                                                <p class="addr-font-h3 font-bold">Order no: @Model.OrderCode</p>
+                                                <p>Date: @DateTime.UtcNow.ToString("MM/dd/yyyy")</p>
+                                                <p>TIme: @DateTime.Now.ToString("HH:mm")</p>
+                                            </address>
                                         </div>
                                     </div>
-                                    <div class="demo-google-material-icon center" style="margin-left:105px">
+                                    <h2 class="col-md-12" style="text-align:center">Lieferung</h2>
+                                    <div style="page-break-before:always" class="col-md-12">
+                                        <div >
+                                            <table>
+                                                <tr>
+                                                    <th style="font-size:13px">Amount </th>
+                                                    <th style="font-size:13px">Product</th>
+                                                    <th style="font-size:13px">Extra</th>
+                                                    <th style="font-size:13px">Price</th>
+                                                    <th style="font-size:13px">Total</th>
+                                                </tr>
+                                                <tbody style="border-top: 2px solid; border-bottom: 2px solid">
 
-                                    </div>
-                                    <hr>
-                                    <div class="row">
-                                        <div class="col-md-12 row">
-                                            <div class="pull-left col-md-4">
-                                                <address>
-                                                    <p class="font-bold">BILL FROM :</p>
-                                                    <p>checking one</p>
-                                                    <p>checking two</p>
-                                                    <p>checking </p>
-                                                </address>
-                                            </div><br><br>
-                                            <div class="col-md-4">
-                                                <address>
-                                                    <p style="font-weight:bold">Lieferando Saferiz </p>
-                                                </address>
-                                            </div>
-                                            <div class="pull-right col-md-4 text-right">
-                                                <address>
-                                                    <p class="addr-font-h3 font-bold">BILL TO :</p>
-                                                    <p>checking one</p>
-                                                    <p>12: 12: 2020</p>
-                                                    <p style="font-weight:bold">Lieferando </p>
-                                                </address>
-                                            </div>
-                                        </div>
-
-                                        <h2 class="col-md-12" style="text-align:center">LIEFERANDO</h2>
-                                        <div class="col-md-12">
-                                            <div class="">
-                                                <table>
-                                                    <tr>
-                                                        <th style="font-size:10px">Menge</th>
-                                                        <th style="font-size:10px">Art-Nr</th>
-                                                        <th style="font-size:10px">Bezwnchge</th>
-                                                        <th style="font-size:10px">Zuneange</th>
-                                                        <th style="font-size:10px">Preicis</th>
-                                                        <th style="font-size:10px">Summe</th>
-                                                    </tr>
-                                                    <tbody>
-                                                        <tr class="roww" style="">
-                                                            <td>
-                                                                <p>one</p>
-                                                                <p>one</p>
-                                                                <p>one</p>
-                                                            </td>
-                                                            <td>
-                                                                <p>one</p>
-                                                                <p>one</p>
-                                                                <p>one</p>
-                                                            </td>
-                                                            <td>
-                                                                <p>one</p>
-                                                                <p>one</p>
-                                                                <p>one</p>
-                                                            </td>
-                                                            <td>
-                                                                <p>one</p>
-                                                                <p>one</p>
-                                                                <p>one</p>
-                                                            </td>
-                                                            <td>
-                                                                <p>one</p>
-                                                                <p>one</p>
-                                                                <p>one</p>
-                                                            </td>
-                                                            <td>
-                                                                <p>one</p>
-                                                                <p>one</p>
-                                                                <p>one</p>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                                <table>
-                                                    <thead>
-                                                        <tr class="" style="border-bottom: none;">
-                                                            <th width="14%">ANZAHIL</th>
-                                                            <td width="14%">ANZAHIL</td>
-                                                            <th width="14%">ANZAHIL</th>
-                                                            <td width="14%">ANZAHIL</td>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
+                                                    @foreach (var item in Model.OrderItems)
+                                                    {
                                                         <tr>
-                                                            <th>QSESRQ</th>
-                                                            <td>QSESRQ</td>
-                                                            <th>QSESRQ</th>
-                                                            <td>QSESRQ</td>
+                                                            @if (item.Quantity != null)
+                                                            {
+                                                                <td>
+                                                                    <p>@item.Quantity</p>
+                                                                </td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td>
+                                                                    <p>Nothing</p>
+                                                                </td>
+                                                            }
+                                                            @if (item.Dish.DishName != null)
+                                                            {
+                                                                <td>
+                                                                    <p>@item.Dish.DishName</p>
+                                                                </td>
+                                                            }
+
+                                                            @if (item.Extras != null)
+                                                            {
+                                                                <td>
+                                                                    <p>@item.Extras</p>
+                                                                </td>
+                                                            }
+
+                                                            @if (item.DishPriceWithAddOnes != null)
+                                                            {
+                                                                <td>
+                                                                    <p>@item.DishPriceWithAddOnes</p>
+                                                                </td>
+                                                            }
+
+                                                            @if (item.TotalPrice != null)
+                                                            {
+                                                                <td>
+                                                                    <p>@item.TotalPrice</p>
+                                                                </td>
+                                                            }
                                                         </tr>
-                                                    </tbody>
-                                                </table>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    <a width="14%">Incl. Tax. (7%): @Model.Discount €</a>
+                                                    <a width="14%">Incl. Tax. (19%): @Model.Discount €</a>
+                                                </div>
+                                                <div class="col-2">
+
+                                                </div>
+                                                <div class="col-5">
+                                                    <a width="14%">Subtotal (€): @Model.SubTotal</a>
+                                                    <a width="14%">Total Sum (€): @Model.TotalBill</a>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-12">
-                                            <p style="font-weight:bold; font-size: 10px; text-align: center">hello we are chec king the printing pting of the hello yellow</p>
-                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <p style="font-size: 10px; text-align: center">
+                                            <b style="font-weight: bold">Order on www.venedigpizza.com to avail 10% discount</b>
+                                        </p>
                                     </div>
                                 </div>
                             </div>

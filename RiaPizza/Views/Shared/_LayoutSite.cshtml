@@ -149,6 +149,16 @@
                                     <i class="fas fa-address-card mr-3"></i> Profile
                                 </a>
                             </div>
+                            <div class="col-12 bg-white py-3 px-4 border-bottom">
+                                <a class="link" type="button" href="#infoModal" ng-click="getDeliveryTiming()" data-toggle="modal" role="button">
+                                    <i class="mr-3">
+                                        <li class="d-inline-block">
+                                            <i class="fas fa-info-circle fa-md info align-self-center" style="background-color: white"></i>
+                                        </li>
+                                    </i>
+                                    About Resturant
+                                </a>
+                            </div>
                         </div>
                         <div class="row pt-4 pl-4 pr-4" ng-if="isLoggedIn">
                             <div class="col-12 border-bottom bg-white py-3 px-4">
@@ -372,37 +382,34 @@
         <!-- order Modal ends -->
     </nav>
     <!-- Navbar ends -->
-    <button onclick="topFunction()" id="myBtn" title="Go to top" style="z-index: 99999;">
+    <button onclick="topFunction()" id="myBtn" title="Go to top" style="z-index: 99999;padding-top: 8px;padding-bottom: 8px;">
         <i class="fas fa-angle-up fa-2x"></i>
     </button>
 
     @RenderBody()
 
     <!-- Footer -->
-    <footer class="footer pt-2 pl-4 pr-4" style="z-index: 667; position: absolute; left: 0; right: 0;">
-        <div class="container-fluid pt-4">
+    <footer class="footer pt-0 pl-4 pr-4" style="z-index: 567; position: absolute; left: 0; right: 0; background-color: black">
+        <div class="container-fluid pt-4" style="padding-top: 0px;">
             <div class="row justify-content-center align-items-center">
-                <ul style="list-style: none; text-align: center;">
-                    <li class="d-md-inline-block d-block mb-4" style="margin-right: 20px; font-size: 13px; font-weight: 400; color: #fff;">
+                <ul style="list-style: none; text-align: center;margin-bottom: 0px;;padding-left: 0px;">
+                    <li class="d-md-inline-block d-block mb-4" style="margin-right: 20px; font-size: 13px; font-weight: 400; color: #fff; padding: 0px">
                         <a href="#" style="color: #fff;">Terms of use</a>
                     </li>
-                    <li class="d-md-inline-block d-block mb-4" style="margin-right: 20px; font-size: 13px; font-weight: 400; color: #fff;">
+                    <li class="d-md-inline-block d-block mb-4" style="margin-right: 20px; font-size: 13px; font-weight: 400; color: #fff; padding: 0px">
                         <a href="#" style="color: #fff;">Privacy statement</a>
                     </li>
                 </ul>
             </div>
-            <p style="font-size: 13px; font-weight: 400; color: #fff;" class="text-center mt-1">&copy; Digicon Valley 2020</p>
+            <p style="font-size: 13px; font-weight: 400; color: #fff; padding: 0px" class="text-center mt-1">&copy; Digicon Valley 2020</p>
         </div>
     </footer>
     <!-- Footer Ends -->
-
-
     <!--Scripts-->
     <script src="~/client-assets/res/bootstrap.bundle.js" type="text/javascript"></script>
     <script src="https://kit.fontawesome.com/2def6b71ee.js" crossorigin="anonymous" type="text/javascript"></script>
     <script src="~/client-assets/res/js/index.js" type="text/javascript"></script>
     <!--Scripts-->
-
     <!--Google Translator Start-->
     <script type="text/javascript">
         function googleTranslateElementInit() {
@@ -410,7 +417,7 @@
 
             window.setInterval(function () {
                 var lang = $(".goog-te-menu-value span:first").text();
-             //   alert(lang);
+                //   alert(lang);
             }, 5000);
         }
     </script>

@@ -524,7 +524,7 @@
             color: #144;
             text-decoration: none;
             &:hover {
-              color: #17f;
+              color: red;
             }
           }
         }
@@ -549,7 +549,7 @@
         border-radius: 0;
         .modal-header {
           border-radius: 0;
-          background: #f37f36;
+          background: red;
           color: #fff;
           text-align: center;
         }
@@ -668,7 +668,7 @@
         border-radius: 0;
         .modal-header {
           border-radius: 0;
-          background: #f37f36;
+          background: red;
           color: #fff;
           text-align: center;
           justify-content: center;

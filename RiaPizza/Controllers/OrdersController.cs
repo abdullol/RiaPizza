@@ -22,6 +22,7 @@ using RiaPizza.Services.NotifyOrder;
 using RiaPizza.Services.OrderService;
 using RiaPizza.Services.ScheduleService;
 using RiaPizza.Services.RenderViewService;
+using RiaPizza.DTOs.DishInvoice;
 
 namespace RiaPizza.Controllers
 {
@@ -89,13 +90,6 @@ namespace RiaPizza.Controllers
             }
 
             return View();
-        }
-
-        [Authorize(Roles = "Manager,Admin")]
-        public async Task<IActionResult> Invoice(int id)
-        {
-            var order = await _service.GetOrder(id);
-            return View(order);
         }
 
         [Authorize(Roles = "Manager,Admin")]
@@ -307,16 +301,24 @@ namespace RiaPizza.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult SecondInvoice()
-        {
-            return View();
-        }
-
         public async Task<IActionResult> Delete(int id)
         {
             await _service.DeleteOrder(id);
             return RedirectToAction("Index", "Orders");
         }
 
+
+        [Authorize(Roles = "Manager,Admin")]
+        public async Task<IActionResult> Invoice(int id)
+        {
+            var order = await _service.GetOrder(id);
+            return View(order);
+        }
+
+        public async Task<IActionResult> SecondInvoice(int id)
+        {
+            var order = await _service.GetOrder(id);
+            return View(order);
+        }
     }
 }

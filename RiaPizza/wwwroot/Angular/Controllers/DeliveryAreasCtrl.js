@@ -78,7 +78,6 @@
         }
     };
     //delete
-    
     $scope.delDeliveryArea = function (Id) {
         swal({
             title: "Are you sure?",

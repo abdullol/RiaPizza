@@ -13096,7 +13096,7 @@ textarea.cart-meal-textarea {
   width: auto;
 }
 .menu-category-bar a.slide-active {
-  color: #ff8000;
+  color: red;
   font-weight: 400;
 }
 .menu-category-bar .swipe-next {

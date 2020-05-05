@@ -37,24 +37,25 @@
             <div class="wrap-login100">
                 <form class="login100-form validate-form" asp-controller="Auth" asp-action="Login" method="post">
                     <span>
-                        <img id="main-logo" class="col-md-5 center" />
+                        @*<img src="~/Uploads/@ViewBag.ShopLogo" class="col-md-5 center"/>*@
+                        <img src="~/Uploads/fa044b59-79f3-4804-a24f-b2db2501e6c6_logo.png" class="col-md-7 center" />
                     </span>
                     <span class="login100-form-title p-b-34 p-t-27">
                         Log in
                     </span>
                     <div class="wrap-input100 validate-input" data-validate="Enter username">
-                        <input class="input100" asp-for="username" type="text" name="username" placeholder="Username">
+                        <input class="input100" asp-for="username" value="demo" type="text" name="username" placeholder="Username">
                         <i class="material-icons focus-input1001">person</i>
                     </div>
                     <div class="wrap-input100 validate-input" data-validate="Enter password">
-                        <input class="input100" asp-for="password" type="password" placeholder="Password">
+                        <input class="input100" asp-for="password" value="1234Demo.." type="password"  placeholder="Password">
                         <i class="material-icons focus-input1001">lock</i>
                     </div>
                     <div class="container-login100-form-btn">
                         <button class="login100-form-btn" type="submit">
                             Login
                         </button>
-
+                        
                     </div>
                     <div class="text-center p-t-50">
                         <a class="txt1" asp-action="Register" asp-controller="Auth">
@@ -70,7 +71,6 @@
 
     <script src="~/assets/js/app.min.js"></script>
 
-    <script src="~/custom-js/shoplogo.js"></script>
     <!-- Extra page Js -->
     <script src="~/assets/js/pages/examples/pages.js"></script>
 
