@@ -33,7 +33,7 @@ namespace RiaPizza.Controllers
             ViewBag.PendingOrdersCount = await _orderService.PendingCount();
             ViewBag.TodayDeliveredCount = await _orderService.TodayDeliveredCount();
             ViewBag.TodaySales = await _orderService.TodaySale();
-            ViewBag.isOpen = await _scheduleService.isShopOpen();
+            //ViewBag.isOpen = await _scheduleService.isShopOpen();
             return View(orders);
         }
 
