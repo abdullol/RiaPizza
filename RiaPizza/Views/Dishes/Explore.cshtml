@@ -332,7 +332,7 @@
                 cartButtonEffect();
             }
             else {
-                showNotification("Shop is closed, Please try later!");
+                showNotification("Shop ist geschlossen, bitte versuchen Sie es später!");
             }
         };
         $scope.increaseQty = function (index) {
@@ -553,7 +553,7 @@
         }
         $scope.proceedOrder = function () {
             if (!$scope.shopschedule.isOpen) {
-                showNotification("Shop is closed! Please try later!")
+                showNotification("Shop ist geschlossen, bitte versuchen Sie es später!")
                 return;
             }
             if ($scope.cart.length < 1) {
@@ -579,14 +579,14 @@
             $(".dishAllergies").html('');
 
             if (allergies === '' && allergies === null) {
-                $(".dishAllergies").html("<h6 style='font-weight:bold'>No Allergies Found</h6>");
+                $(".dishAllergies").html("<h6 style='font-weight:bold'>Keine Allergien gefunden</h6>");
                 return;
             }
 
             if (allergiesOf == 'toppings') {
                 var allergyList = allergies.split(',');
                 if (allergyList.length > 0) {
-                    $(".dishAllergies").append('<h6 style="font-weight:bold">Allergies</h6> <ul> </ul>');
+                    $(".dishAllergies").append('<h6 style="font-weight:bold">Allergien</h6> <ul> </ul>');
                     allergyList.forEach(function (val, key) {
                         $(".dishAllergies ul").append('<li> ' + val + ' </li>');
                     })
@@ -770,13 +770,13 @@
         $(".dishAllergies").html('');
 
         if (allergies === '' || allergies === 'null') {
-            $(".dishAllergies").html("<h6 style='font-weight:bold'>No Allergies Found</h6>");
+            $(".dishAllergies").html("<h6 style='font-weight:bold'>Keine Allergien gefunden</h6>");
             return;
         }
 
         var allergyList = allergies.split(',');
         if (allergyList.length > 0) {
-            $(".dishAllergies").append('<h6 style="font-weight:bold">Allergies</h6> <ul> </ul>');
+            $(".dishAllergies").append('<h6 style="font-weight:bold">Allergien</h6> <ul> </ul>');
             allergyList.forEach(function (val, key) {
                 $(".dishAllergies ul").append('<li> ' + val + ' </li>');
             })
@@ -803,7 +803,7 @@
             <div class="row pt-4 pb-2" style=" border-bottom: 1px solid #eee; width: 360px; ">
                 <div ng-if="cart.length === 0">
                     <i class="fas fa-shopping-cart" style="font-size:-webkit-xxx-large; margin: auto; padding: 5% 0 0 40%;"></i>
-                    <p class="basket-empty__text" style="text-align: center; margin: 10px;">Choose delicious dishes from the menu and order your menu.</p>
+                    <p class="basket-empty__text" style="text-align: center; margin: 10px;">Wählen Sie köstliche Gerichte aus dem Menü und bestellen Sie Ihr Menü.</p>
                 </div>
                 <div class="col-12" ng-repeat="item in cart track by $index">
                     <div class="row">
@@ -837,10 +837,10 @@
                     </p>
                     <p class="cartToppings" ng-if="item.remarks!=''" style="margin-bottom:5% !important">{{item.remarks}}</p>
                     <div class="commentBox hide commentinput-{{$index}}" style="margin-bottom:10% !important">
-                        <label>Remarks</label>
-                        <textarea class="form-control" placeholder="Enter Remarks" ng-model="item.remarks"></textarea>
-                        <a role="button" class="text-primary pointer" style="margin-left:10px">Clear</a>
-                        <a role="button" class="text-primary pointer" ng-click="saveRemarks($index)">Save</a>
+                        <label>Bemerkungen</label>
+                        <textarea class="form-control" placeholder="Bemerkungen eingeben" ng-model="item.remarks"></textarea>
+                        <a role="button" class="text-primary pointer" style="margin-left:10px">klar</a>
+                        <a role="button" class="text-primary pointer" ng-click="saveRemarks($index)">speichern</a>
                     </div>
                 </div>
             </div>
@@ -959,10 +959,10 @@
                             </p>
                             <p class="cartToppings" ng-if="item.remarks!=''" style="margin-bottom:5% !important">{{item.remarks}}</p>
                             <div class="commentBox hide commentinput-{{$index}}" style="margin-bottom:10% !important">
-                                <label>Remarks</label>
-                                <textarea class="form-control" placeholder="Enter Remarks" ng-model="item.remarks"></textarea>
-                                <a role="button" class="text-primary pointer" style="margin-left:10px">Clear</a>
-                                <a role="button" class="text-primary pointer" ng-click="saveRemarks($index)">Save</a>
+                                <label>Bemerkungen</label>
+                                <textarea class="form-control" placeholder="Bemerkungen eingeben" ng-model="item.remarks"></textarea>
+                                <a role="button" class="text-primary pointer" style="margin-left:10px">klar</a>
+                                <a role="button" class="text-primary pointer" ng-click="saveRemarks($index)">speichern</a>
                             </div>
                         </div>
                     </div>
@@ -986,7 +986,7 @@
                             <p style="margin-right: -30px; font-size: 13px;" ng-init="ordertotalPrice.deliveryCharges = @Model.DeliveryCharges">{{ordertotalPrice.deliveryCharges | number : 2}}</p>
                         </div>
                         <div class="col-6" style="margin-top: -20px; margin-left: -20px;">
-                            <p class="font-weight-bold text-left pt-4" style="font-size: 13px;padding-top: 13px;">Total</p>
+                            <p class="font-weight-bold text-left pt-4" style="font-size: 13px;padding-top: 13px;">Gesamt</p>
                         </div>
                         <div class="col-6" style="margin-top: -20px;">
                             <p class="font-weight-bold text-right" style="margin-right: -30px;  font-size: 13px;">{{ordertotalPrice.totalPrice | number : 2}} €</p>
@@ -1008,7 +1008,7 @@
                             <p ng-if="ordertotalPrice.totalPrice < @Model.MinOrderCharges" class="text-muted my-3" style=" font-size: 13px; color: #7d7d7d;">Leider liefern wir nur ab einem Mindestbestellwert von € @Model.MinOrderCharges (ohne. Versandkosten)</p>
                             <p ng-if="ordertotalPrice.totalPrice > @Model.MinOrderCharges" class="text-muted my-3" style=" font-size: 13px; color: #7d7d7d;">Sie haben die Mindestbestellmenge von erreicht @Model.MinOrderCharges € überprüfen</p>
                             <a id="orderBtn" ng-disabled="cart.length === 0" ng-click="proceedOrder()" ng-if="ordertotalPrice.totalPrice > @Model.MinOrderCharges" role="button" class="btn btn-block py-3 mx-auto text-center"
-                               style="color: #fff; width:95%; background-color: red" data-dismiss="modal" onclick="$('#cart-modal').modal('hide');">Order</a>
+                               style="color: #fff; width:95%; background-color: red" data-dismiss="modal" onclick="$('#cart-modal').modal('hide');">Auftrag</a>
                         </div>
                     </div>
                 </div>
@@ -1350,14 +1350,14 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group mb-0 pl-2 mt-3">
-                            <label class="label">Address</label>
+                            <label class="label">Adresse</label>
                             <input type="text" class="form-control address-option" ng-model="orderDeliveryAddress.address" name="address" required>
                             <p class="text-danger pt-4" ng-show="checkoutForm.address.$touched && checkoutForm.address.$error.required">* Adresse ist erforderlich.</p>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group mb-0 pl-2 mt-3">
-                            <label class="label">Postcode</label>
+                            <label class="label">Postleitzahl</label>
                             <input type="text" class="form-control address-option" ng-init="orderDeliveryAddress.postalCode = @Model.PostalCode"
                                    ng-model="orderDeliveryAddress.postalCode" name="postalCode" disabled required>
                             <p class="text-danger pt-4" ng-show="checkoutForm.postalCode.$touched && checkoutForm.postalCode.$error.required">* Postleitzahl ist erforderlich.</p>
@@ -1365,7 +1365,7 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group mb-0 pl-2 mt-3">
-                            <label label>City</label>
+                            <label label>Stadt</label>
                             <input type="text" class="form-control address-option" ng-init="orderDeliveryAddress.city = '@Model.City'"
                                    ng-model="orderDeliveryAddress.city" name="city" value="@Model.City" disabled required>
                             <p class="text-danger pt-4" ng-show="checkoutForm.city.$touched && checkoutForm.city.$error.required">* Stadt ist erforderlich.</p>
@@ -1373,7 +1373,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group mb-0 pl-2 mt-3">
-                            <label class="label">Floor</label>
+                            <label class="label">Fußboden</label>
                             <input type="text" class="form-control address-option" name="floor" ng-model="orderDeliveryAddress.floor">
                         </div>
                     </div>
@@ -1425,7 +1425,7 @@
                             <label class="label">Bitte wählen Sie eine Lieferzeit</label>
                             <select class="form-control address-option" ng-model="order.recievingTime" name="recievingTime" required>
                                 <option hidden value="">-Lieferzeit auswählen-</option>
-                                <option>As soon as possible</option>
+                                <option>So schnell wie möglich</option>
                                 <option ng-repeat="time in scheduleHours">{{time.time}}</option>
                             </select>
                             <p class="text-danger pt-4" ng-show="checkoutForm.recievingTime.$touched && checkoutForm.recievingTime.$error.required">* Bitte wählen Sie die Empfangszeit.</p>
