@@ -108,7 +108,7 @@
                                 <div class="ml-n5 col-9">
                                     <h3 class="modal-title text-white font-weight-bold" id="myModalLabel">
                                         <span ng-if="isLoggedIn">{{user.firstName}} {{user.lastName}}</span>
-                                        <span ng-if="!isLoggedIn">My Account</span>
+                                        <span ng-if="!isLoggedIn">Mein Konto</span>
                                     </h3>
                                     <a ng-if="isLoggedIn" href="~/MyAccount/PersonalData" class="text-white pointer">View personal data</a>
                                 </div>
@@ -124,7 +124,7 @@
                             <div class="col-6">
                                 <button type="button" href="#loginModal" class="btn btn-block btn-outline login-btn"
                                         role="button" data-toggle="modal">
-                                    Login
+                                    Anmeldung
                                 </button>
                             </div>
                             <!-- Login Modal Toggler ends -->
@@ -132,8 +132,8 @@
                             <div class="col-6">
                                 <button type="button" href="#signModal" class="btn btn-block btn-primary create-btn"
                                         role="button" data-toggle="modal">
-                                    Create
-                                    account
+                                    Erstellen
+                                    Konto
                                 </button>
                             </div>
                             <!-- Registration Modal Toggler -->
@@ -141,12 +141,12 @@
                         <div class="row pt-4 pl-4 pr-4">
                             <div class="col-12 border-bottom bg-white py-3 px-4">
                                 <a type="button" href="#orderModal" ng-click="loadOrders()" class="link" data-toggle="modal" role="button">
-                                    <i class="fas fa-shopping-bag mr-3"></i> Orders
+                                    <i class="fas fa-shopping-bag mr-3"></i> Aufträge
                                 </a>
                             </div>
                             <div class="col-12 bg-white py-3 px-4 border-bottom">
                                 <a href="~/MyAccount/PersonalData" class="link">
-                                    <i class="fas fa-address-card mr-3"></i> Profile
+                                    <i class="fas fa-address-card mr-3"></i> Profil
                                 </a>
                             </div>
                             <div class="col-12 bg-white py-3 px-4 border-bottom">
@@ -156,14 +156,14 @@
                                             <i class="fas fa-info-circle fa-md info align-self-center" style="background-color: white"></i>
                                         </li>
                                     </i>
-                                    About Resturant
+                                    Über das Restaurant
                                 </a>
                             </div>
                         </div>
                         <div class="row pt-4 pl-4 pr-4" ng-if="isLoggedIn">
                             <div class="col-12 border-bottom bg-white py-3 px-4">
                                 <a ng-click="logout()" role="button" class="pointer">
-                                    <i class="fas fa-home mr-3"></i> Logout
+                                    <i class="fas fa-home mr-3"></i> Ausloggen
                                 </a>
                             </div>
                         </div>
@@ -181,7 +181,7 @@
                     <div class="modal-header border-0">
                         <div class="row">
                             <div class="col-12">
-                                <h4 class="modal-title">Sign in</h4>
+                                <h4 class="modal-title">Anmelden</h4>
                             </div>
                         </div>
                         <button type="button" class="close" data-dismiss="modal">
@@ -195,21 +195,21 @@
                                     <!--<a href="#" class="btn btn-block login-btn p-3 mb-5">Login with FaceBook</a>-->
                                     <!--<p class="or mb-4">or</p>-->
                                     <div class="form-group mb-5">
-                                        <label for="email">Email Address</label>
+                                        <label for="email">E-Mail-Addresse</label>
                                         <input ng-model="loginUser.username" type="text" class="form-control" required>
                                     </div>
                                     <div class="form-group mb-3">
-                                        <label for="password">Password</label>
+                                        <label for="password">Passwort</label>
                                         <input ng-model="loginUser.password" type="password" class="form-control mb-3" required>
-                                        <a href="#" class="pass-link text-right mt-3">Forgot password?</a>
+                                        <a href="#" class="pass-link text-right mt-3">Passwort vergessen?</a>
                                     </div>
-                                    <p ng-if="loginUnsuccessful" class="text-danger">Email and Password didn't match</p>
-                                    <button type="submit" class="btn btn-block login-btn2 p-3 mb-3">Login</button>
+                                    <p ng-if="loginUnsuccessful" class="text-danger">E-Mail und Passwort stimmten nicht überein</p>
+                                    <button type="submit" class="btn btn-block login-btn2 p-3 mb-3">Anmeldung</button>
                                 </form>
                             </div>
                         </div>
                     </div>
-                    <a role="button" onclick="toggleRegister()" class="pass-link text-center mb-2 pointer">Create Account</a>
+                    <a role="button" onclick="toggleRegister()" class="pass-link text-center mb-2 pointer">Konto erstellen</a>
 
                 </div>
             </div>
@@ -224,7 +224,7 @@
                     <div class="modal-header border-0">
                         <div class="row">
                             <div class="col-12">
-                                <h4 class="modal-title">Register</h4>
+                                <h4 class="modal-title">Registrieren</h4>
                             </div>
                         </div>
                         <button type="button" class="close" data-dismiss="modal">
@@ -240,58 +240,58 @@
                                     <div class="row">
                                         <div class="col-6">
                                             <div class="form-group mb-5">
-                                                <label for="name">First Name</label>
+                                                <label for="name">Vorname</label>
                                                 <input ng-model="registerUser.firstName" name="firstName" type="text" class="form-control mb-3" required>
-                                                <p class="text-danger mb-0 pb-0" ng-show="registerForm.firstName.$touched && registerForm.firstName.$error.required">* Firstname is required.</p>
+                                                <p class="text-danger mb-0 pb-0" ng-show="registerForm.firstName.$touched && registerForm.firstName.$error.required">* Vorname ist erforderlich.</p>
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="form-group mb-5">
-                                                <label for="name">Last Name</label>
+                                                <label for="name">Nachname</label>
                                                 <input ng-model="registerUser.lastName" name="lastName" type="text" class="form-control mb-3" required>
-                                                <p class="text-danger mb-0 pb-0" ng-show="registerForm.lastName.$touched && registerForm.lastName.$error.required">* Lastname is required.</p>
+                                                <p class="text-danger mb-0 pb-0" ng-show="registerForm.lastName.$touched && registerForm.lastName.$error.required">* Nachname ist erforderlich.</p>
                                             </div>
                                         </div>
                                         <div class="col-12">
                                             <div class="form-group mb-5">
-                                                <label for="email">Email Address</label>
+                                                <label for="email">E-Mail-Addresse</label>
                                                 <input ng-model="registerUser.email" name="email" type="email" class="form-control mb-3" required>
-                                                <p class="text-danger mb-0 pb-1" ng-show="registerForm.email.$touched && registerForm.email.$error.required">* Email is required.</p>
-                                                <p class="text-danger mb-0 pb-0" ng-show="registerForm.email.$touched && registerForm.email.$invalid">* Email is invalid</p>
+                                                <p class="text-danger mb-0 pb-1" ng-show="registerForm.email.$touched && registerForm.email.$error.required">* E-Mail ist erforderlich.</p>
+                                                <p class="text-danger mb-0 pb-0" ng-show="registerForm.email.$touched && registerForm.email.$invalid">* E-Mail ist ungültig</p>
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="form-group mb-5">
-                                                <label for="password">Password</label>
+                                                <label for="password">Passwort</label>
                                                 <input ng-model="registerUser.password" name="password" type="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" class="form-control mb-3" required>
-                                                <p class="text-danger mb-0 pb-1" ng-show="registerForm.password.$touched && registerForm.password.$error.required">* Password is required.</p>
-                                                <p class="text-danger mb-0 pb-0" ng-show="registerForm.password.$touched && registerForm.password.$invalid">* Password must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters.</p>
+                                                <p class="text-danger mb-0 pb-1" ng-show="registerForm.password.$touched && registerForm.password.$error.required">* Passwort wird benötigt.</p>
+                                                <p class="text-danger mb-0 pb-0" ng-show="registerForm.password.$touched && registerForm.password.$invalid">* Das Passwort muss mindestens eine Zahl und einen Groß- und Kleinbuchstaben sowie mindestens 8 oder mehr Zeichen enthalten.</p>
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="form-group mb-3">
-                                                <label for="password">Re-enter Password</label>
+                                                <label for="password">Kennwort erneut eingeben</label>
                                                 <input ng-model="registerUser.confirmPassword" dirname="confirmPassword" type="password" class="form-control mb-3" name="confirmPassword" required>
-                                                <p class="text-danger mb-0 pb-1" ng-show="registerForm.confirmPassword.$touched && registerForm.confirmPassword.$error.required">* Confirmation is required.</p>
-                                                <p class="text-danger mb-0 pb-0" ng-if="registerForm.confirmPassword.$touched && registerUser.password !== registerUser.confirmPassword">* Password and Confirm Password didn't match</p>
+                                                <p class="text-danger mb-0 pb-1" ng-show="registerForm.confirmPassword.$touched && registerForm.confirmPassword.$error.required">* Bestätigung ist erforderlich.</p>
+                                                <p class="text-danger mb-0 pb-0" ng-if="registerForm.confirmPassword.$touched && registerUser.password !== registerUser.confirmPassword">* Passwort und Passwort bestätigen stimmten nicht überein</p>
                                             </div>
                                         </div>
                                         <div class="col-12">
                                             <div class="form-group" ng-if="usernameExists">
-                                                <p class="text-danger">Email already registered, please login with registerd email or try other email!</p>
+                                                <p class="text-danger">E-Mail bereits registriert, melden Sie sich bitte mit registrierter E-Mail an oder versuchen Sie es mit einer anderen E-Mail!</p>
                                             </div>
-                                            <button ng-disabled="registerForm.$invalid || registerUser.password !== registerUser.confirmPassword" type="submit" href="#" class="btn btn-block login-btn2 p-3">Register</button>
+                                            <button ng-disabled="registerForm.$invalid || registerUser.password !== registerUser.confirmPassword" type="submit" href="#" class="btn btn-block login-btn2 p-3">Registrieren</button>
                                         </div>
                                     </div>
                                     <p class="caption mb-2">
-                                        By clicking on send you accept the <a href="#">terms of use</a>
-                                        and the <a href="#">terms of use of the Loyalty Shop</a>
+                                        Durch Klicken auf Senden akzeptieren Sie die <a href="#">Nutzungsbedingungen</a>
+                                        and the <a href="#">Nutzungsbedingungen des Loyalty Shops</a>
                                     </p>
                                 </form>
                             </div>
                         </div>
                     </div>
-                    <a role="button" onclick="toggleLogin()" class="pass-link text-center mb-3 pointer">I have an account</a>
+                    <a role="button" onclick="toggleLogin()" class="pass-link text-center mb-3 pointer">Ich habe einen Account</a>
                 </div>
             </div>
         </div>
@@ -305,7 +305,7 @@
                     <div class="modal-header border-0">
                         <div class="row">
                             <div class="col-12">
-                                <h4 class="modal-title text-center">Orders</h4>
+                                <h4 class="modal-title text-center">Aufträge</h4>
                             </div>
                         </div>
                         <button type="button" class="close" data-dismiss="modal">
@@ -318,9 +318,9 @@
                                 <div class="userpanel-favorites js-userpanel-favorites">
                                 </div>
                                 <i class="fas fa-shopping-bag fa-3x my-4"></i>
-                                <h4 class="my-4">No orders yet</h4>
-                                <p class="my-4" style="color: #7d7d7d;">You have no order history available</p>
-                                <button type="submit" href="#" class="btn d-block login-btn2 mx-auto">Send</button>
+                                <h4 class="my-4">Noch keine Bestellungen</h4>
+                                <p class="my-4" style="color: #7d7d7d;">Sie haben keine Bestellhistorie verfügbar</p>
+                                <button type="submit" href="#" class="btn d-block login-btn2 mx-auto">Senden</button>
                             </div>
                         </div>
                         <div ng-if="userOrders.length > 0">
@@ -329,7 +329,7 @@
                                     Code
                                 </div>
                                 <div class="col-2">
-                                    Pay Info
+                                    Info bezahlen
                                 </div>
                                 <div class="col-2">
                                     Status
@@ -340,7 +340,7 @@
                                             Qty
                                         </div>
                                         <div class="col-10">
-                                            Dishes
+                                            Geschirr
                                         </div>
                                     </div>
                                 </div>
@@ -352,8 +352,8 @@
                                 <div class="col-md-2 col-xs-12">
                                     <span class="order-head-mob">Total Bill:</span>
                                     {{order.totalBill}}
-                                    <span ng-if="order.isPaymentConfirmed" class="badge badge-success">Paid</span>
-                                    <span ng-if="!order.isPaymentConfirmed" class="badge badge-danger">Pending</span>
+                                <span ng-if="order.isPaymentConfirmed" class="badge badge-success">Bezahlt</span>
+                                <span ng-if="!order.isPaymentConfirmed" class="badge badge-danger">steht aus</span>
                                 </div>
                                 <div class="col-md-2 col-xs-12">
                                     <span class="order-head-mob">Status:</span>
@@ -362,14 +362,14 @@
                                 <div class="col-md-6 col-xs-12 text-md-left">
                                     <div class="row" ng-repeat="item in order.orderItems">
                                         <div class="col-md-2 col-xs-12">
-                                            <span class="order-head-mob">Quantity:</span>
+                                            <span class="order-head-mob">Menge:</span>
                                             {{item.quantity}}x
                                         </div>
                                         <div class="col-md-10 col-xs-12">
-                                            <span class="order-head-mob">Dishes:</span>
+                                            <span class="order-head-mob">Geschirr:</span>
                                             <h4 style="font-size:18px">{{item.dish.dishName}}</h4>
                                             <p class="pl-0 mb-0">{{item.extras}}</p>
-                                            <p class="pl-0" ng-if="item.remarks"> <strong>Remarks:</strong> {{item.remarks}}</p>
+                                            <p class="pl-0" ng-if="item.remarks"> <strong>Bemerkungen:</strong> {{item.remarks}}</p>
                                         </div>
                                     </div>
                                 </div>
