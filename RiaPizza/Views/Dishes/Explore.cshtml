@@ -748,8 +748,8 @@
                 { hourNo: 23, time: "23:30" },
                 { hourNo: 23, time: "23:45" }];
             JsonCall("ShopSchedule", "GetShopStatus");
-            var maxTime = list.timeTo.hours;
-            maxTime === 0 ? maxTime = 24 : maxTime = list.timeTo.hours;
+            var maxTime = list.deliveryTimings[0].timeTo;
+            maxTime === 0 ? maxTime = 24 : maxTime = list.deliveryTimings[0].timeTo;
             $scope.scheduleHours = timeList.filter(s => s.hourNo > currentTime && s.hourNo <= maxTime);
         }
 
@@ -1055,7 +1055,7 @@
                                         <h5>Delivery times</h5>
                                     </div>
                                 </div>
-                                <div class="my-3 p-3" style="background-color: #f8f5f2;">
+                                <div class="my-3 p-3" style="background-color: #f8f5f2;" ng-init="getDeliveryTiming()">
                                     <div class="row" ng-repeat="timing in schedule.deliveryTimings">
                                         <div class="col-6">
                                             <p class="mb-2"
