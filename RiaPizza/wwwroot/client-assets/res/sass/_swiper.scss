@@ -139,7 +139,7 @@ p {
   margin: 0;
 }
 input[value="0"] {
-  color: #27f;
+  color: red;
   font-size: 20px;
   width: 50px;
   height: 45px;
@@ -148,7 +148,7 @@ input[value="0"] {
   border-radius: 0 !important;
 }
 input[value="-"] {
-  color: #666;
+  color: red;
   font-size: 22px;
   font-weight: 600;
   width: 50px;
@@ -159,7 +159,7 @@ input[value="-"] {
   outline: none;
 }
 input[value="+"] {
-  color: #666;
+  color: red;
   font-size: 22px;
   font-weight: 600;
   width: 50px;
@@ -224,14 +224,14 @@ input[value="+"] {
     width: 100px !important;
   }
   input[value="0"] {
-    color: #27f;
+    color: red;
     font-size: 14px !important;
     width: 35px !important;
     height: 35px !important;
     text-align: center;
   }
   input[value="-"] {
-    color: #666;
+    color: red;
     font-size: 14px !important;
     width: 30px !important;
     height: 35px !important;
@@ -239,7 +239,7 @@ input[value="+"] {
     border-right: 0;
   }
   input[value="+"] {
-    color: #666;
+    color: red;
     font-size: 14px !important;
     width: 30px !important;
     height: 35px !important;

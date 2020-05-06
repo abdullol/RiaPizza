@@ -23,7 +23,7 @@ namespace RiaPizza.Controllers
         {
             if (error != null)
             {
-                ViewBag.Error = "Unfortunately your postcode is not in ours Delivery area......";
+                ViewBag.Error = "Leider befindet sich Ihre Postleitzahl nicht in unserem Lieferbereich......";
             }
             var areas = await _areaService.AllDeliveryAreas();
 
