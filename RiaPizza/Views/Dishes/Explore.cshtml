@@ -36,6 +36,10 @@
         .tip-form input[value="+"] {
             margin-left: -4.5px;
         }
+
+        /*.custom-control-label::after {
+            background-image: url('/assets/images/tick.png');
+        }*/
     </style>
 
 }
@@ -600,9 +604,9 @@
         function cartButtonEffect() {
             var time = 700;
             setTimeout(function () {
-                $('#cart-btn-mob').removeClass("bg-danger").addClass("bg-danger");
+                $('#cart-btn-mob').removeClass("bg-warning").css("background-color", "red");
             }, time);
-            $('#cart-btn-mob').removeClass("bg-danger").addClass("bg-danger");
+            $('#cart-btn-mob').css("background-color", "red").addClass("bg-warning");
 
         }
 
@@ -786,23 +790,24 @@
     }
 
 </script>
+
 <div ng-controller="ViewDishes" id="ViewDishes">
     <!-- Sidebar -->
     <div class="sidenav" id="sidebar" style="overflow:auto">
         <div class="container-fluid" ng-init="loadCart()">
-            <div class="row py-2" style="margin-top: -10px; border-bottom: 1px solid #eee;">
+            <div class="row py-2" style=" margin-top: -10px; border-bottom: 1px solid #eee;">
                 <div class="col-12 text-center">
-                    <h6 style="font-size: 14px;
-        font-weight: 600;
-        color: rgb(102, 102, 102);
-    ">
+                    <h6 style="font-size: 14px; font-weight: 600; color: rgb(102, 102, 102); ">
                         Korb
                     </h6>
                 </div>
             </div>
-            <div class="row pt-4 pb-2" style=" border-bottom: 1px solid #eee; width: 360px; ">
+            <div class="row pt-4 pb-2" style="
+        border-bottom: 1px solid #eee;
+        width: 360px;
+    ">
                 <div ng-if="cart.length === 0">
-                    <i class="fas fa-shopping-cart" style="font-size:-webkit-xxx-large; margin: auto; padding: 5% 0 0 40%;"></i>
+                    <i class="fas fa-shopping-bag" style="font-size:-webkit-xxx-large; margin: auto; padding: 5% 0 0 43%;"></i>
                     <p class="basket-empty__text" style="text-align: center; margin: 10px;">Wählen Sie köstliche Gerichte aus dem Menü und bestellen Sie Ihr Menü.</p>
                 </div>
                 <div class="col-12" ng-repeat="item in cart track by $index">
@@ -814,8 +819,8 @@
                             <span style="font-size: 12px; color: #000; margin-right: 30px;">{{item.dishName}}</span>
                         </div>
                         <div class="col-3" style="padding:0">
-                            <button class="cartIncreasBtn" style="width: 28px; height: 26px" ng-click="decreaseQty($index)">-</button>
-                            <button class="cartIncreasBtn" style="width: 28px; height: 26px" ng-click="increaseQty($index)">+</button>
+                            <button class="cartIncreasBtn" ng-click="decreaseQty($index)">-</button>
+                            <button class="cartIncreasBtn" ng-click="increaseQty($index)">+</button>
                         </div>
                         <div class="col-4" style="padding:0">
                             <a role="button" ng-click="showRemarkBar($index)" class="btn" style="padding: 0 10px; font-size: 13px; color: red"><i class="fas fa-pencil-alt"></i></a>
@@ -867,7 +872,7 @@
                     <p class="font-weight-bold text-left" style="font-size: 13px; padding-top: 13px">Gesamt</p>
                 </div>
                 <div class="col-6" style="margin-top: -20px;">
-                    <p class="font-weight-bold text-right" style="margin-right: -30px;  font-size: 13px; padding-top: 4px">{{ordertotalPrice.totalPrice | number : 2}} €</p>
+                    <p class="font-weight-bold text-right" style="margin-right: -30px;  font-size: 13px; padding-top: 15px">{{ordertotalPrice.totalPrice | number : 2}} €</p>
                 </div>
                 <div class="col-8" style="margin-left: -20px;"
                      ng-if="ordertotalPrice.totalPrice < requiredOrderValue">
@@ -896,7 +901,7 @@
         <div id="cart-btn-mob" onclick="$('#cart-modal').modal(); $('.cart-btn-section').hide()" class="rounded-0 btn btn-block text-center text-white" style="border-bottom-width: 0px;border-right-width: 0px;border-left-width: 0px;border-top-width: 0px; background-color: red; color: white">
             <div style="float:left; width:25%">
                 <span class="p1 fa-stack fa-2x has-badge" data-count="{{cart.length}}" style="margin-top: 10px">
-                    <i id="cart-icon-mob" class="p3 fa fa-shopping-cart fa-stack-1x xfa-inverse" data-count="4b"></i>
+                    <i id="cart-icon-mob" class="p3 fas fa-shopping-bag fa-stack-1x xfa-inverse" data-count="4b"></i>
                 </span>
             </div>
             <div class="text-center" style="float:none; width:50%; padding: 10px; margin-left: 25%; font-weight:bold;margin-top: 10px;">
@@ -925,8 +930,8 @@
                     </div>
                     <div class="row pt-4 pb-2" style="border-bottom: 1px solid #eee">
                         <div ng-if="cart.length === 0">
-                            <i class="fas fa-shopping-cart" style="font-size:-webkit-xxx-large; margin: auto; padding: 5% 0 0 40%;"></i>
-                            <p class="basket-empty__text" style="text-align: center; margin: 10px;">Wähle leckere Gerichte aus der Karte und bestelle Dein Menü.</p>
+                            <i class="fas fa-shopping-bag" style="font-size:-webkit-xxx-large; margin: auto; padding: 5% 0 0 44%;"></i>
+                            <p class="basket-empty__icon" style="text-align: center; margin: 10px;">Wähle leckere Gerichte aus der Karte und bestelle Dein Menü.</p>
                         </div>
                         <div class="col-12" ng-repeat="item in cart track by $index">
                             <div class="row mob-cart-items">
@@ -937,8 +942,8 @@
                                     <span style="padding-left:10px">{{item.dishName}}</span>
                                 </div>
                                 <div class="col-2" style="font-size:12px">
-                                    <button class="cartIncreasBtn" style="width: 28px; height: 26px" ng-click="decreaseQty($index)">-</button>
-                                    <button class="cartIncreasBtn" style="width:24px; height:26px;" ng-click="increaseQty($index)">+</button>
+                                    <button class="cartIncreasBtn" ng-click="decreaseQty($index)">-</button>
+                                    <button class="cartIncreasBtn" ng-click="increaseQty($index)">+</button>
                                 </div>
                                 <div class="col-4">
                                     <a role="button" ng-click="showRemarkBar($index)" class="btn" style="padding: 0 10px; font-size: 13px; color: red;"><i class="fas fa-pencil-alt"></i></a>
@@ -1213,7 +1218,7 @@
                         <div class="col-12 ml-5 py-3 mb-4 mx-auto dish-col" style="background:url(/Uploads/{{dishCategory.image}});">
                             <h5>{{dishCategory.categoryName}} </h5>
 
-                            <!--<p>{{dishCategory.description}}</p> -->
+                            <p>{{dishCategory.description}}</p>
                         </div>
 
                     </div>
@@ -1235,7 +1240,7 @@
                                             </div>
                                         </div>
 
-                                        <p style="font-style: italic;font-size: 12px;color: #666;padding-right: 0px;padding-top: 0px;" ng-if="dish.subName">{{dish.subName}}</p>
+                                        <p style="font-style: italic;font-size: 12px;color: #666;padding-right: 0px;padding-top: 15px;margin-bottom: 0px;" ng-if="dish.subName">{{dish.subName}}</p>
                                         <span class="dish-desc" ng-bind-html="dish.description"></span>
                                         <h4 style="color:red;font-weight:600;font-size:18px;">{{dish.basePrice | number : 2 }} €</h4>
                                     </div>
