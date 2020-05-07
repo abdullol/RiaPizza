@@ -936,18 +936,18 @@
                         <div class="col-12" ng-repeat="item in cart track by $index">
                             <div class="row mob-cart-items">
                                 <div class="col-1">
-                                    <span style="padding-left:10px">{{item.quantity}}x</span>
+                                    <span style="padding-left:6px">{{item.quantity}}x</span>
                                 </div>
-                                <div class="col-5">
-                                    <span style="padding-left:10px">{{item.dishName}}</span>
+                                <div class="col-4">
+                                    <span style="padding-left:6px">{{item.dishName}}</span>
                                 </div>
                                 <div class="col-2" style="font-size:12px">
                                     <button class="cartIncreasBtn" ng-click="decreaseQty($index)">-</button>
                                     <button class="cartIncreasBtn" ng-click="increaseQty($index)">+</button>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-5">
                                     <a role="button" ng-click="showRemarkBar($index)" class="btn" style="padding: 0 10px; font-size: 13px; color: red;"><i class="fas fa-pencil-alt"></i></a>
-                                    <span style="font-size: 12px; color: #000;">{{item.totalPrice | number : 2}}€</span>
+                                    <span style="font-size: 11px; color: #000;">{{item.totalPrice | number : 2}}€</span>
                                     <a class="btn" ng-click="removeItem($index)" style="padding: 0 0 0 10px; font-size: 13px; color: red;"><i class="fas fa-trash-alt"></i></a>
                                 </div>
                             </div>
