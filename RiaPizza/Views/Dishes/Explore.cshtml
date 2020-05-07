@@ -1216,11 +1216,12 @@
                 <div class="container">
                     <div class="row mx-md-2 mx-0 mt-3 dish-head {{dishCategory.categoryName}}" data-categoryhead="{{dishCategory.categoryName}}">
                         <div class="col-12 ml-5 py-3 mb-4 mx-auto dish-col" style="background:url(/Uploads/{{dishCategory.image}});">
-                            <h5>{{dishCategory.categoryName}} </h5>
-
-                            <p>{{dishCategory.description}}</p>
+                            <h5>{{dishCategory.categoryName}}
+                            <br />
+                            <a style="font-size: 13px; font-family: Montserrat, sans-serif; font-weight: normal">{{dishCategory.description}}</a>
+                            </h5>
+                            
                         </div>
-
                     </div>
 
                     <div class="row mx-md-2 mx-0 px-0 dishes" data-category="{{dishCategory.categoryName}}" ng-repeat="dish in dishCategory.dishes" ng-init="dishIndex = $index">
