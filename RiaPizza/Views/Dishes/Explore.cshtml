@@ -1215,12 +1215,12 @@
             <section ng-repeat="dishCategory in dishCategories | orderBy : 'orderBy' " ng-init="categoryIndex=$index" id="cat-{{categoryIndex}}" class="group-item" index="{{$index}}">
                 <div class="container">
                     <div class="row mx-md-2 mx-0 mt-3 dish-head {{dishCategory.categoryName}}" data-categoryhead="{{dishCategory.categoryName}}">
-                        <div class="col-12 ml-5 py-3 mb-4 mx-auto dish-col" style="background:url(/Uploads/{{dishCategory.image}});">
-                            <h5>{{dishCategory.categoryName}}
-                            <br />
-                            <a style="font-size: 13px; font-family: Montserrat, sans-serif; font-weight: normal">{{dishCategory.description}}</a>
+                        <div class="col-12 ml-5 py-3 mb-4 mx-auto dish-col" style="background:url(/Uploads/{{dishCategory.image}});height: 205.7188px;">
+                            <h5 style="padding-top: 26px;">
+                                {{dishCategory.categoryName}}
+                                <br />
+                                <a style="padding-top: 10px; font-size: 13px; font-family: Montserrat, sans-serif; font-weight: normal">{{dishCategory.description}}</a>
                             </h5>
-                            
                         </div>
                     </div>
 
