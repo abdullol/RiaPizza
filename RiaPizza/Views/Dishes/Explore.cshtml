@@ -8,36 +8,6 @@
     <link rel="stylesheet" type="text/css" href="~/client-assets/swiper.css">
     <link rel="stylesheet" type="text/css" href="~/client-assets/res/custom.css" />
     <link rel="stylesheet" type="text/css" href="~/client-assets/custom/explore.css" />
-    <style>
-        .topping-info {
-            color: red;
-            float: right
-        }
-
-        .tip label {
-            width: 100%;
-            padding: 8px;
-            background: #f0f0f0;
-            margin-bottom: 5px;
-        }
-
-        .tip .tip-form {
-            display: none;
-            background: #f0f0f0;
-            text-align: center;
-            margin-bottom: 5px;
-            padding: 10px 5px;
-        }
-
-        .tip-form input[value="-"] {
-            margin-right: -4.5px;
-        }
-
-        .tip-form input[value="+"] {
-            margin-left: -4.5px;
-        }
-    </style>
-
 }
 <!-- <script src="~/Angular/Controllers/ViewDishesPage.js"></script> -->
 
@@ -637,15 +607,15 @@
 
         $scope.increaseTip = function () {
             var value = $('#tip-input').val();
-            $('#tip-input').val(Number(value) + 1);
-            $scope.ordertotalPrice.tip = Number(value) + 1;
+            $('#tip-input').val(Number(value) + 0.5);
+            $scope.ordertotalPrice.tip = Number(value) + 0.5;
         }
 
         $scope.decreaseTip = function () {
             var value = $('#tip-input').val();
             if (Number(value) !== 1) {
-                $('#tip-input').val(Number(value) - 1);
-                $scope.ordertotalPrice.tip = Number(value) - 1;
+                $('#tip-input').val(Number(value) - 0.5);
+                $scope.ordertotalPrice.tip = Number(value) - 0.5;
             }
         }
         $scope.scheduleTimeAlgo = function () {
@@ -750,7 +720,9 @@
             JsonCall("ShopSchedule", "GetShopStatus");
             var maxTime = list.deliveryTimings[0].timeTo;
             maxTime === 0 ? maxTime = 24 : maxTime = list.deliveryTimings[0].timeTo;
-            $scope.scheduleHours = timeList.filter(s => s.hourNo > currentTime && s.hourNo <= maxTime);
+            let hours = timeList.filter(s => s.hourNo > currentTime && s.hourNo <= maxTime);
+            hours.unshift(timeList.filter(s => s.hourNo === currentTime)[3]);
+            $scope.scheduleHours = hours;
         }
 
         function showNotification(text) {
@@ -1281,14 +1253,14 @@
                                                             <i class="fas fa-angle-up mr-3 text-dark"></i>Zeige weniger
                                                         </button>
                                                     </div>
-                                                    <div class="col-lg-8 col-md-8 col-sm-10 col-xs-10 mx-auto" ng-if="!extratype.chooseMultiple">
+                                                    <div class="col-lg-8 col-md-8 col-sm-10 col-xs-10 mx-auto" ng-if="!extratype.chooseMultiple" ng-init="temp = extratype.placeholder">
                                                         <label class="d-block">
                                                             {{extratype.typeName}}
                                                         </label>
                                                         <select ng-disabled="dish.dishSizes.length > 0 && dishSizeIdSelectedDish==='0'" class="custom-select mt-2 pointer topping-dropdown"
-                                                                ng-model="temp" id="inputGroupSelect-{{extratype.dishExtraTypeId}}"
+                                                                 ng-model="temp" id="inputGroupSelect-{{extratype.dishExtraTypeId}}"
                                                                 ng-change="selectToppingDropdown(extratype.dishExtraTypeId, extratype.dishExtras, extratype.typeName)">
-                                                            <option style="font-size:14px;" hidden value="0">{{extratype.placeholder}}</option>
+                                                            <option style="font-size:14px;" hidden>{{extratype.placeholder}}</option>
                                                             <option style="font-size:14px;" ng-repeat="extra in extratype.dishExtras | orderBy : 'order'" value="{{extra}}">
                                                                 {{extra.extraName}}
                                                                 {{dish.dishSizes.length > 0 ? filterToppingSizePrice(dishSizeIdSelectedDish, extra.sizeToppingPrices) : showToppingPrice(extra.extraPrice) }}
@@ -1338,7 +1310,8 @@
                 <div class="col-md-6">
                     <div class="form-group mb-0 pl-2 mt-4">
                         <label class="label">Von welcher Adresse bestellen Sie??</label>
-                        <select class="form-control address-option" id="selectaddress" name="selectaddress" ng-init="userAddressId = 0" ng-model="userAddressId" ng-change="fillUserAddress()">
+                        <select class="form-control address-option" id="selectaddress" name="selectaddress"
+                                ng-model="userAddressId" ng-change="fillUserAddress()">
                             <option value="0" selected="selected">Geben Sie eine neue Adresse ein</option>
                             <option ng-repeat="add in userAddresses" value="{{add.appUserAddressId}}">{{add.address}}</option>
                         </select>

@@ -106,49 +106,49 @@ namespace RiaPizza
                 endpoints.MapHub<NotifyHub>("/NotifyHub");
             });
 
-            CreateRoles(serviceProvider);
+            //CreateRoles(serviceProvider);
 
         }
 
 
-        private void CreateRoles(IServiceProvider serviceProvider)
-        {
+        //private void CreateRoles(IServiceProvider serviceProvider)
+        //{
 
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<AppRole>>();
-            var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
-            Task<IdentityResult> roleResult;
-            string name = "demo";
+        //    var roleManager = serviceProvider.GetRequiredService<RoleManager<AppRole>>();
+        //    var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
+        //    Task<IdentityResult> roleResult;
+        //    string name = "demo";
 
-            //Check that there is an Administrator role and create if not
-            Task<bool> hasAdminRole = roleManager.RoleExistsAsync("Admin");
-            hasAdminRole.Wait();
+        //    //Check that there is an Administrator role and create if not
+        //    Task<bool> hasAdminRole = roleManager.RoleExistsAsync("Admin");
+        //    hasAdminRole.Wait();
 
-            //if (!hasAdminRole.Result)
-            //{
-            //    roleResult = roleManager.CreateAsync(new AppRole("Admin"));
-            //    roleResult.Wait();
-            //}
+        //    //if (!hasAdminRole.Result)
+        //    //{
+        //    //    roleResult = roleManager.CreateAsync(new AppRole("Admin"));
+        //    //    roleResult.Wait();
+        //    //}
 
-            //Check if the user exists and create it if not
-            Task<AppUser> testUser = userManager.FindByNameAsync(name);
-            testUser.Wait();
+        //    //Check if the user exists and create it if not
+        //    Task<AppUser> testUser = userManager.FindByNameAsync(name);
+        //    testUser.Wait();
 
-            if (testUser.Result == null)
-            {
-                AppUser administrator = new AppUser();
-                administrator.Email = name + "@gmail.com";
-                administrator.UserName = name;
+        //    if (testUser.Result == null)
+        //    {
+        //        AppUser administrator = new AppUser();
+        //        administrator.Email = name + "@gmail.com";
+        //        administrator.UserName = name;
 
-                //giving username and password
-                Task<IdentityResult> newUser = userManager.CreateAsync(administrator, "1234Demo..");
-                newUser.Wait();
+        //        //giving username and password
+        //        Task<IdentityResult> newUser = userManager.CreateAsync(administrator, "1234Demo..");
+        //        newUser.Wait();
 
-                if (newUser.Result.Succeeded)
-                {
-                    Task<IdentityResult> newUserRole = userManager.AddToRoleAsync(administrator, "Admin");
-                    newUserRole.Wait();
-                }
-            }
-        }
+        //        if (newUser.Result.Succeeded)
+        //        {
+        //            Task<IdentityResult> newUserRole = userManager.AddToRoleAsync(administrator, "Admin");
+        //            newUserRole.Wait();
+        //        }
+        //    }
+        //}
     }
 }

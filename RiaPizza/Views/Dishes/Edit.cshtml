@@ -76,7 +76,7 @@
             JsonCallParam("Dishes", "GetDishSizes", { id: Number($('#dishId').val()) });
             $scope.dishSizes = list;
             list.forEach(function (item) {
-                $scope.sizeToppingPrices.push({ dishExtraId: 0, dishSizeId: 0, price: 0, sizeName: item.size });
+                $scope.sizeToppingPrices.push({ dishExtraId: 0, dishSizeId: item.dishSizeId, price: 0, sizeName: item.size });
             })
             $scope.dishSizes.length > 0 ? $scope.multipleSizes = true : $scope.multipleSizes = false;
 
@@ -108,7 +108,7 @@
             }
             let list = [];
             for (var i = 0; i < $scope.sizeToppingPrices.length; i++) {
-                list.push({ dishExtraId: 0, dishSizeId: 0, price: 0, sizeName: $scope.sizeToppingPrices[i].sizeName });
+                list.push({ dishExtraId: 0, dishSizeId: $scope.sizeToppingPrices[i].dishSizeId, price: 0, sizeName: $scope.sizeToppingPrices[i].sizeName });
             }
             $scope.addDishExtraTypes.push({ dishExtraTypeId: 0, typeName: '', placeholder: "", chooseMultiple: true, dishExtras: [{ extraName: '', extraPrice: 0, sizeToppingPrices: list }] });
         }
@@ -121,7 +121,7 @@
             }
             let list = [];
             for (var j = 0; j < $scope.sizeToppingPrices.length; j++) {
-                list.push({ dishExtraId: 0, dishSizeId: 0, price: 0, sizeName: $scope.sizeToppingPrices[j].sizeName });
+                list.push({ dishExtraId: 0, dishSizeId: $scope.sizeToppingPrices[j].dishSizeId, price: 0, sizeName: $scope.sizeToppingPrices[j].sizeName });
             }
             $scope.addDishExtraTypes[i].dishExtras.push({ dishExtraId: 0, extraName: '', extraPrice: 0, sizeToppingPrices: list });
         }

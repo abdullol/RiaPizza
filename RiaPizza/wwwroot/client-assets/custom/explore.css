@@ -179,3 +179,33 @@
     .dish-desc p {
         color: black !important;
     }
+.topping-info {
+    color: red;
+    float: right
+}
+
+.tip label {
+    width: 100%;
+    padding: 8px;
+    background: #f0f0f0;
+    margin-bottom: 5px;
+}
+
+.tip .tip-form {
+    display: none;
+    background: #f0f0f0;
+    text-align: center;
+    margin-bottom: 5px;
+    padding: 10px 5px;
+}
+
+.tip-form input[value="-"] {
+    margin-right: -4.5px;
+}
+
+.tip-form input[value="+"] {
+    margin-left: -4.5px;
+}
+#tip-input{
+    width:70px;
+}
