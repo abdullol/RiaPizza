@@ -43,7 +43,8 @@ namespace RiaPizza.Services.DishCategoryService
         {
             try
             {
-                var categories = await _context.DishCategories.Include(s => s.Dishes).ThenInclude(s => s.DishSizes).ToListAsync();
+                var categories = await _context.DishCategories.Include(s => s.Dishes)
+                    .ThenInclude(s => s.DishSizes).OrderBy(s=>s.OrderBy).ToListAsync();
                 categories.ForEach(s => s.Dishes.ToList().ForEach(a => a.DishCategory = null ));
                 categories.ForEach(s => s.Dishes.ToList().ForEach(a => a.DishSizes.ToList().ForEach(s => s.Dish = null)));
                 foreach (var cat in categories)

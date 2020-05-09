@@ -27,10 +27,10 @@
         }
 
         #addExtraScrollBtn {
+            margin-left: 25px;
             display: none;
             position: fixed;
-            bottom: 20px;
-            right: 30px;
+            bottom: 40px;
             z-index: 99;
             font-size: 18px;
             border: none;
@@ -46,7 +46,6 @@
         }
 
         .save-btn {
-            right: 50px;
             position: relative;
             float: right;
         }
@@ -138,7 +137,10 @@
             if (list === "Success") {
                 swal("Added", "Dish Added!", "success");
                 window.location.reload();
+            } else {
+                swal("Error", "Please Try again later!", "error");
             }
+            
         }
         function validateDish() {
             if ($scope.addDish.dishName === "" || Number($scope.addDish.dishCategoryId) === 0 || $scope.addDish.basePrice === 0) {
@@ -431,7 +433,7 @@
                     </div>
                     <div class="toppings-section pb-2">
                         <div class="form-group" style="width:100%;">
-                            <label style="width:10%; float:left">Dish Toppings</label>
+                            <label style="width:10%; float:left">Dish Extras</label>
                             <div class="switch" style="width:80%;">
                                 <label>
                                     <input type="checkbox" ng-click="proceed()" ng-model="haveToppings">
@@ -449,9 +451,9 @@
                                 <form name="extraTypeform">
                                     <table class="table table-striped">
                                         <tr>
-                                            <th width="30%">Topping Heading</th>
-                                            <th width="25%">Topping Place Holder</th>
-                                            <th width="25%">Topping Selector</th>
+                                            <th width="30%">Extras Heading</th>
+                                            <th width="25%">Extras Place Holder</th>
+                                            <th width="25%">Extras Selector</th>
                                             <th width="20%" class="text-center">Action</th>
                                         </tr>
                                         <tr>
@@ -488,7 +490,7 @@
                                 <div class="width-per-90 m-auto">
 
                                     <p class="font-bold">
-                                        Dish Toppings
+                                        Dish Extras
                                         <button type="button" ng-click="pushDishExtra($index)" class="btn tblActnBtn right">
                                             <i class="material-icons">add</i>
                                         </button>
@@ -498,7 +500,7 @@
                                             <tr>
                                                 <th width="20%">Name</th>
                                                 <th width="20%">Allergies</th>
-                                                <th width="40%">Topping Price</th>
+                                                <th width="40%">Extras Price</th>
                                                 <th class="text-center" width="20%">Action</th>
                                             </tr>
                                             <tr ng-repeat="extra in extraType.dishExtras track by $index" ng-init="extraIndex=$index">
