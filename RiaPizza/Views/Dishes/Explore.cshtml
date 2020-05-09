@@ -1210,7 +1210,7 @@
         </div>
         <!-- Dish list -->
         <div class="groups">
-            <section ng-repeat="dishCategory in dishCategories | orderBy : 'orderBy' " ng-init="categoryIndex=$index" id="cat-{{categoryIndex}}" class="group-item" index="{{$index}}">
+            <section ng-repeat="dishCategory in dishCategories" ng-init="categoryIndex=$index" id="cat-{{categoryIndex}}" class="group-item" index="{{$index}}">
                 <div class="container">
                     <div class="row mx-md-2 mx-0 mt-3 dish-head {{dishCategory.categoryName}}" data-categoryhead="{{dishCategory.categoryName}}">
                         <div class="col-12 ml-5 py-3 mb-4 mx-auto dish-col" style="background:url(/Uploads/{{dishCategory.image}});height: 205.7188px;">
@@ -1272,7 +1272,7 @@
                                                                    value="{{extra.extraName}}"
                                                                    ng-checked="toppings.indexOf(extra.extraName) > -1"
                                                                    ng-click="toggleToppings(extra.extraName, extratype.typeName, extra.extraPrice, extra.sizeToppingPrices)">
-                                                            <label class="custom-control-label pointer" for="{{extra.dishExtraId}}_{{extraIndex}}" style="font-size: 12px;">
+                                                            <label class="custom-control-label pointer pt-1" for="{{extra.dishExtraId}}_{{extraIndex}}" style="font-size: 12px;">
                                                                 {{extra.extraName}}
                                                                 {{dish.dishSizes.length > 0 ? filterToppingSizePrice(dishSizeIdSelectedDish, extra.sizeToppingPrices) : showToppingPrice(extra.extraPrice) }}
                                                             </label>

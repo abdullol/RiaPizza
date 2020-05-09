@@ -6,6 +6,7 @@
 
 @section css{
     <link href="~/assets/js/Trumbowyg-master/dist/ui/trumbowyg.css" rel="stylesheet" />
+    <link href="~/waitme/waitMe.css" rel="stylesheet" />
     <style>
         .null-marbottom {
             margin-bottom: 0 !important;
@@ -26,6 +27,24 @@
         .table tbody tr td {
             border-top: none;
             border-bottom: none;
+        }
+        #addExtraScrollBtn {
+            margin-left:25px;
+            display: none;
+            position: fixed;
+            bottom: 40px;
+            z-index: 99;
+            font-size: 18px;
+            border: none;
+            outline: none;
+            background-color: #000;
+            opacity: 0.6;
+            color: white;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 4px;
+            -webkit-transition: all ease-in-out 0.4s;
+            transition: all ease-in-out 0.4s;
         }
     </style>
 }
@@ -98,7 +117,7 @@
             })
 
 
-            
+
         }
         $scope.pushDishExtraType = function () {
             var length = $scope.addDishExtraTypes.length;
@@ -229,6 +248,10 @@
         $scope.copyDishExtra = function (extraTypeIndex, extraIndex) {
             var extra = angular.copy($scope.addDishExtraTypes[extraTypeIndex].dishExtras[extraIndex]);
             extra.dishExtraId = 0;
+            if (extra.sizeToppingPrices != null && extra.sizeToppingPrices.length != 0) {
+                extra.sizeToppingPrices.forEach(s => s.sizeToppingPriceId = 0);
+            }
+
             $scope.addDishExtraTypes[extraTypeIndex].dishExtras.push(extra);
         }
 
@@ -252,7 +275,7 @@
         }
 
         $scope.upward = function (i) {
-             if (i === 0) return;
+            if (i === 0) return;
 
             let current = $scope.addDishExtraTypes[i];
             let updated = $scope.addDishExtraTypes[i - 1];
@@ -271,13 +294,25 @@
         }
 
         $scope.saveAll = function () {
+            $('.body').waitMe({
+                effect: "stretch",
+                text: 'Please Wait...',
+                bg: '#fff',
+                color: '#555'
+            });
+            setTimeout(function () {
+                processSave();
+                swal("Saved!", "Dish Edited Successfully!", "success");
+                window.location.reload();
+            }, 3000);
+        }
+
+        function processSave() {
             updateToppingsOrder();
 
 
             var pram = { "dishId": JSON.stringify(Number($('#dishId').val())), "dishExtraTypes": JSON.stringify($scope.addDishExtraTypes) };
             JsonCallParam("Dishes", "UpdateDishExtraTypes", pram);
-
-            window.location.reload();
         }
         function updateToppingsOrder() {
             $scope.addDishExtraTypes.forEach(function (item, index) {
@@ -440,7 +475,7 @@
                     <h3 class="card-inside-title">
                         Dish Toppings
                         <button type="button" class="btn btn-primary float-right"
-                                ng-click="pushDishExtraType()" @*ng-disabled="!haveToppings && extraTypeform.$invalid"*@>
+                                ng-click="pushDishExtraType()">
                             <i class="fa fa-plus"></i>
                         </button>
                     </h3>
@@ -451,9 +486,9 @@
                         <form name="extraTypeform">
                             <table class="table table-striped">
                                 <tr>
-                                    <th width="30%">Topping Heading</th>
-                                    <th width="25%">Topping Place Holder</th>
-                                    <th width="25%">Topping Selector</th>
+                                    <th width="30%">Extra Heading</th>
+                                    <th width="25%">Extra Place Holder</th>
+                                    <th width="25%">Extra Selector</th>
                                     <th width="20%" class="text-center">Action</th>
                                 </tr>
                                 <tr>
@@ -490,17 +525,17 @@
                         <div class="width-per-90 m-auto">
 
                             <p class="font-bold">
-                                Dish Toppings
+                                Dish Extras
                                 <button type="button" ng-click="pushDishExtra($index)" class="btn tblActnBtn right">
                                     <i class="material-icons">add</i>
                                 </button>
                             </p>
-                            <form name="extraForm">
+                            <form name="extraForm" novalidate>
                                 <table class="table table-striped extras-table" ng-if="extraType.dishExtras.length > 0">
                                     <tr>
                                         <th width="20%">Name</th>
                                         <th width="20%">Allergies</th>
-                                        <th width="40%">Topping Price</th>
+                                        <th width="40%">Extras Price</th>
                                         <th class="text-center" width="20%">Action</th>
                                     </tr>
                                     <tr ng-repeat="extra in extraType.dishExtras" ng-init="extraIndex=$index">
@@ -553,6 +588,9 @@
         </div>
     </div>
 
+    <button ng-click="pushDishExtraType()" id="addExtraScrollBtn" style="z-index: 99999; display: block;">
+        <i class="material-icons" aria-hidden="true">add</i>
+    </button>
 </div>
 
 @section scripts{
@@ -561,6 +599,7 @@
     <script src="~/assets/js/form.min.js"></script>
     <script src="~/assets/js/pages/forms/form-wizard.js"></script>
 
+    <script src="~/waitme/waitMe.js"></script>
     <script src="https://cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>
     <script>
 
@@ -571,14 +610,14 @@
                 var extras = [];
                 $(this).find('.dish-extras-ordering tr').each(function (j) {
                     var extraId = $(this).data('id');
-                    extras.push({ id: extraId, order: j+1 });
+                    extras.push({ id: extraId, order: j + 1 });
                 })
-                extraTypes.push({ id: typeId, order: i+1, dishExtras: extras });
+                extraTypes.push({ id: typeId, order: i + 1, dishExtras: extras });
             });
             $.ajax({
                 type: "POST",
                 url: '/Dishes/UpdateToppingSequence',
-                data: { "toppingSequence": JSON.stringify(extraTypes), "dishId":dishId },
+                data: { "toppingSequence": JSON.stringify(extraTypes), "dishId": dishId },
                 success: function () {
                     swal("Updated!", "Topping Sequence Updated!", "success");
                     window.location.reload();
