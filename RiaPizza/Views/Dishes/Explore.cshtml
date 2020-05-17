@@ -1217,12 +1217,12 @@
                             <h5>
                                 {{dishCategory.categoryName}}
                                 <br />
-                                <a style="position: absolute; font-size: 13px; font-family: Montserrat,Arial, sans-serif; font-weight: 300; font-style:normal; color: #0a3847; line-height: 22px">{{dishCategory.description}}</a>
+                                <a style="font-size: 13px; font-family: Montserrat,Arial, sans-serif; font-weight: 300; font-style:normal; color: #0a3847; line-height: 22px">{{dishCategory.description}}</a>
                             </h5>
                         </div>
                     </div>
 
-                    <div class="row mx-md-2 mx-0 px-0 dishes" data-category="{{dishCategory.categoryName}}" ng-repeat="dish in dishCategory.dishes" ng-init="dishIndex = $index">
+                    <div style="position: relative;" class="row mx-md-2 mx-0 px-0 dishes" data-category="{{dishCategory.categoryName}}" ng-repeat="dish in dishCategory.dishes" ng-init="dishIndex = $index">
                         <div class="col-12 ml-5 py-1 pl-0 pr-0 mx-auto">
                             <div class="panel-group" id="accordion_{{dish.dishId}}" role="tablist" aria-multiselectable="true">
                                 <div class="panel panel-default">

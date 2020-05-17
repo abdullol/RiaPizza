@@ -144,11 +144,15 @@
                                     <i class="fas fa-shopping-bag mr-3"></i> Aufträge
                                 </a>
                             </div>
-                            <div class="col-12 bg-white py-3 px-4 border-bottom">
-                                <a href="~/MyAccount/PersonalData" class="link">
-                                    <i class="fas fa-address-card mr-3"></i> Profil
-                                </a>
-                            </div>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <div class="col-12 bg-white py-3 px-4 border-bottom">
+                                    <a href="~/MyAccount/PersonalData" class="link">
+                                        <i class="fas fa-address-card mr-3"></i> Profil
+                                    </a>
+                                </div>
+                            }
+
                             <div class="col-12 bg-white py-3 px-4 border-bottom">
                                 <a class="link" type="button" href="#infoModal" ng-click="getDeliveryTiming()" data-toggle="modal" role="button">
                                     <i class="mr-3">
@@ -184,8 +188,8 @@
                                 <h4 class="modal-title">Anmelden</h4>
                             </div>
                         </div>
-                        <button type="button" class="close" data-dismiss="modal">
-                            <i class="fas fa-times"></i>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <i style="color: white" class="fas fa-times-circle"></i>
                         </button>
                     </div>
                     <div class="modal-body">
@@ -227,8 +231,8 @@
                                 <h4 class="modal-title">Registrieren</h4>
                             </div>
                         </div>
-                        <button type="button" class="close" data-dismiss="modal">
-                            <i class="fas fa-times"></i>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <i style="color: white" class="fas fa-times-circle"></i>
                         </button>
                     </div>
                     <div class="modal-body">
@@ -308,8 +312,8 @@
                                 <h4 class="modal-title text-center">Aufträge</h4>
                             </div>
                         </div>
-                        <button type="button" class="close" data-dismiss="modal">
-                            <i class="fas fa-times"></i>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <i style="color: white" class="fas fa-times-circle"></i>
                         </button>
                     </div>
                     <div class="modal-body align-items-center" style="overflow:scroll">
@@ -352,8 +356,8 @@
                                 <div class="col-md-2 col-xs-12">
                                     <span class="order-head-mob">Total Bill:</span>
                                     {{order.totalBill}}
-                                <span ng-if="order.isPaymentConfirmed" class="badge badge-success">Bezahlt</span>
-                                <span ng-if="!order.isPaymentConfirmed" class="badge badge-danger">steht aus</span>
+                                    <span ng-if="order.isPaymentConfirmed" class="badge badge-success">Bezahlt</span>
+                                    <span ng-if="!order.isPaymentConfirmed" class="badge badge-danger">steht aus</span>
                                 </div>
                                 <div class="col-md-2 col-xs-12">
                                     <span class="order-head-mob">Status:</span>
