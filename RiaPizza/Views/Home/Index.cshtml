@@ -36,6 +36,11 @@
 
         .suggestion-list li {
             cursor: pointer;
+            /*border: 1px solid black;
+            border-radius: 0 0 2px 2px;
+            border-top: 1px solid #f8f5f2;
+            box-shadow: 0 2px 4px 0 rgba(0,0,0,0);
+            box-sizing: border-box;*/
         }
 
         .bg-img-overlay {
@@ -46,6 +51,22 @@
         @@media only screen and (max-width: 375px) {
             .text-head {
                 color: black;
+            }
+
+            .suggestion-list {
+                list-style: none;
+                list-style-type: none;
+                font-weight: bold;
+                padding-left: 10%;
+                padding-right: 14%;
+                width: 100%;
+                margin: auto;
+                position: absolute;
+            }
+
+            .suggestion-list li{
+                position: relative;
+                z-index: 1;
             }
 
             .slider-bg {
@@ -74,13 +95,13 @@
                                 <button class="btn btn-disabled btn-show font-weight-bold text-white" style="background: #DE0019">Show</button>
                             </div>
                         </div>
-                        @*<a style="color:white; position: absolute;right: 0px;left: 0px;">Postal Code Format 71083 </a>*@
-                        <ul class="suggestion-list">
-                            @foreach (var area in Model.OrderByDescending(s => s.MinOrderCharges))
-                            {
-                                <li data-value="@area.AreaName"><i class="fa fa-home"></i> &nbsp; &nbsp; @area.AreaName - @area.PostalCode</li>
-                            }
-                        </ul>
+                        @* style="position: absolute"style="position: relative; z-index: 10"<a style="color:white; position: absolute;right: 0px;left: 0px;">Postal Code Format 71083 </a>*@
+                            <ul class="suggestion-list">
+                                @foreach (var area in Model.OrderByDescending(s => s.MinOrderCharges))
+                                {
+                                    <li style="position: relative; z-index: 1" data-value="@area.AreaName"><i class="fa fa-home"></i> &nbsp; &nbsp; @area.AreaName - @area.PostalCode</li>
+                                }
+                            </ul>
                         <h6 class="text-white mt-4">@ViewBag.Error</h6>
                     </form>
                 </div>

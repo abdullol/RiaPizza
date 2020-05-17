@@ -103,7 +103,7 @@
                 transform-origin: 0 0;
             }
 
-            /*table {
+        /*table {
                 page-break-inside: auto;
             }
 
@@ -120,13 +120,17 @@
                 display: table-footer-group
             }*/
 
-            /*.pagebreak {
+        /*.pagebreak {
                 clear: both;
                 page-break-before: always;
             }*/
     </style>
 
 </head>
+@{
+    var taxSeven = 0.0F;
+    var taxNine = 0.0F;
+}
 <body class="light">
 
     <div class="container-fluid">
@@ -137,17 +141,17 @@
                         <div class="row">
                             <div class="white-box col-md-6" style="height: 184px;">
                                 <div class="center" style="padding-top:20px;margin-left: 70px;margin-right: 37px;text-align: center;">
-                                    <div class="row" style="text-decoration:underline; width: 400px;">
+                                    <div class="row" style="text-decoration:underline;width: 400px;margin-left: 39px;">
                                         <i class="fas fa-arrows-alt" style="margin-right: 13px"></i>
-                                        <h4 style="text-decoration: underline; font-weight: bold; padding-bottom: 5px;">Pizza Venedig Home Service</h4>
+                                        <h4 style="text-decoration: underline; font-weight: bold; padding-bottom: 5px;">Ria Pizza Thuisservice</h4>
                                         <i class="fas fa-arrows-alt" style="margin-left: 13px"></i>
                                     </div>
-                                    <p style="font-weight: bold;font-size: 8px;text-align: center;margin-left: 37px;width: 190px;"><b>Horber Str, 22, 71083 Herrenberg</b></p>
+                                    <p style="font-weight: bold;font-size: 8px;text-align: center;margin-left: 75px;width: 190px;"><b>Stuttgarter Str. 36, 71083 Herrenberg</b></p>
 
-                                    <p style="font-weight: bold; font-size: 12px; width: 230px"><i class="fas fa-phone-square" style="margin-right: 15px; font-size: 15px; "></i>07032 - 22 111 - 07032 - 28 655</p>
+                                    <p style="font-weight: bold; font-size: 12px; width: 230px;margin-left: 55px;"><i class="fas fa-phone-square" style="margin-right: 15px; font-size: 15px; "></i>+49 7032 9544332</p>
 
                                 </div>
-                                <div class="demo-google-material-icon center" style="width: 413px">
+                                <div class="demo-google-material-icon center" style="width: 413px;margin-left: 45px;">
                                     <i class="material-icons" style="width: 30px; font-size: 17px">star_rate</i>
                                     <i class="material-icons" style="width: 30px; font-size: 17px">star_rate</i>
                                     <i class="material-icons" style="width: 30px; font-size: 17px">star_rate</i>
@@ -163,16 +167,17 @@
                                                     <b>
                                                         @Model.OrderBy.Name <br>
                                                         @Model.OrderDeliveryAddress.Address<br>
+                                                        @Model.OrderBy.Contact
                                                     </b>
                                                 </p>
                                             </address>
                                         </div><br><br>
                                         <div class="pull-right col-md-6 text-right" style="margin-bottom: 0px;">
                                             <address>
-                                                <p class="addr-font-h3 font-bold">Order no: @Model.OrderCode</p>
-                                                <p>Offer: Normal</p>
-                                                <p>Date @DateTime.UtcNow.ToString("MM/dd/yyyy") @DateTime.Now.ToString("HH:mm")</p>
-                                                <p><b>Delivery time: Right now</b></p>
+                                                <p class="addr-font-h3 font-bold">Bestelnr: @Model.OrderCode</p>
+                                                <p>Angebot: Normal</p>
+                                                <p>Datum @DateTime.UtcNow.ToString("MM/dd/yyyy") @DateTime.Now.ToString("HH:mm")</p>
+                                                <p><b>Lieferzeit: SOFORT</b></p>
                                             </address>
                                         </div>
                                     </div>
@@ -181,11 +186,11 @@
                                         <div class="">
                                             <table>
                                                 <tr>
-                                                    <th style="font-size:13px">Amount </th>
-                                                    <th style="font-size: 13px">Product</th>
-                                                    <th style="font-size:13px">Extra</th>
-                                                    <th style="font-size:13px">Price</th>
-                                                    <th style="font-size:13px">Total</th>
+                                                    <th style="font-size:13px">Menge </th>
+                                                    <th style="font-size: 13px">Bezeichnung</th>
+                                                    <th style="font-size:13px">Zusatz/Gr</th>
+                                                    <th style="font-size:13px">Preis</th>
+                                                    <th style="font-size:13px">Summe</th>
                                                 </tr>
                                                 <tbody style="border-top: 2px solid; border-bottom: 2px solid">
 
@@ -236,24 +241,44 @@
                                                 </tbody>
                                             </table>
                                             <div class="row">
-                                                <div class="col-5">
-                                                    <a width="14%">Incl. Tax. (7%): @Model.Discount €</a>
-                                                    <a width="14%">Incl. Tax. (19%): @Model.Discount €</a>
-                                                </div>
-                                                <div class="col-2">
+                                                <div class="col-7">
 
+                                                    @foreach (var item in Model.OrderItems)
+                                                    {
+                                                        //if (item.Dish.DishCategory.CategoryName != "Alkoholfreie Getränke")
+                                                        if (item.Dish.DishCategoryId != 28)
+                                                        {
+                                                            var totalSeven = 0.0F;
+                                                            var percSeven = 7.0F;
+
+                                                            totalSeven = totalSeven + item.DishPriceWithAddOnes;
+                                                            taxSeven = (percSeven / 100) * totalSeven;
+                                                        }
+                                                    }
+
+                                                    <a width="14%">Incl. Mist. (7%): @taxSeven €</a><br />
+
+                                                    @foreach (var item in Model.OrderItems)
+                                                    {
+                                                        //if (item.Dish.DishCategory.CategoryName == "Alkoholfreie Getränke")
+                                                        if (item.Dish.DishCategoryId == 28)
+                                                        {
+                                                            var totalNine = 0.0F;
+                                                            var percNine = 13.0F;
+
+                                                            totalNine = totalNine + item.DishPriceWithAddOnes;
+                                                            taxNine = (percNine / 100) * totalNine;
+
+                                                        }
+                                                    }
+                                                    <a width="14%">Incl. Mist. (13%): @taxNine €</a>
                                                 </div>
                                                 <div class="col-5">
-                                                    <a width="14%">Subtotal (€): @Model.SubTotal</a>
-                                                    <a width="14%">Total Sum (€): @Model.TotalBill</a>
+                                                    <a width="100%">Zwischensumme (€): @Model.SubTotal</a><br />
+                                                    <a width="14%">EndSumme (€): @Model.TotalBill</a>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <p style="font-size: 10px; text-align: center">
-                                            <b style="font-weight: bold">Order on www.venedigpizza.com to avail 10% discount</b>
-                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -262,7 +287,7 @@
                                     <div class="col-md-6 mb-0">
                                         <div class="row" style="height: 50px">
                                             <div class="col-md-5">
-                                                <p style="font-weight:bold; font-size: 13px; padding-right: 5px">Driver:</p>
+                                                <p style="font-weight:bold; font-size: 13px; padding-right: 5px">Fahrer:</p>
                                             </div>
                                             <div class="col-md-7" style="width:auto">
                                                 <hr />
@@ -270,7 +295,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6" style="padding-right: 0px;">
-                                                <p style="font-weight:bold; font-size: 13px;">Customer:</p>
+                                                <p style="font-weight:bold; font-size: 13px;">Kunde:</p>
                                             </div>
                                             <div class="col-md-5" style="padding-left: 0px;padding-right: 0px;">
                                                 <p style="font-size: 13px">
@@ -281,22 +306,22 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="row">
-                                            <p style="font-weight:bold; font-size: 13px; padding-right: 5px">Order No:</p>
+                                            <p style="font-weight:bold; font-size: 13px; padding-right: 5px">Bestelnr:</p>
                                             <p style="font-size: 13px">@Model.OrderCode</p>
                                         </div>
                                         <div class="row">
-                                            <p style="font-weight:bold; font-size: 13px; padding-right: 5px">Date:</p>
+                                            <p style="font-weight:bold; font-size: 13px; padding-right: 5px">Datum:</p>
                                             <p style="font-size: 13px">@DateTime.Now</p>
                                         </div>
                                         <div class="row">
-                                            <p style="font-weight:bold; font-size: 13px; padding-right: 5px">Time:</p>
+                                            <p style="font-weight:bold; font-size: 13px; padding-right: 5px">Uhrzeit:</p>
                                             <p style="font-size: 13px">@DateTime.Now.ToString("HH:mm")</p>
                                         </div>
                                         <div class="row">
-                                            <p style="font-weight: bold">Delivery time: RIGHT NOW</p>
+                                            <p style="font-weight: bold">Lieferzeit: SOFORT</p>
                                         </div>
                                         <div class="row">
-                                            <p style="font-weight:bold; font-size: 13px; padding-right: 5px">Total:</p>
+                                            <p style="font-weight:bold; font-size: 13px; padding-right: 5px">Summe:</p>
                                             <p style="font-size: 13px">@Model.TotalBill €</p>
                                         </div>
                                     </div>
@@ -307,35 +332,38 @@
                                     <div class="col-md-12 row" style="height: 165px;">
                                         <div class="pull-left col-md-4" style="margin-bottom: 0px;">
                                             <address>
-                                                <p style="font-size: 13px">
-                                                    @Model.OrderBy.Name <br>
-                                                    @Model.OrderDeliveryAddress.Address<br>
-                                                </p>
+                                                <b>
+                                                    <p style="font-size: 13px; font-weight: bold">
+                                                        @Model.OrderBy.Name <br>
+                                                        @Model.OrderDeliveryAddress.Address<br>
+                                                        @Model.OrderBy.Contact
+                                                    </p>
+                                                </b>
                                             </address>
                                         </div><br><br>
                                         <div class="col-md-4" style="margin-bottom: 0px;">
                                             <address>
-                                                <p style="font-weight: bold"><b>Delivery time: RIGHT NOW</b></p>
+                                                <p style="font-weight: bold"><b>Lieferzeit: SOFORT</b></p>
                                             </address>
                                         </div>
                                         <div class="pull-right col-md-4 text-right" style="margin-bottom: 0px;">
                                             <address>
-                                                <p class="addr-font-h3 font-bold">Order no: @Model.OrderCode</p>
-                                                <p>Date: @DateTime.UtcNow.ToString("MM/dd/yyyy")</p>
-                                                <p>TIme: @DateTime.Now.ToString("HH:mm")</p>
+                                                <p class="addr-font-h3 font-bold">Bestelnr: @Model.OrderCode</p>
+                                                <p>Datum: @DateTime.UtcNow.ToString("MM/dd/yyyy")</p>
+                                                <p>Uhrzeit: @DateTime.Now.ToString("HH:mm")</p>
                                             </address>
                                         </div>
                                     </div>
                                     <h2 class="col-md-12" style="text-align:center">Lieferung</h2>
                                     <div style="page-break-before:always" class="col-md-12">
-                                        <div >
+                                        <div>
                                             <table>
                                                 <tr>
-                                                    <th style="font-size:13px">Amount </th>
-                                                    <th style="font-size:13px">Product</th>
-                                                    <th style="font-size:13px">Extra</th>
-                                                    <th style="font-size:13px">Price</th>
-                                                    <th style="font-size:13px">Total</th>
+                                                    <th style="font-size:13px">Menge </th>
+                                                    <th style="font-size:13px">Bezeichnung</th>
+                                                    <th style="font-size:13px">Zusatz/Gr</th>
+                                                    <th style="font-size:13px">Preis</th>
+                                                    <th style="font-size:13px">Summe</th>
                                                 </tr>
                                                 <tbody style="border-top: 2px solid; border-bottom: 2px solid">
 
@@ -386,24 +414,47 @@
                                                 </tbody>
                                             </table>
                                             <div class="row">
-                                                <div class="col-5">
-                                                    <a width="14%">Incl. Tax. (7%): @Model.Discount €</a>
-                                                    <a width="14%">Incl. Tax. (19%): @Model.Discount €</a>
-                                                </div>
-                                                <div class="col-2">
+                                                <div class="col-7">
+
+                                                    @foreach (var item in Model.OrderItems)
+                                                    {
+                                                        //if (item.Dish.DishCategory.CategoryName != "Alkoholfreie Getränke")
+                                                        if (item.Dish.DishCategoryId != 28)
+                                                        {
+                                                            var totalSeven = 0.0F;
+                                                            var percSeven = 7.0F;
+
+                                                            totalSeven = totalSeven + item.DishPriceWithAddOnes;
+                                                            taxSeven = (percSeven / 100) * totalSeven;
+
+                                                        }
+                                                    }
+
+                                                    <a width="14%">Incl. Mist. (7%): @taxSeven €</a><br />
+
+                                                    @foreach (var item in Model.OrderItems)
+                                                    {
+                                                        //if (item.Dish.DishCategory.CategoryName == "Alkoholfreie Getränke")
+                                                        if (item.Dish.DishCategoryId == 28)
+                                                        {
+                                                            var totalNine = 0.0F;
+                                                            var percNine = 13.0F;
+
+                                                            totalNine = totalNine + item.DishPriceWithAddOnes;
+                                                            taxNine = (percNine / 100) * totalNine;
+
+                                                        }
+                                                    }
+
+                                                    <a width="14%">Incl. Mist. (13%): @taxNine €</a>
 
                                                 </div>
                                                 <div class="col-5">
-                                                    <a width="14%">Subtotal (€): @Model.SubTotal</a>
-                                                    <a width="14%">Total Sum (€): @Model.TotalBill</a>
+                                                    <a width="14%">Zwischensumme (€): @Model.SubTotal</a><br />
+                                                    <a width="14%">EndSumme (€): @Model.TotalBill</a>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <p style="font-size: 10px; text-align: center">
-                                            <b style="font-weight: bold">Order on www.venedigpizza.com to avail 10% discount</b>
-                                        </p>
                                     </div>
                                 </div>
                             </div>

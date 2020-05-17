@@ -181,16 +181,16 @@ body {
   outline: none;
   border-radius: 0;
   border: 0.1px solid #e7e7e7;
-  color: #17f;
+  color: red;
   -webkit-transition: all ease-in-out 0.4s;
   transition: all ease-in-out 0.4s;
 }
 
-.navbar #myModal .my-modal .modal-content .modal-body .login-btn:hover {
-  background: #14a;
-  border: none;
-  color: #fff;
-}
+    .navbar #myModal .my-modal .modal-content .modal-body .login-btn:hover {
+        background: #cd0000;
+        border: none;
+        color: #fff;
+    }
 
 .navbar #myModal .my-modal .modal-content .modal-body .create-btn {
   border-radius: 0;
@@ -201,9 +201,9 @@ body {
   outline: none;
 }
 
-.navbar #myModal .my-modal .modal-content .modal-body .create-btn:hover {
-  background: #14a;
-}
+    .navbar #myModal .my-modal .modal-content .modal-body .create-btn:hover {
+        background: #cd0000;
+    }
 
 .navbar #myModal .my-modal .modal-content .modal-body .link {
   color: #144;
@@ -211,7 +211,7 @@ body {
 }
 
 .navbar #myModal .my-modal .modal-content .modal-body .link:hover {
-  color: #17f;
+  color: red;
 }
 
 .navbar #loginModal .my-modal {
@@ -233,16 +233,16 @@ body {
 }
 
 .navbar #loginModal .my-modal .modal-content .modal-body .login-btn2 {
-  background: #17f;
+  background: red;
   border-radius: 0;
   color: #fff;
   -webkit-transition: all ease-in-out 0.4s;
   transition: all ease-in-out 0.4s;
 }
 
-.navbar #loginModal .my-modal .modal-content .modal-body .login-btn2:hover {
-  background: #14a;
-}
+    .navbar #loginModal .my-modal .modal-content .modal-body .login-btn2:hover {
+        background: #cd0000;
+    }
 
 .navbar #loginModal .my-modal .modal-content .modal-body .form-group .form-control {
   border-radius: 0;
@@ -293,9 +293,9 @@ body {
   transition: all ease-in-out 0.4s;
 }
 
-.navbar #loginModal .my-modal .modal-content .modal-body .create-btn:hover {
-  background: #14a;
-}
+    .navbar #loginModal .my-modal .modal-content .modal-body .create-btn:hover {
+        background: #cd0000;
+    }
 
 .navbar #loginModal .my-modal .modal-content .modal-body .link {
   color: #144;
@@ -303,7 +303,7 @@ body {
 }
 
 .navbar #loginModal .my-modal .modal-content .modal-body .link:hover {
-  color: #17f;
+  color: red;
 }
 
 .navbar #loginModal .my-modal .modal-content .pass-link {
@@ -371,7 +371,7 @@ body {
 }
 
 .navbar #signModal .my-modal .modal-content .modal-body .login-btn2 {
-  background: #17f;
+  background: red;
   border-radius: 0;
   color: #fff;
   -webkit-transition: all ease-in-out 0.4s;
@@ -379,7 +379,7 @@ body {
 }
 
 .navbar #signModal .my-modal .modal-content .modal-body .login-btn2:hover {
-  background: #14a;
+  background: #cd0000;
 }
 
 .navbar #signModal .my-modal .modal-content .modal-body .form-group .form-control {
@@ -440,9 +440,9 @@ body {
   transition: all ease-in-out 0.4s;
 }
 
-.navbar #signModal .my-modal .modal-content .modal-body .create-btn:hover {
-  background: #14a;
-}
+    .navbar #signModal .my-modal .modal-content .modal-body .create-btn:hover {
+        background: #cd0000;
+    }
 
 .navbar #signModal .my-modal .modal-content .modal-body .link {
   color: #144;
@@ -450,7 +450,7 @@ body {
 }
 
 .navbar #signModal .my-modal .modal-content .modal-body .link:hover {
-  color: #17f;
+  color: red;
 }
 
 .navbar #signModal .my-modal .modal-content .pass-link {
@@ -514,17 +514,17 @@ body {
   outline: none;
   border-radius: 0;
   border: 1px solid #e7e7e7;
-  color: #17f;
+  color: red;
   font-weight: 500;
   -webkit-transition: all ease-in-out 0.4s;
   transition: all ease-in-out 0.4s;
   padding: 14px 120px;
 }
 
-.navbar #orderModal .my-modal .modal-content .modal-body .login-btn2:hover {
-  background: #15c;
-  color: #fff;
-}
+    .navbar #orderModal .my-modal .modal-content .modal-body .login-btn2:hover {
+        background: #cd0000;
+        color: #fff;
+    }
 
 .navbar #orderModal .my-modal .modal-content .modal-body .form-group .form-control {
   border-radius: 0;
@@ -584,9 +584,9 @@ body {
   transition: all ease-in-out 0.4s;
 }
 
-.navbar #orderModal .my-modal .modal-content .modal-body .create-btn:hover {
-  background: #14a;
-}
+    .navbar #orderModal .my-modal .modal-content .modal-body .create-btn:hover {
+        background: #cd0000;
+    }
 
 .navbar #orderModal .my-modal .modal-content .modal-body .link {
   color: #144;
@@ -594,7 +594,7 @@ body {
 }
 
 .navbar #orderModal .my-modal .modal-content .modal-body .link:hover {
-  color: #17f;
+  color: red;
 }
 
 .navbar #orderModal .my-modal .modal-content .pass-link {
@@ -636,17 +636,17 @@ body {
   outline: none;
   border-radius: 0;
   border: 1px solid #e7e7e7;
-  color: #17f;
+  color: red;
   font-weight: 500;
   -webkit-transition: all ease-in-out 0.4s;
   transition: all ease-in-out 0.4s;
   padding: 14px 95px;
 }
 
-.navbar #favoritesModal .my-modal .modal-content .modal-body .login-btn2:hover {
-  background: #15c;
-  color: #fff;
-}
+    .navbar #favoritesModal .my-modal .modal-content .modal-body .login-btn2:hover {
+        background: #cd0000;
+        color: #fff;
+    }
 
 .navbar #favoritesModal .my-modal .modal-content .modal-body .form-group .form-control {
   border-radius: 0;
@@ -706,9 +706,9 @@ body {
   transition: all ease-in-out 0.4s;
 }
 
-.navbar #favoritesModal .my-modal .modal-content .modal-body .create-btn:hover {
-  background: #14a;
-}
+    .navbar #favoritesModal .my-modal .modal-content .modal-body .create-btn:hover {
+        background: #cd0000;
+    }
 
 .navbar #favoritesModal .my-modal .modal-content .modal-body .link {
   color: #144;
@@ -716,7 +716,7 @@ body {
 }
 
 .navbar #favoritesModal .my-modal .modal-content .modal-body .link:hover {
-  color: #17f;
+  color: red;
 }
 
 .navbar #favoritesModal .my-modal .modal-content .pass-link {
@@ -816,9 +816,9 @@ body {
   transition: all ease-in-out 0.4s;
 }
 
-.navbar #address2Modal .my-modal .modal-content .modal-body .create-btn:hover {
-  background: #14a;
-}
+    .navbar #address2Modal .my-modal .modal-content .modal-body .create-btn:hover {
+        background: #cd0000;
+    }
 
 .navbar #address2Modal .my-modal .modal-content .modal-body .link {
   color: #144;
@@ -826,7 +826,7 @@ body {
 }
 
 .navbar #address2Modal .my-modal .modal-content .modal-body .link:hover {
-  color: #17f;
+  color: red;
 }
 
 .navbar #address2Modal .my-modal .modal-content .pass-link {
@@ -2217,7 +2217,7 @@ input[value="+"] {
     width: 100px !important;
   }
   input[value="0"] {
-    color: #27f;
+    color: red;
     font-size: 14px !important;
     width: 35px !important;
     height: 35px !important;
@@ -2254,7 +2254,7 @@ input[value="+"] {
   background: transparent;
   border: 0;
   margin-top: 20px;
-  color: #1474f5;
+  color: red;
   -webkit-box-shadow: none;
           box-shadow: none;
   outline: none;
@@ -2265,7 +2265,7 @@ input[value="+"] {
   border: 0;
   display: none;
   margin-top: 20px;
-  color: #1474f5;
+  color: red;
   -webkit-box-shadow: none;
           box-shadow: none;
   outline: none;
@@ -2290,18 +2290,22 @@ input[value="+"] {
     .dish-col h5 {
         background: #f8f5f2 !important;
         position: relative;
-        height: 89px;
-        top: 73%;
+        height: 67px;
+        top: 85%;
         margin-bottom: 20px;
-        padding-top: 14px;
+        padding-top: 22px;
         padding-left: 14px;
         margin-left: -1.7%;
         left: 0 !important;
-    }
+    } 
+    /*.dish-col a {
+        background: #f8f5f2 !important;
+        margin-top: 300px;
+    }*/
 
 @media only screen and (max-width: 767px) and (min-width: 320px) {
   .dish-col {
-    height: 20vh;
+    height: 30vh;
     background: url(../img/pizza_steinofenpizza.png) center/cover no-repeat;
     padding: 0 !important;
     padding-bottom: 3% !important;
@@ -2310,8 +2314,8 @@ input[value="+"] {
   .dish-col h5 {
     background: #f8f5f2 !important;
     position: relative;
-    height: 53px;
-    top: 92%;
+    height: 63px;
+    top: 82%;
     margin-bottom: 20px;
     padding-top: 14px;
     padding-left: 14px;
@@ -2350,7 +2354,7 @@ input::placeholder {
 
 #product-info {
   font-size: 13px !important;
-  color: #17f !important;
+  color: red !important;
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: inline-flex;
@@ -2538,7 +2542,7 @@ input::placeholder {
   padding: 6px 6px 6px 32px;
   text-decoration: none;
   font-size: 14px;
-  color: #1474f5;
+  color: red;
   padding: 10px 19px;
   font-weight: 600;
   display: block;
@@ -2603,7 +2607,7 @@ input::placeholder {
   padding: 6px 6px 6px 32px;
   text-decoration: none;
   font-size: 12px;
-  color: #1474f5;
+  color: red;
   padding: 10px 19px;
   font-weight: 600;
   display: block;
@@ -2808,7 +2812,7 @@ input::placeholder {
   padding: 6px 6px 6px 32px;
   text-decoration: none;
   font-size: 14px;
-  color: #1474f5;
+  color: red;
   padding: 10px 19px;
   font-weight: 600;
   display: block;
@@ -2886,16 +2890,16 @@ input::placeholder {
 }
 
 .services .service-btn {
-  background-color: #1574f5 !important;
+  background-color: red !important;
   padding: 5px 15px;
   border-radius: 10px;
   font-size: 13px !important;
   margin-top: -6px;
 }
 
-.services .service-btn:hover {
-  background-color: #15c !important;
-}
+    .services .service-btn:hover {
+        background-color: #cd0000 !important;
+    }
 
 .services .Qp {
   padding-left: 0;
@@ -3031,8 +3035,8 @@ input::placeholder {
 }
 
 .ready .remarks:hover {
-  -webkit-box-shadow: 0 0 5px #1574f5;
-          box-shadow: 0 0 5px #1574f5;
+  -webkit-box-shadow: 0 0 5px red;
+          box-shadow: 0 0 5px red;
   cursor: pointer;
 }
 
@@ -3135,8 +3139,8 @@ input::placeholder {
     height: auto !important;
   }
   .remarks:hover {
-    -webkit-box-shadow: 0 0 5px #1574f5;
-            box-shadow: 0 0 5px #1574f5;
+    -webkit-box-shadow: 0 0 5px red;
+            box-shadow: 0 0 5px red;
     cursor: pointer;
   }
   .remarks .remarks-check {

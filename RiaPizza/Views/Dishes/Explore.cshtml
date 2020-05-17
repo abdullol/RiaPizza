@@ -1213,11 +1213,11 @@
             <section ng-repeat="dishCategory in dishCategories" ng-init="categoryIndex=$index" id="cat-{{categoryIndex}}" class="group-item" index="{{$index}}">
                 <div class="container">
                     <div class="row mx-md-2 mx-0 mt-3 dish-head {{dishCategory.categoryName}}" data-categoryhead="{{dishCategory.categoryName}}">
-                        <div class="col-12 ml-5 py-3 mb-4 mx-auto dish-col" style="background:url(/Uploads/{{dishCategory.image}});height: 205.7188px;">
-                            <h5 style="padding-top: 26px;">
+                        <div class="col-12 ml-5 py-3 mb-4 mx-auto dish-col" style="background:url(/Uploads/{{dishCategory.image}})">
+                            <h5>
                                 {{dishCategory.categoryName}}
                                 <br />
-                                <a style="padding-top: 10px; font-size: 13px; font-family: Montserrat, sans-serif; font-weight: normal">{{dishCategory.description}}</a>
+                                <a style="position: absolute; font-size: 13px; font-family: Montserrat,Arial, sans-serif; font-weight: 300; font-style:normal; color: #0a3847; line-height: 22px">{{dishCategory.description}}</a>
                             </h5>
                         </div>
                     </div>
@@ -1290,7 +1290,7 @@
                                                             {{extratype.typeName}}
                                                         </label>
                                                         <select ng-disabled="dish.dishSizes.length > 0 && dishSizeIdSelectedDish==='0'" class="custom-select mt-2 pointer topping-dropdown"
-                                                                 ng-model="temp" id="inputGroupSelect-{{extratype.dishExtraTypeId}}"
+                                                                ng-model="temp" id="inputGroupSelect-{{extratype.dishExtraTypeId}}"
                                                                 ng-change="selectToppingDropdown(extratype.dishExtraTypeId, extratype.dishExtras, extratype.typeName)">
                                                             <option style="font-size:14px;" hidden>{{extratype.placeholder}}</option>
                                                             <option style="font-size:14px;" ng-repeat="extra in extratype.dishExtras | orderBy : 'order'" value="{{extra}}">
