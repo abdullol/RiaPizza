@@ -68,8 +68,8 @@ namespace RiaPizza
             services.AddTransient<ICustomizeThemeService, CustomizeThemeService>();
 
 
-            services.AddHangfire(s => s.UseSqlServerStorage(
-                    Configuration.GetConnectionString("DefaultConnection")));
+            services.AddHangfire(s => s.UseSqlServerStorage(Configuration.GetConnectionString("DefaultConnection")));
+            
             services.AddHangfireServer();
             services.AddSignalR();
             services.AddMemoryCache();
