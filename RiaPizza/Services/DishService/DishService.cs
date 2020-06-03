@@ -18,6 +18,12 @@ namespace RiaPizza.Services.DishService
             _context = context;
         }
 
+        public Dish GetLastAddedDish()
+        {
+            var lastElement = _context.Dishes.ToArray().LastOrDefault();
+            return lastElement;
+        }
+
         //Interface Functions
         public async Task<Dish> GetDish(int id)
         {

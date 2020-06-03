@@ -34,5 +34,6 @@ namespace RiaPizza.Services.DishService
         Task DelMultipleDish(int[] dishIds);
         Task AddDishExtraType(DishExtraType dishExtraType);
         Task UpdateToppingSequence(IEnumerable<ExtraTypeSequenceDto> sequenceDto, int dishId);
+        Dish GetLastAddedDish();
     }
 }
