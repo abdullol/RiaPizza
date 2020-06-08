@@ -69,7 +69,7 @@
                 </div>
                 <div id="orderDetailsModal"></div>
                 <div class="header"><h2><strong>Order List</strong></h2></div>
-                <div class="body">
+                <div class="tableBody">
                     <div class="table-responsive overflow-hidden">
                         <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
                             <thead>
@@ -96,10 +96,25 @@
                                             <strong class="font-bold">Recieving:</strong>
                                             @Html.DisplayFor(modelItem => order.RecievingTime)
                                         </td>
+
                                         <td>
-                                            @Html.DisplayFor(modelItem => order.OrderDeliveryAddress.PostalCode)
+                                            @if (order.OrderDeliveryAddress.PostalCode == null)
+                                            {
+                                                <p>nothing to show</p>
+                                            }
+                                            else
+                                            {
+                                                @Html.DisplayFor(modelItem => order.OrderDeliveryAddress.PostalCode)
+                                            }
                                             <strong class="font-bold">|</strong>
-                                            @Html.DisplayFor(modelItem => order.OrderDeliveryAddress.City)
+                                            @if (order.OrderDeliveryAddress.City != null)
+                                            {
+                                                @Html.DisplayFor(modelItem => order.OrderDeliveryAddress.City)
+                                            }
+                                            else
+                                            {
+                                                <p>nothing to show</p>
+                                            }
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => order.OrderDeliveryAddress.Address)
@@ -167,7 +182,7 @@
                     var id = orderId
                     if (status == 'Confirmed') {
                         window.open(
-                        '@Url.Action("Invoice","Orders",new { id = "CC"})'.replace("CC", id), '_blank');
+                        '@Url.Action("SecondInvoice","Orders",new { id = "CC"})'.replace("CC", id), '_blank');
                         document.location.reload(true);
                     } else {
                         window.location.href = "/Orders/Index";
