@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using RiaPizza.Data;
+using RiaPizza.Helpers;
 using RiaPizza.Models;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ namespace RiaPizza.Services.ScheduleService
     public class ScheduleService : IScheduleService
     {
         private readonly AppDbContext _context;
+
         public ScheduleService(AppDbContext context)
         {
             _context = context;
@@ -48,20 +50,20 @@ namespace RiaPizza.Services.ScheduleService
                 await _context.SaveChangesAsync();
             }
 
-            HangfireService(schedule.DeliveryTimings);
+            await HangfireService(schedule.DeliveryTimings);
 
         }
 
-        private void HangfireService(IEnumerable<DeliveryTiming> timings)
+        private async Task HangfireService(IEnumerable<DeliveryTiming> timings)
         {
-            foreach (var timing in timings)
+            await Task.Factory.StartNew(() =>
             {
-                var openShopExpression = "0 " + timing.TimeFrom + " * * " + (int)timing.DayOfWeek;
-                var closeShopExpression = "0 " + timing.TimeTo + " * * " + (int)timing.DayOfWeek;
-
-                RecurringJob.AddOrUpdate(timing.Day + "-Open", () => OpenShop(), openShopExpression, TimeZoneInfo.Local);
-                RecurringJob.AddOrUpdate(timing.Day + "-Close", () => CloseShop(), closeShopExpression, TimeZoneInfo.Local);
-            }
+                foreach (var timing in timings)
+                {
+                    InitShopOpeningSchedular(timing);
+                    InitShopClosingSchedular(timing);
+                }
+            });
         }
 
         public async Task ToggleShop(string status)
@@ -111,5 +113,22 @@ namespace RiaPizza.Services.ScheduleService
             schedule.DeliveryTimings.ToList().ForEach(s => s.ShopSchedule = null);
             return schedule;
         }
+
+        private void InitShopClosingSchedular(DeliveryTiming timing)
+        {
+            var shopClosingHour = ShopTimmingHelper.GetShopTimeByHourId(timing.TimeTo);
+            var closeShopExpression =  string.Format(ShopTimmingHelper.CORS_PATTERN_EXPRESSION, shopClosingHour.Time.Minute, shopClosingHour.Time.Hour, (int)timing.DayOfWeek);
+            
+            RecurringJob.AddOrUpdate(timing.Day + "-Close", () => CloseShop(), closeShopExpression, TimeZoneInfo.Local);
+        }
+
+        private void InitShopOpeningSchedular(DeliveryTiming timing)
+        {
+            var shopOpeniningHour = ShopTimmingHelper.GetShopTimeByHourId(timing.TimeFrom);
+            var openShopExpression = string.Format(ShopTimmingHelper.CORS_PATTERN_EXPRESSION, shopOpeniningHour.Time.Minute, shopOpeniningHour.Time.Hour, (int)timing.DayOfWeek);
+            
+            RecurringJob.AddOrUpdate(timing.Day + "-Open", () => OpenShop(), openShopExpression, TimeZoneInfo.Local);
+        }
+       
     }
 }

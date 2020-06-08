@@ -226,14 +226,14 @@
                                                             @if (item.DishPriceWithAddOnes != null)
                                                             {
                                                                 <td>
-                                                                    <p>@item.DishPriceWithAddOnes</p>
+                                                                    <p>@item.DishPriceWithAddOnes.ToString().Replace('.', ',')</p>
                                                                 </td>
                                                             }
 
                                                             @if (item.TotalPrice != null)
                                                             {
                                                                 <td>
-                                                                    <p>@item.TotalPrice</p>
+                                                                    <p>@item.TotalPrice.ToString().Replace('.',',')</p>
                                                                 </td>
                                                             }
                                                         </tr>
@@ -271,11 +271,11 @@
 
                                                         }
                                                     }
-                                                    <a width="14%">Incl. Mist. (13%): @taxNine €</a>
+                                                    <a width="14%">Incl. Mist. (13%): @taxNine.ToString().Replace('.',',') €</a>
                                                 </div>
                                                 <div class="col-5">
-                                                    <a width="100%">Zwischensumme (€): @Model.SubTotal</a><br />
-                                                    <a width="14%">EndSumme (€): @Model.TotalBill</a>
+                                                    <a width="100%">Zwischensumme (€): @Model.SubTotal.ToString().Replace('.',',')</a><br />
+                                                    <a width="14%">EndSumme (€): @Model.TotalBill.ToString().Replace('.',',')</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -399,14 +399,14 @@
                                                             @if (item.DishPriceWithAddOnes != null)
                                                             {
                                                                 <td>
-                                                                    <p>@item.DishPriceWithAddOnes</p>
+                                                                    <p>@item.DishPriceWithAddOnes.ToString().Replace('.',',')</p>
                                                                 </td>
                                                             }
 
                                                             @if (item.TotalPrice != null)
                                                             {
                                                                 <td>
-                                                                    <p>@item.TotalPrice</p>
+                                                                    <p>@item.TotalPrice.ToString().Replace('.',',')</p>
                                                                 </td>
                                                             }
                                                         </tr>
@@ -430,7 +430,7 @@
                                                         }
                                                     }
 
-                                                    <a width="14%">Incl. Mist. (7%): @taxSeven €</a><br />
+                                                    <a width="14%">Incl. Mist. (7%): @taxSeven.ToString().Replace('.',',') €</a><br />
 
                                                     @foreach (var item in Model.OrderItems)
                                                     {
@@ -446,12 +446,12 @@
                                                         }
                                                     }
 
-                                                    <a width="14%">Incl. Mist. (13%): @taxNine €</a>
+                                                    <a width="14%">Incl. Mist. (13%): @taxNine.ToString().Replace('.',',') €</a>
 
                                                 </div>
                                                 <div class="col-5">
-                                                    <a width="14%">Zwischensumme (€): @Model.SubTotal</a><br />
-                                                    <a width="14%">EndSumme (€): @Model.TotalBill</a>
+                                                    <a width="14%">Zwischensumme (€): @Model.SubTotal.ToString().Replace('.',',')</a><br />
+                                                    <a width="14%">EndSumme (€): @Model.TotalBill.ToString().Replace('.',',')</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -472,3 +472,9 @@
 <script src="~/assets/js/admin.js"></script>
 
 
+<script>
+    function DishPrice(DishPriceWithAddOnes) {
+        var value = DishPriceWithAddOnes;
+        console.log(value);
+    }
+</script>

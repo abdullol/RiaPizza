@@ -149,6 +149,14 @@ namespace RiaPizza.Controllers
                 return Json("Failed");
             }
         }
+        
+        public async Task<IActionResult> GetLastElementEdit()
+        {
+            var lastElement =  _service.GetLastAddedDish();
+            var dish = await _service.GetDish(lastElement.DishId);
+            ViewBag.Categories = await _categoryService.AllDishCategories();
+            return View("Edit", dish);
+        }
 
         [Authorize(Roles = "Manager,Admin")]
         public async Task<IActionResult> Edit(int id)
@@ -157,6 +165,8 @@ namespace RiaPizza.Controllers
             ViewBag.Categories = await _categoryService.AllDishCategories();
             return View(dish);
         }
+
+        
 
         [HttpPost]
         [Authorize(Roles = "Manager,Admin")]
