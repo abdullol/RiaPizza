@@ -58,6 +58,10 @@ namespace RiaPizza.Controllers
         public async Task<IActionResult> Index()
         {
             var orders = await _service.AllOrders();
+            if (orders == null)
+            {
+                return NotFound();
+            }
             return View(orders);
         }
 
@@ -274,7 +278,7 @@ namespace RiaPizza.Controllers
             return Content(result);
         }
 
-      
+
         public async Task<JsonResult> GetUserOrders(int id)
         {
             var orders = await _service.GetUserOrders(id);

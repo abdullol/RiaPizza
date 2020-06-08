@@ -102,7 +102,7 @@ namespace RiaPizza.Services.OrderService
         }
         public async Task<List<Order>> AllOrders()
         {
-            List<Order> allOrders = await _context.Orders.Include(s => s.OrderBy).ToListAsync();
+            List<Order> allOrders = await _context.Orders.Include(s => s.OrderBy).Include(s=>s.OrderDeliveryAddress).ToListAsync();
             return allOrders;
         }
         public async Task<int> TodayOrdersCount()
