@@ -113,7 +113,7 @@ namespace RiaPizza.Services.OrderService
         public async Task<List<Order>> TodayOrders()
         {
             var todayOrders = await _context.Orders.Where(s => s.OrderDateTime.Year == DateTime.Now.Year && s.OrderDateTime.Month == DateTime.Now.Month && s.OrderDateTime.Day == DateTime.Now.Day)
-                .Include(s => s.OrderBy).ToListAsync();
+                .Include(s => s.OrderBy).Include(s=>s.OrderDeliveryAddress).ToListAsync();
             return todayOrders;
         }
         public async Task<int> PendingCount()
