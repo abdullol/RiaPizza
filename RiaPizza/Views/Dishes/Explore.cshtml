@@ -604,16 +604,10 @@
             return tip ? tip.toFixed(2).toString().replace('.', ',') : ' ';
         }
 
-        //$scope.ReplaceBasePrice = function (basePrice) {
-        //    console.dir(basePrice)
-        //    //$('.baseAreaPrice').html('');
-        //    //var basePriceList = basePrice.toString().split('.').join(',');
-        //    //if (basePriceList.length > 0) {
-        //    //    basePriceList.forEach(function (value) {
-        //    //    $('.baseAreaPrice').append("<h4 style='color:red;font-weight:600;font-size:18px;'>" + value + "</h4>");
-        //    //    })
-        //    //}
-        //}
+        $scope.MinOrderPrice = function (requiredOrderValue, totalPrice) {
+            var value = requiredOrderValue - totalPrice;
+            return value.toFixed(2).toString().replace('.', ',');
+        }
 
         $scope.showDishDesc = function (allergies, allergiesOf) {
             $(".dishDetails").modal();
@@ -923,7 +917,7 @@
                     <p class="font-weight-bold text-right text-success"
                        style="margin-right: -30px;  font-size: 13px;"
                        ng-if="ordertotalPrice.totalPrice < requiredOrderValue">
-                        {{requiredOrderValue - ordertotalPrice.totalPrice | number : 2}} €
+                        {{MinOrderPrice(requiredOrderValue, ordertotalPrice.totalPrice)}} €
                     </p>
                 </div>
             </div>
