@@ -297,6 +297,9 @@ namespace RiaPizza.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("DishImageFile")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Logo")
                         .HasColumnType("nvarchar(max)");
 
@@ -354,11 +357,11 @@ namespace RiaPizza.Migrations
                     b.Property<int>("ShopScheduleId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("TimeFrom")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("TimeFrom")
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("TimeTo")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("TimeTo")
+                        .HasColumnType("int");
 
                     b.HasKey("DeliveryTimingId");
 

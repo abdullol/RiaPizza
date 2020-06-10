@@ -4,13 +4,14 @@
         traditional: true,
         async: false,
         cache: false,
-        url: '/Customize/GetLogo',
+        url: '/Customize/UpdateDishImage',
         context: document.body,
         success: function (result) {
-            $('#main-logo').attr('src', result);
+            $('#showcase-dish').css('background', 'url(' + result + ')');
         },
         error: function (xhr) {
-            $('#main-logo').attr('src', '/assets/images/logo.png');
+            $('#showcase-dish').css('background', '/client-assets/res/img/generic.jpg');
         }
     });
 })
+

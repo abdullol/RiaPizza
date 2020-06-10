@@ -275,7 +275,6 @@
                         }
                         dishToppings += "] ";
                     }
-
                 }
                 $scope.orderItems.push({ dishId: $scope.cart[i].dishId, extras: dishToppings, quantity: $scope.cart[i].quantity, dishBasePrice: $scope.cart[i].dishPrice, dishPriceWithAddOnes: $scope.cart[i].priceWithExtras, totalPrice: $scope.cart[i].totalPrice, remarks: $scope.cart[i].remarks });
             }
@@ -1214,7 +1213,16 @@
         </div>
         <!-- Modal Ends-->
         <!-- Header -->
-        <header class="pizza-header" style="margin-right: 0 !important; height: 300px"></header>
+        <header class="pizza-header" id="showcase-dish" style="align-content: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        height: 30vh;
+        max-height: 30vh;
+        position: relative;
+        margin-right: 340px;
+   ">
+        </header>
+
         <!-- Header ends -->
         <!-- Restaurant Description -->
         <section class="item my-0" style="padding-bottom: 0px;padding-top: 0px;">
@@ -1594,6 +1602,7 @@
     <script src="~/client-assets/res/js/jquery.waypoints.js"></script>
     <script src="~/client-assets/res/js/myswiper.js"></script>
     <script src="~/client-assets/bootstrap-notify.min.js"></script>
+    <script src="~/custom-js/ShowCaseDishImage.js"></script>
     <script>
         $(function () {
             $('.sizeSelect').click(function () {

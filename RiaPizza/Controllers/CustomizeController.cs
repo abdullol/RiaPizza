@@ -32,6 +32,12 @@ namespace RiaPizza.Controllers
             return Json(theme.Logo);
         }
 
+        public async Task<JsonResult> UpdateDishImage()
+        {
+            var theme = await _customizeThemeService.UpdateShowCaseDish();
+            return Json(theme.DishImageFile);
+        }
+
         [HttpPost]
         public async Task<IActionResult> LogoUpdate(IFormFile file, string origin)
         {
@@ -50,6 +56,28 @@ namespace RiaPizza.Controllers
                 file.CopyTo(new FileStream(filePath, FileMode.Create));
                 var logo = origin + "/CustomTheme/" + UniqueFilename;
                 await _customizeThemeService.UpdateLogo(logo);
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DishMainFileUpdate(IFormFile file, string originTwo)
+        {
+            string UniqueFilename;
+            if (file != null)
+            {
+                string UploadFolder = Path.Combine(_hostingEnvironment.WebRootPath, "CustomTheme");
+
+                if (!Directory.Exists(UploadFolder))
+                {
+                    Directory.CreateDirectory(UploadFolder);
+                }
+
+                UniqueFilename = Guid.NewGuid().ToString() + "_" + file.FileName;
+                string filePath = Path.Combine(UploadFolder, UniqueFilename);
+                file.CopyTo(new FileStream(filePath, FileMode.Create));
+                var logo = originTwo + "/CustomTheme/" + UniqueFilename;
+                await _customizeThemeService.UpdateDishImage(logo);
             }
             return RedirectToAction("Index");
         }

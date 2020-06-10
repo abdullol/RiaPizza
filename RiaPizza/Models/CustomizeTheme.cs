@@ -11,5 +11,6 @@ namespace RiaPizza.Models
         [Key]
         public int Id { get; set; }
         public string Logo { get; set; }
+        public string DishImageFile { get; set; }
     }
 }
