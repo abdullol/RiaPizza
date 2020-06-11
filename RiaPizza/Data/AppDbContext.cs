@@ -35,6 +35,7 @@ namespace RiaPizza.Data
         public DbSet<DishSize> DishSize { get; set; }
         public DbSet<SizeToppingPrice> SizeToppingPrices { get; set; }
         public DbSet<CustomizeTheme> CustomizeTheme { get; set; }
+        public DbSet<RestaurantInfo> RestaurantInfos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

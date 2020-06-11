@@ -48,15 +48,15 @@ namespace RiaPizza.Services.ThemeCustomization
                 await _context.CustomizeTheme.AddAsync(theme);
                 await _context.SaveChangesAsync();
             }
-            if (theme.DishImageFile == null)
-            {
-                theme = new CustomizeTheme
-                {
-                    DishImageFile = file
-                };
-                await _context.CustomizeTheme.AddAsync(theme);
-                await _context.SaveChangesAsync();
-            }
+            //if (theme.DishImageFile == null)
+            //{
+            //    theme = new CustomizeTheme
+            //    {
+            //        DishImageFile = file
+            //    };
+            //    await _context.CustomizeTheme.AddAsync(theme);
+            //    await _context.SaveChangesAsync();
+            //}
             theme.Logo = file;
             _context.CustomizeTheme.Update(theme);
             await _context.SaveChangesAsync();

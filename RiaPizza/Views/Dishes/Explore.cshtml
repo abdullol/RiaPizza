@@ -1083,7 +1083,7 @@
 
                         <div class="tab-content">
                             <div>
-                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2524.5710064952273!2d8.076955115302928!3d50.74644507387427!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47bc186e9ba0a223%3A0x6a79ca7f91176277!2sAgentur%20f%C3%BCr%20Arbeit%20Burbach!5e0!3m2!1sen!2s!4v1582018821947!5m2!1sen!2s" frameborder="0" style="border:0;" allowfullscreen="" class="map"></iframe>
+                                <iframe id="RestaurantMap" frameborder="0" style="border:0;" allowfullscreen="" class="map"></iframe>
                             </div>
                             <div class="container-fluid">
                                 <div class="row mt-4 align-items-center">
@@ -1166,27 +1166,7 @@
                                     </div>
                                 </div>
                                 <div class="row my-3 p-3" style="background-color: #f8f5f2;">
-                                    <div class="col-12">
-                                        <p class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; color: rgb(102, 102, 102)">
-                                            Inayat Ullah Begum handelt im Namen von Ria Pizza Herrenberg
-                                        </p>
-                                        <p class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; color: rgb(102, 102, 102)">
-                                            Stuttgarter Straße 36
-                                        </p>
-                                        <p class="mb-5"
-                                           style="font-size: 14px; font-weight: 400; color: rgb(102, 102, 102)">
-                                            71083 Herrenberg
-                                        </p>
-                                        <p class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; color: rgb(102, 102, 102)">
-                                            Email: info@digicon-valley.com
-                                        </p>
-                                        <p class="mb-2"
-                                           style="font-size: 14px; font-weight: 400; color: rgb(102, 102, 102)">
-                                            Plattform der EU-Kommission zur Online-Streitbeilegung:
-                                        </p>
+                                    <div class="col-12" id="OwnerDetails">
                                     </div>
                                 </div>
                             </div>
@@ -1603,6 +1583,7 @@
     <script src="~/client-assets/res/js/myswiper.js"></script>
     <script src="~/client-assets/bootstrap-notify.min.js"></script>
     <script src="~/custom-js/ShowCaseDishImage.js"></script>
+    <script src="~/custom-js/CustomRestaurantInfo.js"></script>
     <script>
         $(function () {
             $('.sizeSelect').click(function () {
