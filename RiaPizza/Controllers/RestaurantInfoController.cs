@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RiaPizza.Models;
@@ -16,6 +17,7 @@ namespace RiaPizza.Controllers
         {
             _restaurantInfoService = restaurantInfoService;
         }
+        [Authorize(Roles = "Manager,Admin")]
         public IActionResult Index()
         {
             return View();
