@@ -16,7 +16,7 @@ using RiaPizza.Services.ScheduleService;
 
 namespace RiaPizza.Controllers
 {
-    [Authorize(Roles = "Manager,Admin")]
+    //[Authorize(Roles = "Manager,Admin")]
     public class AuthController : Controller
     {
         private readonly UserManager<AppUser> _userManager;

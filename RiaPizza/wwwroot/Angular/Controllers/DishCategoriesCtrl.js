@@ -37,8 +37,8 @@
     }
 
     $scope.allCategories = [];
-    $scope.addCategoryObj = { categoryName: '', description: "", orderBy: '', isAvailable: true };
-    $scope.editCategoryObj = { dishCategoryId: 0, description: "", categoryName: '', orderBy: 0, isAvailable: true };
+    $scope.addCategoryObj = { categoryName: '', description: "", dishCategoryTax: 0, orderBy: '', isAvailable: true };
+    $scope.editCategoryObj = { dishCategoryId: 0, description: "", dishCategoryTax: 0, categoryName: '', orderBy: 0, isAvailable: true };
     $scope.category = new FormData();
 
     $scope.getAllCategories = function () {
@@ -52,6 +52,7 @@
         $scope.editCategoryObj = {
             dishCategoryId: category.dishCategoryId,
             categoryName: category.categoryName,
+            dishCategoryTax: category.dishCategoryTax,
             orderBy: category.orderBy,
             isAvailable: category.isAvailable,
             description: category.description
