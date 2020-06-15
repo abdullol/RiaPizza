@@ -233,7 +233,7 @@
                                                             @if (item.TotalPrice != null)
                                                             {
                                                                 <td>
-                                                                    <p>@item.TotalPrice.ToString().Replace('.',',')</p>
+                                                                    <p>@item.TotalPrice.ToString().Replace('.', ',')</p>
                                                                 </td>
                                                             }
                                                         </tr>
@@ -245,8 +245,8 @@
 
                                                     @foreach (var item in Model.OrderItems)
                                                     {
-                                                        //if (item.Dish.DishCategory.CategoryName != "Alkoholfreie Getränke")
-                                                        if (item.Dish.DishCategoryId != 28)
+                                                        if (item.Dish.DishCategory.CategoryName != "Alkoholfreie Getränke")
+                                                        //if (item.Dish.DishCategoryId != 28)
                                                         {
                                                             var totalSeven = 0.0F;
                                                             var percSeven = 7.0F;
@@ -260,8 +260,8 @@
 
                                                     @foreach (var item in Model.OrderItems)
                                                     {
-                                                        //if (item.Dish.DishCategory.CategoryName == "Alkoholfreie Getränke")
-                                                        if (item.Dish.DishCategoryId == 28)
+                                                        if (item.Dish.DishCategory.CategoryName == "Alkoholfreie Getränke")
+                                                        //if (item.Dish.DishCategoryId == 28)
                                                         {
                                                             var totalNine = 0.0F;
                                                             var percNine = 13.0F;
@@ -271,11 +271,11 @@
 
                                                         }
                                                     }
-                                                    <a width="14%">Incl. Mist. (13%): @taxNine.ToString().Replace('.',',') €</a>
+                                                    <a width="14%">Incl. Mist. (13%): @taxNine.ToString().Replace('.', ',') €</a>
                                                 </div>
                                                 <div class="col-5">
-                                                    <a width="100%">Zwischensumme (€): @Model.SubTotal.ToString().Replace('.',',')</a><br />
-                                                    <a width="14%">EndSumme (€): @Model.TotalBill.ToString().Replace('.',',')</a>
+                                                    <a width="100%">Zwischensumme (€): @Model.SubTotal.ToString().Replace('.', ',')</a><br />
+                                                    <a width="14%">EndSumme (€): @Model.TotalBill.ToString().Replace('.', ',')</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -399,14 +399,14 @@
                                                             @if (item.DishPriceWithAddOnes != null)
                                                             {
                                                                 <td>
-                                                                    <p>@item.DishPriceWithAddOnes.ToString().Replace('.',',')</p>
+                                                                    <p>@item.DishPriceWithAddOnes.ToString().Replace('.', ',')</p>
                                                                 </td>
                                                             }
 
                                                             @if (item.TotalPrice != null)
                                                             {
                                                                 <td>
-                                                                    <p>@item.TotalPrice.ToString().Replace('.',',')</p>
+                                                                    <p>@item.TotalPrice.ToString().Replace('.', ',')</p>
                                                                 </td>
                                                             }
                                                         </tr>
@@ -418,8 +418,8 @@
 
                                                     @foreach (var item in Model.OrderItems)
                                                     {
-                                                        //if (item.Dish.DishCategory.CategoryName != "Alkoholfreie Getränke")
-                                                        if (item.Dish.DishCategoryId != 28)
+                                                        if (item.Dish.DishCategory.CategoryName != "Alkoholfreie Getränke")
+                                                        //if (item.Dish.DishCategoryId != 28)
                                                         {
                                                             var totalSeven = 0.0F;
                                                             var percSeven = 7.0F;
@@ -430,12 +430,12 @@
                                                         }
                                                     }
 
-                                                    <a width="14%">Incl. Mist. (7%): @taxSeven.ToString().Replace('.',',') €</a><br />
+                                                    <a width="14%">Incl. Mist. (7%): @taxSeven.ToString().Replace('.', ',') €</a><br />
 
                                                     @foreach (var item in Model.OrderItems)
                                                     {
-                                                        //if (item.Dish.DishCategory.CategoryName == "Alkoholfreie Getränke")
-                                                        if (item.Dish.DishCategoryId == 28)
+                                                        if (item.Dish.DishCategory.CategoryName == "Alkoholfreie Getränke")
+                                                        //if (item.Dish.DishCategoryId == 28)
                                                         {
                                                             var totalNine = 0.0F;
                                                             var percNine = 13.0F;
@@ -446,12 +446,12 @@
                                                         }
                                                     }
 
-                                                    <a width="14%">Incl. Mist. (13%): @taxNine.ToString().Replace('.',',') €</a>
+                                                    <a width="14%">Incl. Mist. (13%): @taxNine.ToString().Replace('.', ',') €</a>
 
                                                 </div>
                                                 <div class="col-5">
-                                                    <a width="14%">Zwischensumme (€): @Model.SubTotal.ToString().Replace('.',',')</a><br />
-                                                    <a width="14%">EndSumme (€): @Model.TotalBill.ToString().Replace('.',',')</a>
+                                                    <a width="14%">Zwischensumme (€): @Model.SubTotal.ToString().Replace('.', ',')</a><br />
+                                                    <a width="14%">EndSumme (€): @Model.TotalBill.ToString().Replace('.', ',')</a>
                                                 </div>
                                             </div>
                                         </div>

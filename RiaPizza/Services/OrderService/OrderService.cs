@@ -24,6 +24,7 @@ namespace RiaPizza.Services.OrderService
                 Include(s => s.OrderDeliveryAddress).
                 Include(s => s.OrderItems).
                     ThenInclude(s => s.Dish).
+                    ThenInclude(s=>s.DishCategory).
                 SingleOrDefaultAsync(s => s.OrderId == id);
             return order;
         }
@@ -102,7 +103,7 @@ namespace RiaPizza.Services.OrderService
         }
         public async Task<List<Order>> AllOrders()
         {
-            List<Order> allOrders = await _context.Orders.Include(s => s.OrderBy).Include(s=>s.OrderDeliveryAddress).ToListAsync();
+            List<Order> allOrders = await _context.Orders.Include(s => s.OrderBy).Include(s => s.OrderDeliveryAddress).ToListAsync();
             return allOrders;
         }
         public async Task<int> TodayOrdersCount()
@@ -113,7 +114,7 @@ namespace RiaPizza.Services.OrderService
         public async Task<List<Order>> TodayOrders()
         {
             var todayOrders = await _context.Orders.Where(s => s.OrderDateTime.Year == DateTime.Now.Year && s.OrderDateTime.Month == DateTime.Now.Month && s.OrderDateTime.Day == DateTime.Now.Day)
-                .Include(s => s.OrderBy).Include(s=>s.OrderDeliveryAddress).ToListAsync();
+                .Include(s => s.OrderBy).Include(s => s.OrderDeliveryAddress).ToListAsync();
             return todayOrders;
         }
         public async Task<int> PendingCount()
@@ -252,7 +253,7 @@ namespace RiaPizza.Services.OrderService
             order.OrderItems.ToList().ForEach(s => s.Order = null);
             order.OrderBy.Order = null;
             order.OrderDeliveryAddress.Order = null;
-            
+
             return order;
         }
         public async Task<List<Order>> GetUserOrders(int id)
