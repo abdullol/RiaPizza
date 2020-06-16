@@ -65,6 +65,7 @@ namespace RiaPizza.Services.DishCategoryService
             var dishCategory = await _context.DishCategories.FindAsync(editDishCategory.DishCategoryId);
             dishCategory.CategoryName = editDishCategory.CategoryName;
             dishCategory.Description = editDishCategory.Description;
+            dishCategory.DishCategoryTax = editDishCategory.DishCategoryTax;
             if (editDishCategory.Image != null)
             {
                 dishCategory.Image = editDishCategory.Image;

@@ -1,0 +1,68 @@
+﻿@model RiaPizza.Models.RestaurantInfo
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+@section css{
+    <link href="~/assets/js/Trumbowyg-master/dist/ui/trumbowyg.css" rel="stylesheet" />
+}
+<div class="container-fluid">
+    <div class="block-header">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ul class="breadcrumb breadcrumb-style ">
+                    <li class="breadcrumb-item">
+                        <h4 class="page-title">Restaurant Information</h4>
+                    </li>
+                    <li class="breadcrumb-item bcrumb-1">
+                        <a href="~/Home/Index">
+                            <i class="fas fa-home"></i> Home
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item bcrumb-2">
+                        <a href="#" onClick="return false;">Restaurant Information</a>
+                    </li>
+                    <li class="breadcrumb-item active">Index</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Basic Examples -->
+    <div class="row clearfix card">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="col-lg-6 col-md-12 null-marbottom">
+                    <form method="post" asp-controller="RestaurantInfo" asp-action="PostLocation">
+                        <div class="form-group">
+                            <label>Restaurant Location <span class="text-danger">*</span></label>
+                            <input asp-for="RestaurantLocation" type="text" class="form-control" placeholder="Enter Restaurant Location Link..." name="restaurantLocation" required>
+                        </div>
+                        <input type="submit" class="btn btn-success save-btn" value="Save" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row clearfix card">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <form method="post" asp-controller="RestaurantInfo" asp-action="PostOwnerInfo">
+                    <div class="col-lg-12 col-md-12 null-marbottom card">
+                        <div class="form-group">
+                            <label>Restaurant Contact Detail's <span class="text-danger">*</span></label>
+                            <textarea asp-for="OwnerDetails" id="editor1" name="ownerDetails" required></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success save-btn">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script src="https://cdn.ckeditor.com/4.14.0/standard/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace('editor1');
+        CKEDITOR.config.height = 150;
+    </script>
+}

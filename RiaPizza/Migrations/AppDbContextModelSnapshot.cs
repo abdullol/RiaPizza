@@ -297,6 +297,9 @@ namespace RiaPizza.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("DishImageFile")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Logo")
                         .HasColumnType("nvarchar(max)");
 
@@ -354,11 +357,11 @@ namespace RiaPizza.Migrations
                     b.Property<int>("ShopScheduleId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("TimeFrom")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("TimeFrom")
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("TimeTo")
-                        .HasColumnType("datetime2");
+                    b.Property<int>("TimeTo")
+                        .HasColumnType("int");
 
                     b.HasKey("DeliveryTimingId");
 
@@ -458,6 +461,9 @@ namespace RiaPizza.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<float>("DishCategoryTax")
+                        .HasColumnType("real");
 
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
@@ -718,6 +724,24 @@ namespace RiaPizza.Migrations
                     b.HasIndex("OrderId");
 
                     b.ToTable("OrderItems");
+                });
+
+            modelBuilder.Entity("RiaPizza.Models.RestaurantInfo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("OwnerDetails")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RestaurantLocation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RestaurantInfos");
                 });
 
             modelBuilder.Entity("RiaPizza.Models.ShopSchedule", b =>

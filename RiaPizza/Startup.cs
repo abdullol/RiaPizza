@@ -25,6 +25,7 @@ using Hangfire;
 using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Identity;
 using RiaPizza.Services.ThemeCustomization;
+using RiaPizza.Services.RestaurantInfoService;
 
 namespace RiaPizza
 {
@@ -66,6 +67,7 @@ namespace RiaPizza
             services.AddTransient<IScheduleService, ScheduleService>();
             services.AddTransient<ICouponService, CouponService>();
             services.AddTransient<ICustomizeThemeService, CustomizeThemeService>();
+            services.AddTransient<IRestaurantInfoService, RestaurantInfoService>();
 
 
             services.AddHangfire(s => s.UseSqlServerStorage(Configuration.GetConnectionString("DefaultConnection")));

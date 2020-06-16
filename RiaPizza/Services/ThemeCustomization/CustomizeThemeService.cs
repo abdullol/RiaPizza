@@ -12,6 +12,8 @@ namespace RiaPizza.Services.ThemeCustomization
     {
         Task<CustomizeTheme> GetThemeElements();
         Task UpdateLogo(string file);
+        Task UpdateDishImage(string file);
+        Task<CustomizeTheme> UpdateShowCaseDish();
     }
     public class CustomizeThemeService : ICustomizeThemeService
     {
@@ -28,21 +30,51 @@ namespace RiaPizza.Services.ThemeCustomization
             return theme;
         }
 
+        public async Task<CustomizeTheme> UpdateShowCaseDish()
+        {
+            var theme = await _context.CustomizeTheme.FirstOrDefaultAsync();
+            return theme;
+        }
+
         public async Task UpdateLogo(string file)
         {
             var theme = await _context.CustomizeTheme.FirstOrDefaultAsync();
-            if(theme == null)
+            if (theme.Logo == null)
             {
                 theme = new CustomizeTheme
                 {
-                    Logo = file   
+                    Logo = file
                 };
                 await _context.CustomizeTheme.AddAsync(theme);
                 await _context.SaveChangesAsync();
             }
+            //if (theme.DishImageFile == null)
+            //{
+            //    theme = new CustomizeTheme
+            //    {
+            //        DishImageFile = file
+            //    };
+            //    await _context.CustomizeTheme.AddAsync(theme);
+            //    await _context.SaveChangesAsync();
+            //}
             theme.Logo = file;
             _context.CustomizeTheme.Update(theme);
             await _context.SaveChangesAsync();
         }
+
+        public async Task UpdateDishImage(string file)
+        {
+            var theme = await _context.CustomizeTheme.FirstOrDefaultAsync();
+            if (theme.DishImageFile == null)
+            {
+                theme.DishImageFile = file;
+                _context.CustomizeTheme.Update(theme);
+                await _context.SaveChangesAsync();
+            }
+            theme.DishImageFile = file;
+            _context.CustomizeTheme.Update(theme);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }
