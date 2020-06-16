@@ -16,7 +16,6 @@ using RiaPizza.Services.ScheduleService;
 
 namespace RiaPizza.Controllers
 {
-    //[Authorize(Roles = "Manager,Admin")]
     public class AuthController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
@@ -35,7 +34,6 @@ namespace RiaPizza.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Manager,Admin")]
         public IActionResult Login()
         {
             return View();

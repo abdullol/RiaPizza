@@ -66,7 +66,7 @@ namespace RiaPizza.Controllers
                 await _service.AddDish(dish);
                 return Json("Success");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Json("Failed");
             }
@@ -90,6 +90,58 @@ namespace RiaPizza.Controllers
                     SubName = dish.SubName,
                     Rating = dish.Rating
                 };
+
+                //var dishSizes = new List<DishSize>();
+                //foreach (var item in dish.DishSizes)
+                //{
+                //    var size = new DishSize
+                //    {
+                //        BasePrice = item.BasePrice,
+                //        Diameter = item.Diameter,
+                //        Size = item.Size
+                //    };
+                //    dishSizes.Add(size);
+                //}
+                //cloneDish.DishSizes = dishSizes;
+
+                //var dishExtraTypes = new List<DishExtraType>();
+                //foreach (var item in dish.DishExtraTypes)
+                //{
+                //    var dishExtraType = new DishExtraType
+                //    {
+                //        ChooseMultiple = item.ChooseMultiple,
+                //        Status = item.Status,
+                //        TypeName = item.TypeName
+                //    };
+
+                //    var dishExtras = new List<DishExtra>();
+                //    foreach (var extra in item.DishExtras)
+                //    {
+                //        var dishExtra = new DishExtra
+                //        {
+                //            ExtraName = extra.ExtraName,
+                //            ExtraPrice = extra.ExtraPrice,
+                //            Allergies = extra.Allergies,
+                //            IsAvailable = extra.IsAvailable
+                //        };
+
+                //        var sizeToppingPrices = new List<SizeToppingPrice>();
+                //        foreach (var topppingSize in extra.SizeToppingPrices)
+                //        {
+                //            var toppingPrice = new SizeToppingPrice
+                //            {
+                //                SizeName = topppingSize.SizeName,
+                //                Price = topppingSize.Price
+                //            };
+                //            sizeToppingPrices.Add(toppingPrice);
+                //        }
+                //        dishExtra.SizeToppingPrices = sizeToppingPrices;
+                //        dishExtras.Add(dishExtra);
+                //    }
+                //    dishExtraType.DishExtras = dishExtras;
+                //    dishExtraTypes.Add(dishExtraType);
+                //}
+                //cloneDish.DishExtraTypes = dishExtraTypes;
 
                 var dishSizes = new List<DishSize>();
                 dish.DishSizes.ToList().ForEach(s =>
@@ -149,10 +201,10 @@ namespace RiaPizza.Controllers
                 return Json("Failed");
             }
         }
-        
+
         public async Task<IActionResult> GetLastElementEdit()
         {
-            var lastElement =  _service.GetLastAddedDish();
+            var lastElement = _service.GetLastAddedDish();
             var dish = await _service.GetDish(lastElement.DishId);
             ViewBag.Categories = await _categoryService.AllDishCategories();
             return View("Edit", dish);
@@ -166,7 +218,7 @@ namespace RiaPizza.Controllers
             return View(dish);
         }
 
-        
+
 
         [HttpPost]
         [Authorize(Roles = "Manager,Admin")]
@@ -187,7 +239,7 @@ namespace RiaPizza.Controllers
             catch (Exception ex)
             {
                 return RedirectToAction("Edit", "Dishes", new { @id = returnId });
-            } 
+            }
         }
 
         [HttpPost]
@@ -196,7 +248,7 @@ namespace RiaPizza.Controllers
             try
             {
                 var extra = JsonConvert.DeserializeObject<DishExtra>(form["extra"]);
-                if(extra.DishExtraId == 0)
+                if (extra.DishExtraId == 0)
                     await _service.AddDishExtra(extra);
                 else
                     await _service.EditDishExtra(extra);
@@ -296,7 +348,7 @@ namespace RiaPizza.Controllers
         public async Task<IActionResult> Explore(string areaname)
         {
             var area = await _areaService.GetDeliveryArea(areaname);
-            if(area == null)
+            if (area == null)
             {
                 ViewBag.Error = "No Area Found!";
                 return RedirectToAction("Index", "Home", new { error = "Error" });
@@ -366,7 +418,7 @@ namespace RiaPizza.Controllers
                 await _service.UpdateToppingSequence(dishExtraTypes, dishId);
                 return RedirectToAction("Edit", "Dishes", new { @id = dishId });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return RedirectToAction("Edit", "Dishes", new { @id = dishId });
             }
@@ -381,7 +433,8 @@ namespace RiaPizza.Controllers
                 await _service.UpdateDishExtraTypes(id, dishExtraTypes);
 
             }
-            catch (Exception ex) { 
+            catch (Exception ex)
+            {
 
             }
         }
